@@ -36,24 +36,25 @@ class area_map{
   //Looks in all neighbors within n spaces to see if any matches state
   bool inspectNeighbors(size_t row, size_t col, size_t n, bool state);
 
-  /*
+  void deleteBitMap();
+  
   //Function to clean noise by setting all black pixels n spaces from a clear pixel clear
   void trimNoise(size_t n);
-
+  
   //Switch all clear pixels within n spaces of a black pixel black
   void addBuffer(size_t n);
-  */
+  
  public:
   area_map();
 
   area_map(char * filename);
-  /*
+  
   //Function first trims noise and then adds buffer
   void cleanBMP(size_t noise_level, size_t buffer_level){
     trimNoise(noise_level);
     addBuffer(buffer_level);
-    return
+    return;
       }
-  */
+  
   ~area_map();
 };

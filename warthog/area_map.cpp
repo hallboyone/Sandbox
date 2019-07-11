@@ -6,7 +6,7 @@ bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state
   size_t range_row_high = range;
   size_t range_col_low = range;
   size_t range_col_high = range;
-  
+
   //Make sure the range won't push us outside the boundries
   if (row < range){//Negative row index
     range_row_low = row;
@@ -21,8 +21,8 @@ bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state
     range_col_high = pixel_width - col-1;
   }
 
-  for (size_t row_itr = range_row_low; row_itr<=range_row_high; row_itr++){
-    for (size_t col_itr = range_col_low; col_itr<=range_col_high; col_itr++){
+  for (size_t row_itr = row-range_row_low; row_itr<=row+range_row_high; row_itr++){
+    for (size_t col_itr = col-range_col_low; col_itr<=col+range_col_high; col_itr++){
       if (row_itr != row || col_itr!=col){
 	if ((*bit_map[row_itr])[col_itr].is_black == state){
 	  return true;
@@ -30,12 +30,56 @@ bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state
       }
     }
   }
-
   return false;
 }
       
-	
-    
+void area_map::trimNoise(size_t n){
+  size_t trimmed = 0;
+  std::vector<std::vector<pixel>* > new_bit_map;
+  new_bit_map.resize(pixel_height);
+  for(size_t row = 0; row<pixel_height; row++){
+    new_bit_map[row] = new std::vector<pixel>;
+    (*new_bit_map[row]).resize(pixel_width);
+    for(size_t col = 0; col < pixel_width; col++){
+      (*new_bit_map[row])[col] = (*bit_map[row])[col]; 
+      if ((*bit_map[row])[col].is_black && inspectNeighbors(row, col, n, false)){
+	(*new_bit_map[row])[col].is_black = false;
+	trimmed++;
+      }
+    }
+  }
+  deleteBitMap();
+  bit_map = new_bit_map;
+  std::cout<<"Trimmed "<<trimmed<<" black pixels\n";
+}
+
+      
+void area_map::addBuffer(size_t n){
+  size_t added = 0;
+  std::vector<std::vector<pixel>* > new_bit_map;
+  new_bit_map.resize(pixel_height);
+  for(size_t row = 0; row<pixel_height; row++){
+    new_bit_map[row] = new std::vector<pixel>;
+    (*new_bit_map[row]).resize(pixel_width);
+    for(size_t col = 0; col < pixel_width; col++){
+      (*new_bit_map[row])[col] = (*bit_map[row])[col]; 
+      if (!(*bit_map[row])[col].is_black && inspectNeighbors(row, col, n, true)){
+	(*new_bit_map[row])[col].is_black = true;
+	added++;
+      }
+    }
+  }
+  deleteBitMap();
+  bit_map = new_bit_map;
+  std::cout<<"Added "<<added<<" black pixels\n";
+}
+
+ void area_map::deleteBitMap(){
+   for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
+      delete(*it);
+    }
+ }
+   
 void area_map::read_bmp(std::ifstream & bmp){
       char file_type[2];
       char char_buf[8];
@@ -129,10 +173,10 @@ void area_map::read_bmp(std::ifstream & bmp){
 	  red = bmp.get();
 	  (*bit_map[i])[j].id_building = 0;
 	  if (red < 10 && green < 10 && blue < 10){
-	    (*bit_map[i])[j].is_black = 1;
+	    (*bit_map[i])[j].is_black = true;
 	  }
 	  else{
-	    (*bit_map[i])[j].is_black = 0;
+	    (*bit_map[i])[j].is_black = false;
 	  }
 	}
 	bmp.ignore(padding_size);
