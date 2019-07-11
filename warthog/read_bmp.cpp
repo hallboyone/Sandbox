@@ -28,6 +28,8 @@ int main(int argc, char * argv[]){
 
   int row_size; //Number of bytes per row
   
+  std::vector<std::vector<rgb_> *> bit_map;
+
   if (argc != 2){
     std::cout <<"Usage: "<<argv[0]<<" <filename.bmp>\n";
     return 0;
@@ -98,7 +100,7 @@ int main(int argc, char * argv[]){
   std::cout<<"Skipping "<<bytes_to_skip - bytes_read<<" bytes\n";
   bmp.ignore(bytes_to_skip - bytes_read-2);
 
-  std::cout << "Reading from: "<<argv[1]<<"..."<<std::endl;
+  std::cout<<"Reading from: "<<argv[1]<<"..."<<std::endl;
   std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
   std::cout<<"Diminsion: "<<pixel_width<<"w x "<<pixel_height<<"h\n";  
   std::cout<<"Bits per Pixel: "<<bits_per_pixel<<std::endl;
@@ -108,23 +110,30 @@ int main(int argc, char * argv[]){
   int padding_size = row_size - pixel_width*bits_per_pixel/8;
   std::cout<<row_size<<std::endl;
   std::cout<<padding_size<<std::endl;
-  rgb_ pixel;
   int black_count = 0;
- 
-  for (int i=0; i<pixel_height; i++){//Iterate through all the row
-    // std::cout<<"Column number "<<i<<std::endl;
+
+  bit_map.resize(pixel_height); //Resize the bit_map vector to holds a pointer for each row
+  
+  for (int i=0; i<pixel_height; i++){//Iterate through all the rows
+    bit_map[i] = new std::vector<rgb_>;
+    (*bit_map[i]).resize(pixel_width);
     for(int j=0; j<pixel_width; j++){//Iterate through all the pixels in a row
-	pixel.blue = bmp.get();
-	pixel.green = bmp.get();
-	pixel.red = bmp.get();
-	if (pixel.blue <10 && pixel.red < 10 && pixel.green < 10){
-	  black_count++;
+      (*bit_map[i])[j].blue = bmp.get();
+      (*bit_map[i])[j].green = bmp.get();
+      (*bit_map[i])[j].red = bmp.get();
+	if ((*bit_map[i])[j].blue <10 && (*bit_map[i])[j].red < 10 && (*bit_map[i])[j].green < 10){
+	 black_count++;
 	}
     }
-    bmp.ignore(padding_size);    
+    bmp.ignore(padding_size);
   }
   
   std::cout<<"Black Count: "<<black_count<<std::endl;
+
+  for (int i=0; i<pixel_height; i++){
+    delete(bit_map[i]);
+  }
+  
   bmp.close();
   return 0;
 }
