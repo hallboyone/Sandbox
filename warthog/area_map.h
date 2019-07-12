@@ -3,8 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
-#include <vector>
+#include <cmath>
 
 class area_map{
  private:
@@ -14,6 +13,7 @@ class area_map{
     
   } pixel;
 
+  
   //Holds the pixel structs. The std::vector<pixel>s are dynamically allocated
   std::vector<std::vector<pixel>* > bit_map;
 
@@ -33,6 +33,8 @@ class area_map{
   
   int char2Int(const char * c, int n);
 
+  void writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little = true);
+  
   //Looks in all neighbors within n spaces to see if any matches state
   bool inspectNeighbors(size_t row, size_t col, size_t n, bool state);
 
@@ -55,6 +57,9 @@ class area_map{
     addBuffer(buffer_level);
     return;
       }
+
+  //Creates a bmp with the current bit_map
+  void writeBMP(char * filename, int type = 0);
   
   ~area_map();
 };

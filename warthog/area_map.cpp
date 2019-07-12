@@ -192,6 +192,37 @@ void area_map::read_bmp(std::ifstream & bmp){
     return number;
   }
 
+void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little ){
+  //char n = (char) num;
+  int32_t n = num;
+  char data[byte_count];
+  for (size_t i=0; i<byte_count; i++){
+    data[i] = static_cast<char>((n >> (i*8)) & 0xFF);
+  }
+  file.write(data, byte_count);
+  /*if (num > pow(16, byte_count)-1){
+    std::cerr<<num<<" cannot be stored in "<<byte_count<<" bytes\n";
+    return;
+  }
+  
+  std::vector<int> hex_mults(byte_count);
+  
+  //Get each part of the number
+  for (size_t i=byte_count; i > 0; i--){
+    hex_mults[i-1] = num/pow(16, i-1);
+    num = num - pow(16, i-1) * hex_mults[i-1];
+    std::cout<<"multiple = "<<hex_mults[i-1]<<std::endl<<"New Num = "<<num<<std::endl;
+  }
+  
+  if(little){
+    for(size_t i = 0; i<byte_count; i+=2){
+      file.write(hex_mults << std::hex << hex_mults[i+1]<<hex_mults[i];
+    }
+  }*/
+}
+      
+      
+
   area_map::area_map(){}
 
   area_map::area_map(char * filename){
@@ -214,7 +245,23 @@ void area_map::read_bmp(std::ifstream & bmp){
     //If there are multiple id's in the pixel's neighbors, merge the id's and set the pixels id to match
     for (size_t col = 0; col<pixel_height; col++){
       for (size_t row = 0; row<pixel_width; row++){
-*/	
+*/
+
+void area_map::writeBMP(char * filename, int type){
+    std::ofstream new_file (filename, std::ofstream::out);
+    new_file << "BM";
+    //2:   File Size       4 bytes
+    writeHex(new_file, 1000, 4);
+    //6:   Not used        4
+    writeHex(new_file, 0, 4);
+    //10:  bit_map offset  4
+    writeHex(new_file, 138, 4);
+    //14:  size of DIB     4
+    //18:  bmp width       4
+    //22:  bmp hieght      4
+    //
+    new_file.close();
+  }
   area_map::~area_map(){
     for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
       delete(*it);
