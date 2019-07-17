@@ -1,6 +1,6 @@
 #include "area_map.h"
 
-
+/*
 bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state){
   size_t range_row_low = range;
   size_t range_row_high = range;
@@ -32,7 +32,8 @@ bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state
   }
   return false;
 }
-      
+
+
 void area_map::trimNoise(size_t n){
   size_t trimmed = 0;
   std::vector<std::vector<pixel>* > new_bit_map;
@@ -73,6 +74,7 @@ void area_map::addBuffer(size_t n){
   bit_map = new_bit_map;
   std::cout<<"Added "<<added<<" black pixels\n";
 }
+*/
 
  void area_map::deleteBitMap(){
    for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
@@ -123,9 +125,9 @@ void area_map::read_bmp(std::ifstream & bmp){
   
       //Read the image's diminsions (bytes 18-25)
       bmp.read(char_buf, 4);
-      pixel_width = char2Int(char_buf, 4);
+      pixel_width_raw = char2Int(char_buf, 4);
       bmp.read(char_buf, 4);
-      pixel_height = char2Int(char_buf, 4);
+      pixel_height_raw = char2Int(char_buf, 4);
       bytes_read+=8;
 
       //Skip the color plane
@@ -142,23 +144,23 @@ void area_map::read_bmp(std::ifstream & bmp){
   
       //Read the image resolution in pixels/meter (bytes 38-45)
       bmp.read(char_buf, 4);
-      pixel_hres = char2Int(char_buf, 4);
+      pixel_hres_raw = char2Int(char_buf, 4);
       bmp.read(char_buf, 4);
-      pixel_vres = char2Int(char_buf, 4);
+      pixel_vres_raw = char2Int(char_buf, 4);
       bytes_read+=8;
 
       //Skip to the pixel data
       bmp.ignore(bytes_to_skip - bytes_read-2);
 
       std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
-      std::cout<<"Diminsion: "<<pixel_width<<"w x "<<pixel_height<<"h\n";  
+      std::cout<<"Diminsion: "<<pixel_width_raw<<"w x "<<pixel_height_raw<<"h\n";  
       std::cout<<"Bits per Pixel: "<<bits_per_pixel<<std::endl;
-      std::cout<<"Resolution: "<<pixel_hres<<"p/m horiz x "<<pixel_vres<<"p/m vert\n";
+      std::cout<<"Resolution: "<<pixel_hres_raw<<"p/m horiz x "<<pixel_vres_raw<<"p/m vert\n";
 
-      row_size = 4*(bits_per_pixel*pixel_width+31)/32;
-      padding_size = row_size - pixel_width*bits_per_pixel/8;
+      row_size = 4*(bits_per_pixel*pixel_width_raw+31)/32;
+      padding_size = row_size - pixel_width_raw*bits_per_pixel/8;
      
-      bit_map.resize(pixel_height); //Resize the bit_map vector to holds a pointer for each row
+      bit_map.resize(pixel_height_raw); //Resize the bit_map vector to holds a pointer for each row
 
       int blue;
       int green;
