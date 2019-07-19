@@ -1,5 +1,5 @@
 #include "area_map.h"
 
-int main(){
-  area_map test;
+int main(int argc, char** argv){
+  area_map test(argv[1]);
 }

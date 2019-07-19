@@ -1,4 +1,3 @@
-
 #include "area_map.h"
 
 area_map::area_map(){

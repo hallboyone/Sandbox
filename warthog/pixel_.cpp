@@ -1,48 +1,36 @@
 #include "area_map.h"
  
 area_map::pixel_::pixel_(){
-  neighbors_[area_map::pixel_::dir::NW] = NULL;
-  neighbors_[area_map::pixel_::dir::N] = NULL;
-  neighbors_[area_map::pixel_::dir::NE] = NULL;
-  neighbors_[area_map::pixel_::dir::E] = NULL;
-  neighbors_[area_map::pixel_::dir::SE] = NULL;
-  neighbors_[area_map::pixel_::dir::S] = NULL;
-  neighbors_[area_map::pixel_::dir::SW] = NULL;
-  neighbors_[area_map::pixel_::dir::W] = NULL;
+  neighbors[area_map::pixel_::dir::NW] = NULL;
+  neighbors[area_map::pixel_::dir::N] = NULL;
+  neighbors[area_map::pixel_::dir::NE] = NULL;
+  neighbors[area_map::pixel_::dir::E] = NULL;
+  neighbors[area_map::pixel_::dir::SE] = NULL;
+  neighbors[area_map::pixel_::dir::S] = NULL;
+  neighbors[area_map::pixel_::dir::SW] = NULL;
+  neighbors[area_map::pixel_::dir::W] = NULL;
 
-  is_black_ = false;
+  is_black = false;
   id_building_ = 0;
 }
-area_map::pixel_::pixel_(bool is_black){
-  neighbors_[area_map::pixel_::dir::NW] = NULL;
-  neighbors_[area_map::pixel_::dir::N] = NULL;
-  neighbors_[area_map::pixel_::dir::NE] = NULL;
-  neighbors_[area_map::pixel_::dir::E] = NULL;
-  neighbors_[area_map::pixel_::dir::SE] = NULL;
-  neighbors_[area_map::pixel_::dir::S] = NULL;
-  neighbors_[area_map::pixel_::dir::SW] = NULL;
-  neighbors_[area_map::pixel_::dir::W] = NULL;
+area_map::pixel_::pixel_(bool is_black_){
+  neighbors[area_map::pixel_::dir::NW] = NULL;
+  neighbors[area_map::pixel_::dir::N] = NULL;
+  neighbors[area_map::pixel_::dir::NE] = NULL;
+  neighbors[area_map::pixel_::dir::E] = NULL;
+  neighbors[area_map::pixel_::dir::SE] = NULL;
+  neighbors[area_map::pixel_::dir::S] = NULL;
+  neighbors[area_map::pixel_::dir::SW] = NULL;
+  neighbors[area_map::pixel_::dir::W] = NULL;
 
-  is_black_ = is_black;
+  is_black = is_black_;
   id_building_ = 0;
 }
 
 //pixel_::pixel_(bool is_black, std::map<std::string, pixel_ *> neighbors);
 area_map::pixel_::~pixel_(){
-  if (neighbors_[area_map::pixel_::dir::N]!=NULL){
-    delete neighbors_[area_map::pixel_::dir::N];
+  if (neighbors[area_map::pixel_::dir::W]==NULL){//If we are in the first col
+    delete neighbors[area_map::pixel_::dir::N];
   }
-  if (neighbors_[area_map::pixel_::dir::E]!=NULL){
-    delete neighbors_[area_map::pixel_::dir::E];
-  }
-  if (neighbors_[area_map::pixel_::dir::W]!=NULL){
-    (*neighbors_[area_map::pixel_::dir::W]).neighbors_[area_map::pixel_::dir::W] = NULL;
-  }
-
-  if (neighbors_[area_map::pixel_::dir::SW]!=NULL){
-    (*neighbors_[area_map::pixel_::dir::SW]).neighbors_[area_map::pixel_::dir::NW] = NULL;
-  }
-  if (neighbors_[area_map::pixel_::dir::S]!=NULL){
-    (*neighbors_[area_map::pixel_::dir::S]).neighbors_[area_map::pixel_::dir::N] = NULL;
-}
+  delete neighbors[area_map::pixel_::dir::E];
 }

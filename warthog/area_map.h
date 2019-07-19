@@ -11,9 +11,9 @@ class area_map{
   class pixel_{
   public:
     enum class dir {NW, N, NE, E, SE, S, SW, W};
-    std::map<dir, pixel_*> neighbors_;
-    bool is_black_;
-    unsigned char color; //0=white, 255=black
+    std::map<dir, pixel_*> neighbors;
+    bool is_black;
+    unsigned char color; //0-20 = black
     unsigned int id_building_;
 
     pixel_();
@@ -24,7 +24,7 @@ class area_map{
 
   
   pixel_ * raw_data;
-  pixel_ * area_map;
+  pixel_ * map_data;
   
   
   //Holds all the unique buildings as vectors of their indicies. 
@@ -49,7 +49,8 @@ class area_map{
   void read_bmp(std::ifstream & bmp);
   
   int char2Int(const char * c, int n);
-
+  int char2Gray(std::ifstream & file);
+  
   //void writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little = true);
   
   //Looks in all neighbors within n spaces to see if any matches state
