@@ -17,6 +17,7 @@ class area_map{
     unsigned int id_building_;
     size_t x_coord;
     size_t y_coord;
+
     
     pixel_();
     pixel_(bool is_black);
