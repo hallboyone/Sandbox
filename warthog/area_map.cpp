@@ -39,42 +39,88 @@ area_map::pixel_ * area_map::getPix(const size_t x, const size_t y, pixel_ * sta
   
   return pixel;
 }
+
+bool area_map::inspectNeighbors(pixel_ * pix, size_t range, bool state){
+
+  size_t row = pix->y_coord;
+  size_t col = pix->x_coord;
   
-  /*
-
-bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state){
-  size_t range_row_low = range;
-  size_t range_row_high = range;
-  size_t range_col_low = range;
-  size_t range_col_high = range;
-
-  //Make sure the range won't push us outside the boundries
-  if (row < range){//Negative row index
-    range_row_low = row;
+  int y_coord_low = row - range;
+  int y_coord_high = row + range;
+  int x_coord_low = col - range;
+  int x_coord_high = col + range;
+  
+  //Make sure the range doesn't push us outside the boundries
+  if (y_coord_low < 0){//Negative row index
+    y_coord_low = 0;
   }
-  if (pixel_height-1 < row + range){//To large row index
-    range_row_high = pixel_height - row-1;
+  if (y_coord_high > pixel_height_raw - 1){//To large row index
+    y_coord_heigh = pixel_height_raw - 1;
   }
-  if (col < range){//Negative col index
-    range_col_low = col;
+  if (x_coord_low < 0){//Negative col index
+    x_coord_low = 0;
   }
-  if (pixel_width-1 < col + range){//To large col index
-    range_col_high = pixel_width - col-1;
+  if (x_coord_high > pixel_width_raw - 1){//To large col index
+    x_coord_high = pixel_width_raw - 1;
   }
 
-  for (size_t row_itr = row-range_row_low; row_itr<=row+range_row_high; row_itr++){
-    for (size_t col_itr = col-range_col_low; col_itr<=col+range_col_high; col_itr++){
-      if (row_itr != row || col_itr!=col){
-	if ((*bit_map[row_itr])[col_itr].is_black == state){
-	  return true;
-	}
-      }
+  pixel_ * cur_pix = pix;
+
+  //Move down to the lower edge
+  while(cur_pix->y_coord != y_coord_low){
+    cur_pix = cur_pix->neighbors[pixel_::dir::S];
+  }
+
+  //Move along the lower edge to the left
+  while(cur_pix->x_coord != x_coord_low){
+    if (cur_pix->is_black ==state){
+      return true;
     }
+    cur_pix = cur_pix->neighbors[pixel_::dir::W];
   }
-  return false;
+
+  //Move up the left edge
+  while(cur_pix->y_coord != y_coord_high){
+    if (cur_pix->is_black ==state){
+      return true;
+    }
+    cur_pix = cur_pix->neighbors[pixel_::dir::N];
+  }
+  
+  //Move across the top
+    while(cur_pix->x_coord != x_coord_high){
+    if (cur_pix->is_black ==state){
+      return true;
+    }
+    cur_pix = cur_pix->neighbors[pixel_::dir::E];
+  }
+
+  //Move down the right
+    while(cur_pix->y_coord != y_coord_low){
+    if (cur_pix->is_black == state){
+      return true;
+    }
+    cur_pix = cur_pix->neighbors[pixel_::dir::S];
+  }
+
+  //Move across the bottom till inline with pix
+    while(cur_pix->x_coord != col){
+    if (cur_pix.is_black ==state){
+      return true;
+    }
+    cur_pix = cur_pix->neighbors[pixel_::dir::W];
+    }
+
+    //Recursivly call
+    if (range > 1){
+      return area_map::inspectNeighbors(pix, range-1, state);
+    }
+    else{
+      return false;
+    }
 }
 
-
+/*
 void area_map::trimNoise(size_t n){
   size_t trimmed = 0;
   std::vector<std::vector<pixel>* > new_bit_map;

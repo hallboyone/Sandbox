@@ -17,6 +17,7 @@ class area_map{
     unsigned int id_building_;
     size_t x_coord;
     size_t y_coord;
+    
 
     
     pixel_();
@@ -59,7 +60,7 @@ class area_map{
   //void writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little = true);
   
   //Looks in all neighbors within n spaces to see if any matches state
-  //bool inspectNeighbors(size_t row, size_t col, size_t n, bool state);
+  bool inspectNeighbors(pixel_ * pix, size_t n, bool state);
 
   void deleteBitMap();
   
@@ -75,7 +76,23 @@ class area_map{
   area_map();
   
   area_map(char * filename, bool gray_scale_ = false);
-  
+
+  void rawVRes(unsigned int v_res){
+    pixel_vres_raw = v_res;
+  }
+
+  void rawHRes(unsigned int h_res){
+    pixel_hres_raw = h_res;
+  }
+
+  void vRes(unsigned int v_res){
+    pixel_vres_comp = v_res;
+  }
+
+  void hRes(unsigned int h_res){
+    pixel_hres_comp = h_res;
+  }
+    
   //Function first trims noise and then adds buffer
   /*void cleanBMP(size_t noise_level, size_t buffer_level){
     trimNoise(noise_level);
