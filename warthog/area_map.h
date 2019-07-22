@@ -13,12 +13,16 @@ class area_map{
     enum class dir {NW, N, NE, E, SE, S, SW, W};
     std::map<dir, pixel_*> neighbors;
     bool is_black;
-    unsigned char color; //0-20 = black
+    int color; //0-20 = black
     unsigned int id_building_;
-
+    size_t x_coord;
+    size_t y_coord;
+    
     pixel_();
     pixel_(bool is_black);
     //    pixel_(bool is_black, std::map<std::string, pixel_ * neighbors);
+
+    void connectDiags();
     ~pixel_();
   };
 
@@ -63,11 +67,13 @@ class area_map{
   
   //Switch all clear pixels within n spaces of a black pixel black
   //void addBuffer(size_t n);
+
+  pixel_ * getPix(size_t x, size_t y, pixel_ * start);
   
  public:
   area_map();
   
-  area_map(char * filename);
+  area_map(char * filename, bool gray_scale_ = false);
   
   //Function first trims noise and then adds buffer
   /*void cleanBMP(size_t noise_level, size_t buffer_level){
