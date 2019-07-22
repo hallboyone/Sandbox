@@ -1,5 +1,46 @@
 #include "area_map.h"
 
+area_map::pixel_ * area_map::getPix(const size_t x, const size_t y, pixel_ * start){
+  pixel_ * pixel = start;
+  
+  if(x<y){
+    for (size_t i = 0; i < x; i++){
+      if(pixel==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pixel = pixel->neighbors[pixel_::dir::NE];
+    }
+    for (size_t i = x; i < y; i++){
+      if(pixel==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pixel = pixel->neighbors[pixel_::dir::N];
+    }
+  }
+  
+  else{
+    for (size_t i = 0; i < y; i++){
+      if(pixel==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pixel = pixel->neighbors[pixel_::dir::NE];
+    }
+    for (size_t i = y; i<x; i++){
+      if(pixel==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pixel = pixel->neighbors[pixel_::dir::E];
+    }
+  }
+  
+  return pixel;
+}
+  
+  /*
 
 bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state){
   size_t range_row_low = range;
@@ -32,7 +73,8 @@ bool area_map::inspectNeighbors(size_t row, size_t col, size_t range, bool state
   }
   return false;
 }
-      
+
+
 void area_map::trimNoise(size_t n){
   size_t trimmed = 0;
   std::vector<std::vector<pixel>* > new_bit_map;
@@ -74,22 +116,24 @@ void area_map::addBuffer(size_t n){
   std::cout<<"Added "<<added<<" black pixels\n";
 }
 
-void area_map::deleteBitMap(){
-  for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
-     delete(*it);
-   }
-}
-   
+
+ void area_map::deleteBitMap(){
+   for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
+      delete(*it);
+    }
+ }
+*/
+
 void area_map::read_bmp(std::ifstream & bmp){
   char file_type[2];
   char char_buf[8];
-  
+
   //Fields in bmp header
   int file_size;
   int bytes_to_skip;
   int bytes_read = 0;
   int bits_per_pixel;
-  
+
   int row_size; //Number of bytes per row
   int padding_size;
       
@@ -116,16 +160,16 @@ void area_map::read_bmp(std::ifstream & bmp){
   bmp.read(char_buf, 4); //Read the next four bytes indicating distance to start of image data
   bytes_read +=4;
   bytes_to_skip = char2Int(char_buf, 4);
-  std::cout<<bytes_to_skip<<std::endl;
+  
   //Skip the header size info
   bmp.ignore(4);
   bytes_read += 4;
   
   //Read the image's diminsions (bytes 18-25)
   bmp.read(char_buf, 4);
-  pixel_width = char2Int(char_buf, 4);
+  pixel_width_raw = char2Int(char_buf, 4);
   bmp.read(char_buf, 4);
-  pixel_height = char2Int(char_buf, 4);
+  pixel_height_raw = char2Int(char_buf, 4);
   bytes_read+=8;
 
   //Skip the color plane
@@ -142,41 +186,80 @@ void area_map::read_bmp(std::ifstream & bmp){
   
   //Read the image resolution in pixels/meter (bytes 38-45)
   bmp.read(char_buf, 4);
-  pixel_hres = char2Int(char_buf, 4);
+  pixel_hres_raw = char2Int(char_buf, 4);
   bmp.read(char_buf, 4);
-  pixel_vres = char2Int(char_buf, 4);
+  pixel_vres_raw = char2Int(char_buf, 4);
   bytes_read+=8;
 
   //Skip to the pixel data
   bmp.ignore(bytes_to_skip - bytes_read-2);
 
   std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
-  std::cout<<"Diminsion: "<<pixel_width<<"w x "<<pixel_height<<"h\n";  
+  std::cout<<"Diminsion: "<<pixel_width_raw<<"w x "<<pixel_height_raw<<"h\n";  
   std::cout<<"Bits per Pixel: "<<bits_per_pixel<<std::endl;
-  std::cout<<"Resolution: "<<pixel_hres<<"p/m horiz x "<<pixel_vres<<"p/m vert\n";
+  std::cout<<"Resolution: "<<pixel_hres_raw<<"p/m horiz x "<<pixel_vres_raw<<"p/m vert\n";
 
-  row_size = 4*(bits_per_pixel*pixel_width+31)/32;
-  padding_size = row_size - pixel_width*bits_per_pixel/8;
-     
-  bit_map.resize(pixel_height); //Resize the bit_map vector to holds a pointer for each row
+  row_size = 4*(bits_per_pixel*pixel_width_raw+31)/32;
+  padding_size = row_size - pixel_width_raw*bits_per_pixel/8;
 
-  int blue;
-  int green;
-  int red;
-      
-  for (size_t i=0; i<pixel_height; i++){//Iterate through all the rows
-    bit_map[i] = new std::vector<pixel>;
-    (*bit_map[i]).resize(pixel_width);
-    for(size_t j=0; j<pixel_width; j++){//Iterate through all the pixels in a row
-      blue = bmp.get();
-      green = bmp.get();
-      red = bmp.get();
-      (*bit_map[i])[j].id_building = 0;
-      if (red < 10 && green < 10 && blue < 10){
-	(*bit_map[i])[j].is_black = true;
+  pixel_ * cur_row = NULL;
+  pixel_ * new_pix = NULL;
+  pixel_ * prev_pix = NULL;
+  pixel_ * lower_row;
+  
+  for (size_t i = 0; i<pixel_height_raw; i++){//Iterate through all the rows
+    //Create the first pixel in a row
+    lower_row = cur_row;
+    cur_row = new pixel_;
+    new_pix = cur_row;
+
+    if (i==0){//Set the head pointer to be the first corner (SW)
+      raw_data = cur_row;
+    }
+    else{  
+      //Set the pointers
+      //N-S
+      new_pix->neighbors[pixel_::dir::S] = lower_row;
+      lower_row->neighbors[pixel_::dir::N] = new_pix;
+    }
+    
+    //Set its value
+    new_pix->color = char2Gray(bmp);
+    if (new_pix->color < 20){
+      new_pix->is_black = true;
+    }
+    else{
+      new_pix->is_black = false;
+    }
+    new_pix->x_coord = 0;
+    new_pix->y_coord = i;
+	
+    for(size_t j=1; j < pixel_width_raw; j++){//Iterate through all other pixels in a row
+      //Create new pixel
+      prev_pix = new_pix;
+      new_pix = new pixel_;
+      //Set the pixel's value
+      new_pix->color = char2Gray(bmp);
+      if (new_pix->color < 20){
+	new_pix->is_black = true;
+	std::cout<<"Black pixel at ("<<j<<","<<i<<")\n";
       }
       else{
-	(*bit_map[i])[j].is_black = false;
+	new_pix->is_black = false;
+      }
+      new_pix->x_coord = j;
+      new_pix->y_coord = i;
+
+      //Set the pointers
+      //W-E
+      new_pix->neighbors[pixel_::dir::W] = prev_pix;
+      prev_pix->neighbors[pixel_::dir::E] = new_pix;
+      if (i>0){//Check if we are above the first row
+	//N-S
+	lower_row = lower_row->neighbors[pixel_::dir::E];
+	
+	new_pix->neighbors[pixel_::dir::S] = lower_row;
+	lower_row->neighbors[pixel_::dir::N] = new_pix;
       }
     }
     bmp.ignore(padding_size);
@@ -192,6 +275,15 @@ int area_map::char2Int(const char * c, int n){
   return number;
 }
 
+int area_map::char2Gray(std::ifstream & file){
+  int gray = 0;
+  for (size_t i=0; i<3; i++){
+    gray += (unsigned char)file.get();
+  }
+  gray /= 3;
+  return gray;
+}
+/*
 void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little ){
   int32_t n = num;
   char data[byte_count];
@@ -200,12 +292,12 @@ void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, boo
   }
   file.write(data, byte_count);
 }
-      
+*/    
       
 
 area_map::area_map(){}
 
-area_map::area_map(char * filename){
+area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(gray_scale_){
 
   //Open the bmp file for reading
   std::ifstream bmp(filename, std::ifstream::binary);
@@ -213,37 +305,39 @@ area_map::area_map(char * filename){
     std::cout <<"Could not open file\n";
     throw std::exception();
   }
-  
   read_bmp(bmp);
   bmp.close();
+  
+  raw_data->connectDiags();
+
+  pixel_ * test = getPix(0, 0, raw_data);
+    std::cout<<test->color<<std::endl;
+  test = getPix(500, 500, raw_data);
+  test = getPix(25, 35, raw_data);
+    std::cout<<test->color<<std::endl;
+  test = getPix(76, 93, raw_data);
+  std::cout<<test->color<<std::endl;
 }
+
 /*
-  unsigned int area_map::groupBuildings(){
-  //Iterate through each pixel
-  //Check if pixel's row/col neighbors are part of a building group
-  //If at least one has a building id and all neighbors match, set pixels id to match
-  //If there are multiple id's in the pixel's neighbors, merge the id's and set the pixels id to match
-  for (size_t col = 0; col<pixel_height; col++){
-  for (size_t row = 0; row<pixel_width; row++){
+void area_map::writeBMP(char * filename, int type){
+    std::ofstream new_file (filename, std::ofstream::out);
+    new_file << "BM";
+    //2:   File Size       4 bytes
+    writeHex(new_file, 1000, 4);
+    //6:   Not used        4
+    writeHex(new_file, 0, 4);
+    //10:  bit_map offset  4
+    writeHex(new_file, 138, 4);
+    //14:  size of DIB     4
+    //18:  bmp width       4
+    //22:  bmp hieght      4
+    //
+    new_file.close();
+  }
 */
 
-void area_map::writeBMP(char * filename, int type){
-  std::ofstream new_file (filename, std::ofstream::out);
-  new_file << "BM";
-  //2:   File Size       4 bytes
-  writeHex(new_file, 1000, 4);
-  //6:   Not used        4
-  writeHex(new_file, 0, 4);
-  //10:  bit_map offset  4
-  writeHex(new_file, 138, 4);
-  //14:  size of DIB     4
-  //18:  bmp width       4
-  //22:  bmp hieght      4
-  //
-  new_file.close();
-}
 area_map::~area_map(){
-  for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
-    delete(*it);
-  }
+  delete(raw_data);
+  delete(map_data);
 }
