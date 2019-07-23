@@ -1,5 +1,6 @@
 #include "area_map.h"
- 
+#include <queue>
+
 area_map::pixel_::pixel_(){
   neighbors[area_map::pixel_::dir::NW] = NULL;
   neighbors[area_map::pixel_::dir::N] = NULL;
@@ -33,7 +34,7 @@ void area_map::pixel_::connectDiags(){
   if(neighbors[area_map::pixel_::dir::N]!=NULL && x_coord==0){
     neighbors[area_map::pixel_::dir::N]->connectDiags();
   }
-  
+v  
   if(neighbors[area_map::pixel_::dir::E]!=NULL){
     neighbors[area_map::pixel_::dir::E]->connectDiags();
   }
@@ -59,7 +60,21 @@ void area_map::pixel_::connectDiags(){
   }
   return;
 }
+
+void area_map::pixel_::dist2Here(){
+  std::queue <pixel_ *> pix_q;
+
+  pix_q.push(neighbors[area_map::pixel_::dir::N]);
+  pix_q.push(neighbors[area_map::pixel_::dir::NE]);
+  pix_q.push(neighbors[area_map::pixel_::dir::E]);
+  pix_q.push(neighbors[area_map::pixel_::dir::SE]);
+  pix_q.push(neighbors[area_map::pixel_::dir::S]);
+  pix_q.push(neighbors[area_map::pixel_::dir::SW]);
+  pix_q.push(neighbors[area_map::pixel_::dir::W]);
+  pix_q.push(neighbors[area_map::pixel_::dir::NW]);
+
   
+}
 //pixel_::pixel_(bool is_black, std::map<std::string, pixel_ *> neighbors);
 area_map::pixel_::~pixel_(){
   if (neighbors[area_map::pixel_::dir::W]==NULL){//If we are in the first col
