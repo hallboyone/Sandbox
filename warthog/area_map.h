@@ -11,37 +11,39 @@
 
 class area_map{
  private:
-
-  class pixel_{
-    
+  class pixel{    
   public:
-    enum class dir {NW, N, NE, E, SE, S, SW, W};
-    std::map<dir, pixel_*> neighbors;
-
+    enum dir {NW, N, NE, E, SE, S, SW, W};
+    std::vector<pixel *> neighbors;
+    std::vector<pixel *> neighbors_raw;
     //Holds the min distance for each pixel coord pair from the pixel
-    std::map<std::pair<size_t, size_t>, float> pix_dist;
-
+    std::map<pixel *, float> min_dists;
     std::pair<size_t, size_t> coord;
-    
     bool is_black;
-    int color; //0-20 = black
-    
-    pixel_();
-    pixel_(bool is_black);
+    unsigned char color;
 
-    void dist2Here();
-    void checkAround(std::queue<pixel_ *> & pix_q, std::pair<size_t, size_t> & target);
+    
+    //Variable to map the direction to the distance
+    static std::map<size_t, float> one_step;
+     
+    pixel();
+    pixel(unsigned char color_);
+
+    void computeDist();
     void connectDiags();
-
-    void initDists(size_t w, size_t h);
-    void initDists(size_t w, size_t h, std::pair<size_t, size_t> & cur_coord);
+    void restore(){
+      neighbors = neighbors_raw;
+    }
     
-    ~pixel_();
+    ~pixel();
+
+    //private:
+    void computeDist(std::queue<pixel *> & pix_q, pixel * target);
   };
 
   
-  pixel_ * raw_data;
-  pixel_ * map_data;
+  pixel * map_data;//Points at the SW corner of the bit map
+
   
   
   //Holds all the unique buildings as vectors of their indicies. 
@@ -62,7 +64,7 @@ class area_map{
   void read_bmp(std::ifstream & bmp);
   
   int char2Int(const char * c, int n);
-  int char2Gray(std::ifstream & file);
+  unsigned char char2Gray(std::ifstream & file);
   
   //Looks in all neighbors within n spaces to see if any matches state
   //  bool inspectNeighbors(pixel_ * pix, size_t n, bool state);
@@ -75,7 +77,7 @@ class area_map{
   //Switch all clear pixels within n spaces of a black pixel black
   //void addBuffer(unsigned int n);
 
-  pixel_ * getPix(size_t x, size_t y, pixel_ * start);
+  pixel * getPix(size_t x, size_t y, pixel * start);
   
  public:
   area_map();
@@ -84,7 +86,7 @@ class area_map{
 
   area_map(char * filename, size_t res, bool gray_scale = false);
 
-  pixel_ * operator()(size_t x, size_t y);
+  pixel * operator()(size_t x, size_t y);
   /*
   void clean(unsigned int trim, unsigned int add, unsigned int res = 0){
     trimNoise(trim);

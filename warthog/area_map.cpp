@@ -1,44 +1,45 @@
 #include "area_map.h"
 
-area_map::pixel_ * area_map::getPix(const size_t x, const size_t y, pixel_ * start){
-  pixel_ * pixel = start;
+area_map::pixel * area_map::getPix(const size_t x, const size_t y, pixel * start){
+  pixel * pix = start;
   
   if(x<y){
     for (size_t i = 0; i < x; i++){
-      if(pixel==NULL){
+      if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
-      pixel = pixel->neighbors[pixel_::dir::NE];
+      pix = pix->neighbors[1];
     }
     for (size_t i = x; i < y; i++){
-      if(pixel==NULL){
+      if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
-      pixel = pixel->neighbors[pixel_::dir::N];
+      pix = pix->neighbors[0];
     }
   }
   
   else{
     for (size_t i = 0; i < y; i++){
-      if(pixel==NULL){
+      if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
-      pixel = pixel->neighbors[pixel_::dir::NE];
+      pix = pix->neighbors[1];
     }
     for (size_t i = y; i<x; i++){
-      if(pixel==NULL){
+      if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
-      pixel = pixel->neighbors[pixel_::dir::E];
+      pix = pix->neighbors[2];
     }
   }
   
-  return pixel;
+  return pix;
 }
+
 /*
 bool area_map::inspectNeighbors(pixel_ * pix, size_t range, bool state){
 
@@ -237,67 +238,68 @@ void area_map::read_bmp(std::ifstream & bmp){
   row_size = 4*(bits_per_pixel*width_raw+31)/32;
   padding_size = row_size - width_raw*bits_per_pixel/8;
 
-  pixel_ * cur_row = NULL;
-  pixel_ * new_pix = NULL;
-  pixel_ * prev_pix = NULL;
-  pixel_ * lower_row;
+  pixel * cur_row = NULL;
+  pixel * new_pix = NULL;
+  pixel * prev_pix = NULL;
+  pixel * lower_row;
+
+  size_t black_counter = 0;
+  unsigned char color;
   
   for (size_t i = 0; i<height_raw; i++){//Iterate through all the rows
+    color = char2Gray(bmp);
     //Create the first pixel in a row
     lower_row = cur_row;
-    cur_row = new pixel_;
+    cur_row = new pixel(color);
     new_pix = cur_row;
 
     if (i==0){//Set the head pointer to be the first corner (SW)
-      raw_data = cur_row;
+      map_data = cur_row;
     }
     else{  
       //Set the pointers
       //N-S
-      new_pix->neighbors[pixel_::dir::S] = lower_row;
-      lower_row->neighbors[pixel_::dir::N] = new_pix;
+      new_pix->neighbors_raw[4] = lower_row;
+      lower_row->neighbors_raw[0] = new_pix;
     }
     
-    //Set its value
-    new_pix->color = char2Gray(bmp);
-    if (new_pix->color < 20){
-      new_pix->is_black = true;
-    }
-    else{
-      new_pix->is_black = false;
-    }
     new_pix->coord.first = 0;
     new_pix->coord.second = i;
-	
+    //    std::cout<<0<<","<<i<<"="<<(unsigned int)color<<std::endl;
     for(size_t j=1; j < width_raw; j++){//Iterate through all other pixels in a row
+      color = char2Gray(bmp);
+      
       //Create new pixel
       prev_pix = new_pix;
-      new_pix = new pixel_;
+      new_pix = new pixel(color);
+
       //Set the pixel's value
-      new_pix->color = char2Gray(bmp);
-      if (new_pix->color < 20){
-	new_pix->is_black = true;
+      //new_pix->color = char2Gray(bmp);
+      if (new_pix->is_black){
+	
+	black_counter++;
       }
-      else{
-	new_pix->is_black = false;
-      }
+      
       new_pix->coord.first = j;
       new_pix->coord.second = i;
-
+      //std::cout<<j<<","<<i<<"="<<(unsigned int)color<<std::endl;
       //Set the pointers
       //W-E
-      new_pix->neighbors[pixel_::dir::W] = prev_pix;
-      prev_pix->neighbors[pixel_::dir::E] = new_pix;
+      (new_pix->neighbors_raw)[6] = prev_pix;
+      (prev_pix->neighbors_raw)[2] = new_pix;
       if (i>0){//Check if we are above the first row
 	//N-S
-	lower_row = lower_row->neighbors[pixel_::dir::E];
+	lower_row = lower_row->neighbors_raw[2];
 	
-	new_pix->neighbors[pixel_::dir::S] = lower_row;
-	lower_row->neighbors[pixel_::dir::N] = new_pix;
+	new_pix->neighbors_raw[4] = lower_row;
+	lower_row->neighbors_raw[0] = new_pix;
       }
     }
     bmp.ignore(padding_size);
   }
+
+  std::cout<<black_counter<<std::endl;
+  map_data->connectDiags();
   return;
 }
 
@@ -309,11 +311,15 @@ int area_map::char2Int(const char * c, int n){
   return number;
 }
 
-int area_map::char2Gray(std::ifstream & file){
-  int gray = 0;
+unsigned char area_map::char2Gray(std::ifstream & file){
+  unsigned char gray = 0;
+  unsigned char new_gray = 0;
   for (size_t i=0; i<3; i++){
-    gray += (unsigned char)file.get();
+    new_gray = file.get();
+    std::cout<<(unsigned int)new_gray<<",";
+    gray += new_gray;
   }
+  std::cout<<"="<<(unsigned int)gray<<std::endl;
   gray /= 3;
   return gray;
 }
@@ -342,16 +348,9 @@ area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(
   read_bmp(bmp);
   bmp.close();
   
-  raw_data->connectDiags();
-  //raw_data->initDists(width_raw, height_raw);
-  
-  res = res_raw;
-  
+  res = res_raw;  
   height = height_raw;
   width = width_raw;
-  map_data = raw_data;
-
-  //  area_map::inspectNeighbors(raw_data, 3, 0);
 }
 
 area_map::area_map(char * filename, size_t res, bool gray_scale_): grayscale(gray_scale_){
@@ -364,20 +363,12 @@ area_map::area_map(char * filename, size_t res, bool gray_scale_): grayscale(gra
   read_bmp(bmp);
   bmp.close();
   
-  raw_data->connectDiags();
-  
-  //  raw_data->initDists(width_raw, height_raw);
-  
-  res_raw = res;
-  
   res = res_raw;
- 
   height = height_raw;
   width = width_raw;
-  map_data = raw_data;
 }
 
-area_map::pixel_ * area_map::operator()(size_t x, size_t y){
+area_map::pixel * area_map::operator()(size_t x, size_t y){
   return getPix(x, y, map_data);
 }
 
@@ -421,143 +412,41 @@ void area_map::writeBMP(char * filename, int type){
   }
 */
 
-void area_map::getDists(){
-  area_map::pixel_ * cur_pix = map_data;
-  area_map::pixel_ * cur_row = map_data;
-  for (size_t row = 0; row < height; row++){
-    for (size_t col = 0; col< width; col++){
-      cur_pix->dist2Here();
-      cur_pix = cur_pix->neighbors[area_map::pixel_::dir::E];
-    }
-    cur_row = cur_row->neighbors[area_map::pixel_::dir::N];
-    cur_pix = cur_row;
-  }
-}
-
 void area_map::getDists(size_t x, size_t y){
-  area_map::pixel_* pixel = getPix(x, y, raw_data);
-  pixel -> dist2Here();
+  area_map::pixel * pixel = getPix(x, y, map_data);
+  pixel -> computeDist();
 }
 
 void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y){
-  
-  std::pair<size_t, size_t> source(start_x, start_y);
-  std::pair<size_t, size_t> sink(end_x, end_y);
-  area_map::pixel_ * source_pix = getPix(start_x, start_y, map_data);
-  area_map::pixel_ * sink_pix = getPix(end_x, end_y, map_data);
-  area_map::pixel_ * cur_pix = source_pix;
 
-  pixel_* n  = cur_pix->neighbors[area_map::pixel_::dir::N];
-  pixel_* ne = cur_pix->neighbors[area_map::pixel_::dir::NE];
-  pixel_* e  = cur_pix->neighbors[area_map::pixel_::dir::E];
-  pixel_* se = cur_pix->neighbors[area_map::pixel_::dir::SE];
-  pixel_* s  = cur_pix->neighbors[area_map::pixel_::dir::S];
-  pixel_* sw = cur_pix->neighbors[area_map::pixel_::dir::SW];
-  pixel_* w  = cur_pix->neighbors[area_map::pixel_::dir::W];
-  pixel_* nw = cur_pix->neighbors[area_map::pixel_::dir::NW];
+  area_map::pixel * source_pix = getPix(start_x, start_y, map_data);
+  area_map::pixel * sink_pix = getPix(end_x, end_y, map_data);
+  area_map::pixel * cur_pix = source_pix;
 
-  //check if end pixel's distance already had been computed
-  if(map_data->pix_dist.count(sink)==0){
-    sink_pix->dist2Here();
-  }
+  sink_pix->computeDist();
 
-  std::cout<<"Moving "<<source_pix->pix_dist[sink]<<" units\n";
+  std::cout<<"Moving "<<source_pix->min_dists[sink_pix]<<" units\n";
 
-  size_t min_step = width * height;
-  size_t min_step_prev = width * height;
-
+  size_t min_dir;
+  float min_dist;
   while(cur_pix != sink_pix){
-    min_step = width*height;
-    min_step_prev = min_step + 1;
-    while(min_step != min_step_prev){
-      min_step_prev = min_step;
-      if(n!=NULL){
-	min_step = std::min(min_step, n->pix_dist[sink]);
-	std::cout<<n->pix_dist[sink]<<"-";
-      }
-      if(ne!=NULL){
-	min_step = std::min(min_step, ne->pix_dist[sink]);
-	std::cout<<ne->pix_dist[sink]<<"-";
-      }
-      if(e!=NULL){
-	min_step = std::min(min_step, e->pix_dist[sink]);
-	std::cout<<e->pix_dist[sink]<<"-";
-      }
-      if(se!=NULL){
-	min_step = std::min(min_step, se->pix_dist[sink]);
-	std::cout<<se->pix_dist[sink]<<"-";
-      }
-      if(s!=NULL){
-	min_step = std::min(min_step, s->pix_dist[sink]);
-	std::cout<<s->pix_dist[sink]<<"-";
-      }
-      if(sw!=NULL){
-	min_step = std::min(min_step, sw->pix_dist[sink]);
-	std::cout<<sw->pix_dist[sink]<<"-";
-      }
-      if(w!=NULL){
-	min_step = std::min(min_step, w->pix_dist[sink]);
-	std::cout<<w->pix_dist[sink]<<"-";
-      }
-      if(nw!=NULL){
-	min_step = std::min(min_step, nw->pix_dist[sink]);
-	std::cout<<nw->pix_dist[sink]<<"-";
+    min_dist = 1000;
+    for(size_t i = 0; i<=7; i++){
+      if(cur_pix->neighbors[i]!=NULL){
+	if((cur_pix->neighbors[i])->min_dists[sink_pix] < min_dist){
+	  min_dir = i;
+	  min_dist = (cur_pix->neighbors[i])->min_dists[sink_pix];
+	}
       }
     }
-    if(min_step ==n->pix_dist[sink]){
-      std::cout<<"N, ";
-      cur_pix = n;
-    }
-    else if(min_step == ne->pix_dist[sink]){
-      std::cout<<"NE:"<<min_step<<", ";
-      cur_pix = ne;
-    }
-    
-    else if(min_step== e->pix_dist[sink]){
-      std::cout<<"E, ";
-      cur_pix = e;
-    }
-    else if(min_step== se->pix_dist[sink]){
-      std::cout<<"SE:"<<min_step<<", ";
-      cur_pix = se;
-    }
-    else if(min_step == s->pix_dist[sink]){
-      std::cout<<"S, ";
-      cur_pix = s;
-    }
-    else if(min_step ==    sw->pix_dist[sink]){
-      std::cout<<"SW, ";
-      cur_pix = sw;
-    }
-    else if (min_step == w->pix_dist[sink]){
-      std::cout<<"W, ";
-      cur_pix = w;
-    }
-    else{
-      std::cout<<"NW, ";
-      cur_pix = nw;
-    }
-    
-    n  = cur_pix->neighbors[area_map::pixel_::dir::N];
-    ne = cur_pix->neighbors[area_map::pixel_::dir::NE];
-    e  = cur_pix->neighbors[area_map::pixel_::dir::E];
-    se = cur_pix->neighbors[area_map::pixel_::dir::SE];
-    s  = cur_pix->neighbors[area_map::pixel_::dir::S];
-    sw = cur_pix->neighbors[area_map::pixel_::dir::SW];
-    w  = cur_pix->neighbors[area_map::pixel_::dir::W];
-    nw = cur_pix->neighbors[area_map::pixel_::dir::NW];
-
+    cur_pix = cur_pix->neighbors[min_dir];
+    std::cout<<min_dir<<":"<<cur_pix->is_black<<", ";
   }
   std::cout<<std::endl;
+  return;
 }
     
 
 area_map::~area_map(){
-  if (raw_data == map_data){
-    delete(raw_data);
-  }
-  else{
-    delete(raw_data);
     delete(map_data);
-  }
 }
