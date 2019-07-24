@@ -5,31 +5,37 @@
 #include <vector>
 #include <cmath>
 #include<map>
+#include <utility>
+#include <queue>
+#include <limits>
 
 class area_map{
  private:
+
   class pixel_{
+    
   public:
     enum class dir {NW, N, NE, E, SE, S, SW, W};
     std::map<dir, pixel_*> neighbors;
-    
-    std::map<pixel_*, size_t> pix_dist;
+
+    //Holds the min distance for each pixel coord pair from the pixel
+    std::map<std::pair<size_t, size_t>, float> pix_dist;
+
+    std::pair<size_t, size_t> coord;
     
     bool is_black;
     int color; //0-20 = black
-    unsigned int id_building_;
-    size_t x_coord;
-    size_t y_coord;
-    
-
     
     pixel_();
     pixel_(bool is_black);
 
     void dist2Here();
-    //    pixel_(bool is_black, std::map<std::string, pixel_ * neighbors);
-
+    void checkAround(std::queue<pixel_ *> & pix_q, std::pair<size_t, size_t> & target);
     void connectDiags();
+
+    void initDists(size_t w, size_t h);
+    void initDists(size_t w, size_t h, std::pair<size_t, size_t> & cur_coord);
+    
     ~pixel_();
   };
 
@@ -43,26 +49,20 @@ class area_map{
   
   
   //The resolution of the image. 
-  unsigned int vres_raw;
-  unsigned int hres_raw;
-  unsigned int vres_clean;
-  unsigned int hres_clean;
+  unsigned int res_raw;
+  unsigned int res;
 
   unsigned int width_raw;
   unsigned int height_raw;
-  unsigned int width_clean;
-  unsigned int height_clean;
+  unsigned int width;
+  unsigned int height;
 
   bool grayscale; //False means the data is binary
-  
-  //unsigned int next_id;
   
   void read_bmp(std::ifstream & bmp);
   
   int char2Int(const char * c, int n);
   int char2Gray(std::ifstream & file);
-  
-  //void writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little = true);
   
   //Looks in all neighbors within n spaces to see if any matches state
   //  bool inspectNeighbors(pixel_ * pix, size_t n, bool state);
@@ -93,12 +93,8 @@ class area_map{
   }
   */
   
-  void rawVRes(unsigned int v_res){
-    vres_raw = v_res;
-  }
-
-  void rawHRes(unsigned int h_res){
-    hres_raw = h_res;
+  void rawRes(unsigned int res_){
+    res_raw = res_;
   }
 
     
@@ -113,6 +109,9 @@ class area_map{
   //void writeBMP(char * filename, int type = 0);
 
   void getDists();
+  void getDists(size_t x, size_t y);
+
+  void printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y);
   
   ~area_map();
 };
