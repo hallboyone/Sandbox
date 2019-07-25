@@ -228,7 +228,7 @@ void area_map::read_bmp(std::ifstream & bmp){
   bytes_read+=8;
 
   //Skip to the pixel data
-  bmp.ignore(bytes_to_skip - bytes_read-2);
+  bmp.ignore(bytes_to_skip - bytes_read);
 
   std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
   std::cout<<"Diminsion: "<<width_raw<<"w x "<<height_raw<<"h\n";  
@@ -247,7 +247,7 @@ void area_map::read_bmp(std::ifstream & bmp){
   unsigned char color;
   
   for (size_t i = 0; i<height_raw; i++){//Iterate through all the rows
-    color = char2Gray(bmp);
+    color = char2Gray(bmp, bits_per_pixel);
     //Create the first pixel in a row
     lower_row = cur_row;
     cur_row = new pixel(color);
@@ -267,7 +267,7 @@ void area_map::read_bmp(std::ifstream & bmp){
     new_pix->coord.second = i;
     //    std::cout<<0<<","<<i<<"="<<(unsigned int)color<<std::endl;
     for(size_t j=1; j < width_raw; j++){//Iterate through all other pixels in a row
-      color = char2Gray(bmp);
+      color = char2Gray(bmp, bits_per_pixel);
       
       //Create new pixel
       prev_pix = new_pix;
@@ -311,17 +311,27 @@ int area_map::char2Int(const char * c, int n){
   return number;
 }
 
-unsigned char area_map::char2Gray(std::ifstream & file){
+unsigned char area_map::char2Gray(std::ifstream & file, size_t bits_per_pix){
   unsigned char gray = 0;
   unsigned char new_gray = 0;
-  for (size_t i=0; i<3; i++){
-    new_gray = file.get();
-    //    std::cout<<(unsigned int)new_gray<<",";
-    gray += new_gray;
+  switch (bits_per_pix){
+  case 32:
+    file.ignore(1);
+  case 24:
+    for (size_t i=0; i<3; i++){
+      new_gray = file.get();
+      //    std::cout<<(unsigned int)new_gray<<",";
+      gray += new_gray;
+    }
+    // std::cout<<"="<<(unsigned int)gray<<std::endl;
+    gray /= 3;
+    break;
+  case 1://Monochrome
+    gray = file.get();
+    break;
   }
-  // std::cout<<"="<<(unsigned int)gray<<std::endl;
-  gray /= 3;
-  return gray;
+  
+  return gray; 
 }
 /*
 void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little ){
