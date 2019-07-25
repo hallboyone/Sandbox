@@ -1,7 +1,7 @@
 #include "area_map.h"
 
 #define SQ2 1.41421356237
-
+#define BLACK_THRESH 40
 
 area_map::pixel::pixel(){
   neighbors_raw.resize(8);
@@ -21,7 +21,7 @@ area_map::pixel::pixel(unsigned char color_){
   }
 
   color = color_;
-  if ((unsigned int)color_ < 20){
+  if ((unsigned int)color_ < BLACK_THRESH){
     is_black = true;
   }
   else{

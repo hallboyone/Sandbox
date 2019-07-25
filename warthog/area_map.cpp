@@ -316,10 +316,10 @@ unsigned char area_map::char2Gray(std::ifstream & file){
   unsigned char new_gray = 0;
   for (size_t i=0; i<3; i++){
     new_gray = file.get();
-    std::cout<<(unsigned int)new_gray<<",";
+    //    std::cout<<(unsigned int)new_gray<<",";
     gray += new_gray;
   }
-  std::cout<<"="<<(unsigned int)gray<<std::endl;
+  // std::cout<<"="<<(unsigned int)gray<<std::endl;
   gray /= 3;
   return gray;
 }
@@ -353,7 +353,7 @@ area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(
   width = width_raw;
 }
 
-area_map::area_map(char * filename, size_t res, bool gray_scale_): grayscale(gray_scale_){
+area_map::area_map(char * filename, size_t res_, bool gray_scale_): grayscale(gray_scale_){
   //Open the bmp file for reading
   std::ifstream bmp(filename, std::ifstream::binary);
   if (!bmp.is_open()){
@@ -363,9 +363,14 @@ area_map::area_map(char * filename, size_t res, bool gray_scale_): grayscale(gra
   read_bmp(bmp);
   bmp.close();
   
+  res_raw = res_;
   res = res_raw;
   height = height_raw;
   width = width_raw;
+
+  //map_data->is_black = true;
+  //pixel * test = getPix(30, 20, map_data);
+  //test->is_black = true;
 }
 
 area_map::pixel * area_map::operator()(size_t x, size_t y){
@@ -419,8 +424,8 @@ void area_map::getDists(size_t x, size_t y){
 
 void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y){
 
-  area_map::pixel * source_pix = getPix(start_x, start_y, map_data);
-  area_map::pixel * sink_pix = getPix(end_x, end_y, map_data);
+  source_pix = getPix(start_x, start_y, map_data);
+  sink_pix = getPix(end_x, end_y, map_data);
   area_map::pixel * cur_pix = source_pix;
 
   sink_pix->computeDist();
@@ -430,9 +435,9 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
   size_t min_dir;
   float min_dist;
   while(cur_pix != sink_pix){
-    min_dist = 1000;
+    min_dist = 100000000;
     for(size_t i = 0; i<=7; i++){
-      if(cur_pix->neighbors[i]!=NULL){
+      if(cur_pix->neighbors[i] != NULL){
 	if((cur_pix->neighbors[i])->min_dists[sink_pix] < min_dist){
 	  min_dir = i;
 	  min_dist = (cur_pix->neighbors[i])->min_dists[sink_pix];
@@ -440,12 +445,44 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
       }
     }
     cur_pix = cur_pix->neighbors[min_dir];
-    std::cout<<min_dir<<":"<<cur_pix->is_black<<", ";
+    std::cout<<min_dir<<":"<<min_dist<<" ";
   }
   std::cout<<std::endl;
   return;
 }
-    
+
+void area_map::printMap(){
+  //get pointer to the upper edge
+  pixel * cur_pix = map_data;
+  while(cur_pix->neighbors[0]!=NULL){
+    cur_pix = cur_pix->neighbors[0];
+  }
+  pixel * cur_row = cur_pix;
+
+  do{
+    do{
+      if(cur_pix==source_pix){
+	std::cout<<"O";
+      }
+      else if(cur_pix==sink_pix){
+	std::cout<<"X";
+      }
+      else if(cur_pix->is_black){
+	std::cout<<"@";
+      }
+      else{
+	std::cout<<":";
+      }
+      cur_pix = cur_pix->neighbors[2];
+      if(cur_pix!=NULL){
+	std::cout<<"..";
+      }
+    }while(cur_pix != NULL);
+    cur_row = cur_row->neighbors[4];
+    cur_pix = cur_row;
+    std::cout<<std::endl;
+  }while(cur_row!=NULL);
+}
 
 area_map::~area_map(){
     delete(map_data);
