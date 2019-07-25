@@ -474,9 +474,9 @@ void area_map::printMap(){
 	std::cout<<":";
       }
       cur_pix = cur_pix->neighbors[2];
-      if(cur_pix!=NULL){
+      /*      if(cur_pix!=NULL){
 	std::cout<<"..";
-      }
+	}*/
     }while(cur_pix != NULL);
     cur_row = cur_row->neighbors[4];
     cur_pix = cur_row;
