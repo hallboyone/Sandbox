@@ -66,7 +66,7 @@ class area_map{
   
   int char2Int(const char * c, int n);
   unsigned char char2Gray(std::ifstream & file, size_t bits_per_pix);
-  
+  unsigned char bit2Black(std::ifstream & file, size_t & bit_pos);
   //Looks in all neighbors within n spaces to see if any matches state
   //  bool inspectNeighbors(pixel_ * pix, size_t n, bool state);
 

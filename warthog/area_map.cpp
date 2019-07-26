@@ -41,7 +41,7 @@ area_map::pixel * area_map::getPix(const size_t x, const size_t y, pixel * start
 }
 
 /*
-bool area_map::inspectNeighbors(pixel_ * pix, size_t range, bool state){
+  bool area_map::inspectNeighbors(pixel_ * pix, size_t range, bool state){
 
   size_t row = pix->y_coord;
   size_t col = pix->x_coord;
@@ -55,107 +55,107 @@ bool area_map::inspectNeighbors(pixel_ * pix, size_t range, bool state){
 
   //Move down to the lower edge
   while(cur_pix->y_coord != y_coord_low){
-    cur_pix = cur_pix->neighbors[pixel_::dir::S];
+  cur_pix = cur_pix->neighbors[pixel_::dir::S];
   }
 
   //Move along the lower edge to the left
   while(cur_pix->x_coord != x_coord_low){
-    if (cur_pix->is_black ==state){
-      return true;
-    }
-    cur_pix = cur_pix->neighbors[pixel_::dir::W];
+  if (cur_pix->is_black ==state){
+  return true;
+  }
+  cur_pix = cur_pix->neighbors[pixel_::dir::W];
   }
 
   //Move up the left edge
   while(cur_pix->y_coord != y_coord_high){
-    if (cur_pix->is_black == state){
-      return true;
-    }
-    cur_pix = cur_pix->neighbors[pixel_::dir::N];
+  if (cur_pix->is_black == state){
+  return true;
+  }
+  cur_pix = cur_pix->neighbors[pixel_::dir::N];
   }
   
   //Move across the top
-    while(cur_pix->x_coord != x_coord_high){
-    if (cur_pix->is_black ==state){
-      return true;
-    }
-    cur_pix = cur_pix->neighbors[pixel_::dir::E];
+  while(cur_pix->x_coord != x_coord_high){
+  if (cur_pix->is_black ==state){
+  return true;
+  }
+  cur_pix = cur_pix->neighbors[pixel_::dir::E];
   }
 
   //Move down the right
-    while(cur_pix->y_coord != y_coord_low){
-    if (cur_pix->is_black == state){
-      return true;
-    }
-    cur_pix = cur_pix->neighbors[pixel_::dir::S];
+  while(cur_pix->y_coord != y_coord_low){
+  if (cur_pix->is_black == state){
+  return true;
+  }
+  cur_pix = cur_pix->neighbors[pixel_::dir::S];
   }
 
   //Move across the bottom till inline with pix
-    while(cur_pix->x_coord != col){
-    if (cur_pix->is_black ==state){
-      return true;
-    }
-    cur_pix = cur_pix->neighbors[pixel_::dir::W];
-    }
+  while(cur_pix->x_coord != col){
+  if (cur_pix->is_black ==state){
+  return true;
+  }
+  cur_pix = cur_pix->neighbors[pixel_::dir::W];
+  }
 
-    //Recursivly call
-    if (range > 1){
-      return area_map::inspectNeighbors(pix, range-1, state);
-    }
-    else{
-      return false;
-    }
-}
+  //Recursivly call
+  if (range > 1){
+  return area_map::inspectNeighbors(pix, range-1, state);
+  }
+  else{
+  return false;
+  }
+  }
 
 
-void area_map::trimNoise(unsigned int n){
+  void area_map::trimNoise(unsigned int n){
   pixel_ * cur_row = map_data;
   pixel_ * cur_pix = map_data;
 
   do {
-    cur_row = cur_row->neighbors[area_map::pixel_::dir::N];
+  cur_row = cur_row->neighbors[area_map::pixel_::dir::N];
 
-    do {
+  do {
 
-      if(inspectNeighbors(cur_pix, n, true)){
+  if(inspectNeighbors(cur_pix, n, true)){
 	
-      }
-      cur_pix = cur_pix->neighbors[area_map::pixel_::dir::E];
+  }
+  cur_pix = cur_pix->neighbors[area_map::pixel_::dir::E];
 
-    }while (cur_pix->neighbors[area_map::pixel_::dir::E] != NULL);
+  }while (cur_pix->neighbors[area_map::pixel_::dir::E] != NULL);
     
-    cur_pix = cur_row;
+  cur_pix = cur_row;
   }while (cur_row->neighbors[area_map::pixel_::dir::N] != NULL);
 
-}
+  }
 
       
-void area_map::addBuffer(size_t n){
+  void area_map::addBuffer(size_t n){
   size_t added = 0;
   std::vector<std::vector<pixel>* > new_bit_map;
   new_bit_map.resize(pixel_height);
   for(size_t row = 0; row<pixel_height; row++){
-    new_bit_map[row] = new std::vector<pixel>;
-    (*new_bit_map[row]).resize(pixel_width);
-    for(size_t col = 0; col < pixel_width; col++){
-      (*new_bit_map[row])[col] = (*bit_map[row])[col]; 
-      if (!(*bit_map[row])[col].is_black && inspectNeighbors(row, col, n, true)){
-	(*new_bit_map[row])[col].is_black = true;
-	added++;
-      }
-    }
+  new_bit_map[row] = new std::vector<pixel>;
+  (*new_bit_map[row]).resize(pixel_width);
+  for(size_t col = 0; col < pixel_width; col++){
+  (*new_bit_map[row])[col] = (*bit_map[row])[col]; 
+  if (!(*bit_map[row])[col].is_black && inspectNeighbors(row, col, n, true)){
+  (*new_bit_map[row])[col].is_black = true;
+  added++;
+  }
+  }
   }
   deleteBitMap();
   bit_map = new_bit_map;
   std::cout<<"Added "<<added<<" black pixels\n";
-}
+  }
 
 
- void area_map::deleteBitMap(){
-   for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
-      delete(*it);
-    }
- }
+  void area_map::deleteBitMap(){
+  for(std::vector<std::vector<pixel> * >::iterator it = bit_map.begin(); it != bit_map.end(); ++it){
+  delete(*it);
+  }
+  }
 */
 
 void area_map::read_bmp(std::ifstream & bmp){
@@ -170,7 +170,10 @@ void area_map::read_bmp(std::ifstream & bmp){
 
   int row_size; //Number of bytes per row
   int padding_size;
-      
+
+  int header_size;
+  int compression_method; //must be 0 (no compression)
+  
   //Read the file type (bytes 0-1)
   bmp.read(file_type, 2);
   bytes_read += 2;
@@ -195,9 +198,10 @@ void area_map::read_bmp(std::ifstream & bmp){
   bytes_read +=4;
   bytes_to_skip = char2Int(char_buf, 4);
   
-  //Skip the header size info
-  bmp.ignore(4);
+  //Detailed Header Size
+  bmp.read(char_buf, 4);
   bytes_read += 4;
+  header_size = char2Int(char_buf, 4);
   
   //Read the image's diminsions (bytes 18-25)
   bmp.read(char_buf, 4);
@@ -212,11 +216,21 @@ void area_map::read_bmp(std::ifstream & bmp){
 
   //Read the number of bits per pixel (bytes 28-29)
   bmp.read(char_buf, 2);
+  bytes_read += 2;
   bits_per_pixel = char2Int(char_buf, 2);
       
-  //Skip the compression method and image size
-  bmp.ignore(8);
-  bytes_read += 8;
+  //Skip the compression method
+  bmp.read(char_buf, 4);
+  bytes_read += 4;
+  compression_method = char2Int(char_buf, 4);
+  if (compression_method != 0){
+    std::cerr<<"File cannot be compressed\n";
+    throw std::exception();
+  }
+
+  //Skip the raw bmp size
+  bmp.ignore(4);
+  bytes_read += 4;
   
   //Read the image resolution in pixels/meter (bytes 38-45)
   bmp.read(char_buf, 4);
@@ -233,8 +247,10 @@ void area_map::read_bmp(std::ifstream & bmp){
   std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
   std::cout<<"Diminsion: "<<width_raw<<"w x "<<height_raw<<"h\n";  
   std::cout<<"Bits per Pixel: "<<bits_per_pixel<<std::endl;
+  std::cout<<"Header size: "<<header_size<<std::endl;
+  std::cout<<"Uncompressed: "<<compression_method<<std::endl;
   std::cout<<"Resolution: "<<res_raw<<" pixels/meter\n";
-
+  
   row_size = 4*(bits_per_pixel*width_raw+31)/32;
   padding_size = row_size - width_raw*bits_per_pixel/8;
 
@@ -245,9 +261,16 @@ void area_map::read_bmp(std::ifstream & bmp){
 
   size_t black_counter = 0;
   unsigned char color;
-  
+
+  size_t bit_pos = 0;
+    
   for (size_t i = 0; i<height_raw; i++){//Iterate through all the rows
-    color = char2Gray(bmp, bits_per_pixel);
+    if(bits_per_pixel <8){
+      color = bit2Black(bmp, bit_pos);
+    }
+    else{
+      color = char2Gray(bmp, bits_per_pixel);
+    }
     //Create the first pixel in a row
     lower_row = cur_row;
     cur_row = new pixel(color);
@@ -267,7 +290,12 @@ void area_map::read_bmp(std::ifstream & bmp){
     new_pix->coord.second = i;
     //    std::cout<<0<<","<<i<<"="<<(unsigned int)color<<std::endl;
     for(size_t j=1; j < width_raw; j++){//Iterate through all other pixels in a row
-      color = char2Gray(bmp, bits_per_pixel);
+      if(bits_per_pixel <8){
+	color = bit2Black(bmp, bit_pos);
+      }
+      else{
+	color = char2Gray(bmp, bits_per_pixel);
+      }
       
       //Create new pixel
       prev_pix = new_pix;
@@ -295,6 +323,7 @@ void area_map::read_bmp(std::ifstream & bmp){
 	lower_row->neighbors_raw[0] = new_pix;
       }
     }
+    bit_pos = 0;
     bmp.ignore(padding_size);
   }
 
@@ -333,15 +362,32 @@ unsigned char area_map::char2Gray(std::ifstream & file, size_t bits_per_pix){
   
   return gray; 
 }
+
+unsigned char area_map::bit2Black(std::ifstream & file, size_t & bit_pos){
+  unsigned char byte_val;
+  if (bit_pos == 8){//If we are at the end of a byte
+    bit_pos = 0;
+    file.ignore();
+  }
+
+  byte_val = file.peek();
+
+  byte_val = byte_val<<bit_pos;
+  byte_val = byte_val>>7;
+
+  bit_pos++;
+
+  return byte_val * 255;
+}
 /*
-void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little ){
+  void area_map::writeHex(std::ofstream & file, size_t num, size_t byte_count, bool little ){
   int32_t n = num;
   char data[byte_count];
   for (size_t i=0; i<byte_count; i++){
-    data[i] = static_cast<char>((n >> (i*8)) & 0xFF);
+  data[i] = static_cast<char>((n >> (i*8)) & 0xFF);
   }
   file.write(data, byte_count);
-}
+  }
 */
       
 
@@ -390,41 +436,41 @@ area_map::pixel * area_map::operator()(size_t x, size_t y){
 /*
 //Make a new set of cleaned data
 void area_map::clean(unsigned int trim, unsigned int add, unsigned int res){
-  //Check if we inherit the resolution
-  if (res==0){
-    res = vres_raw;
-  }
+//Check if we inherit the resolution
+if (res==0){
+res = vres_raw;
+}
   
-  //If there is already cleaned data, delete it
-  if (map_data != raw_data){
-    delete(map_data);
-  }
+//If there is already cleaned data, delete it
+if (map_data != raw_data){
+delete(map_data);
+}
 
-  map_data = new area_map::pixel_;
-  * map_data = raw_data;
+map_data = new area_map::pixel_;
+* map_data = raw_data;
 
-  area_map::trimNoise(trim);
-  area_map::addBuffer(add);
-  area_map::setRes(res);
+area_map::trimNoise(trim);
+area_map::addBuffer(add);
+area_map::setRes(res);
 }
 
   
 
 void area_map::writeBMP(char * filename, int type){
-    std::ofstream new_file (filename, std::ofstream::out);
-    new_file << "BM";
-    //2:   File Size       4 bytes
-    writeHex(new_file, 1000, 4);
-    //6:   Not used        4
-    writeHex(new_file, 0, 4);
-    //10:  bit_map offset  4
-    writeHex(new_file, 138, 4);
-    //14:  size of DIB     4
-    //18:  bmp width       4
-    //22:  bmp hieght      4
-    //
-    new_file.close();
-  }
+std::ofstream new_file (filename, std::ofstream::out);
+new_file << "BM";
+//2:   File Size       4 bytes
+writeHex(new_file, 1000, 4);
+//6:   Not used        4
+writeHex(new_file, 0, 4);
+//10:  bit_map offset  4
+writeHex(new_file, 138, 4);
+//14:  size of DIB     4
+//18:  bmp width       4
+//22:  bmp hieght      4
+//
+new_file.close();
+}
 */
 
 void area_map::getDists(size_t x, size_t y){
@@ -485,8 +531,8 @@ void area_map::printMap(){
       }
       cur_pix = cur_pix->neighbors[2];
       /*      if(cur_pix!=NULL){
-	std::cout<<"..";
-	}*/
+	      std::cout<<"..";
+	      }*/
     }while(cur_pix != NULL);
     cur_row = cur_row->neighbors[4];
     cur_pix = cur_row;
@@ -495,5 +541,5 @@ void area_map::printMap(){
 }
 
 area_map::~area_map(){
-    delete(map_data);
+  delete(map_data);
 }
