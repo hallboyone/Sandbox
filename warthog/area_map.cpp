@@ -241,8 +241,19 @@ void area_map::read_bmp(std::ifstream & bmp){
   }
   bytes_read+=8;
 
-  //Skip to the pixel data
-  bmp.ignore(bytes_to_skip - bytes_read);
+  //If binary, see if 0 is white or black
+  bool black_is_0 = true;
+  
+  if (bits_per_pixel == 1){
+    bmp.ignore(bytes_to_skip - bytes_read - 1);
+    if (char2Gray(bmp, 8)==0){//Check if the last bit in the color map is 0 (implies that 1 => black);
+      black_is_0 = false;
+    }
+  }
+  else{	     
+    //Skip to the pixel data
+    bmp.ignore(bytes_to_skip - bytes_read);
+  }
 
   std::cout<<"File size: "<<file_size<<" bytes"<<std::endl;
   std::cout<<"Diminsion: "<<width_raw<<"w x "<<height_raw<<"h\n";  
@@ -272,6 +283,10 @@ void area_map::read_bmp(std::ifstream & bmp){
     else{
       color = char2Gray(bmp, bits_per_pixel);
     }
+    if(!black_is_0){
+      color = 255-color;
+    }
+    
     //Create the first pixel in a row
     lower_row = cur_row;
     cur_row = new pixel(color);
@@ -297,7 +312,9 @@ void area_map::read_bmp(std::ifstream & bmp){
       else{
 	color = char2Gray(bmp, bits_per_pixel);
       }
-      
+      if(!black_is_0){
+	color = 255-color;
+      }   
       //Create new pixel
       prev_pix = new_pix;
       new_pix = new pixel(color);
@@ -399,6 +416,9 @@ area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(
   res = res_raw;  
   height = height_raw;
   width = width_raw;
+
+  source_pix=NULL;
+  sink_pix = NULL;
 }
 
 area_map::area_map(char * filename, size_t res_, bool gray_scale_): grayscale(gray_scale_){
@@ -415,6 +435,10 @@ area_map::area_map(char * filename, size_t res_, bool gray_scale_): grayscale(gr
   res = res_raw;
   height = height_raw;
   width = width_raw;
+
+  
+  source_pix=NULL;
+  sink_pix = NULL;
 
   //map_data->is_black = true;
   //pixel * test = getPix(30, 20, map_data);
