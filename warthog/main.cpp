@@ -1,14 +1,14 @@
 #include "area_map.h"
 
 int main(int argc, char** argv){
-  /*  size_t x = 0;
-  size_t y = 1;
+  /*  size_t x = 1;
+  size_t y = 2;
   size_t x0 = 0;
   size_t y0 = 0;
   //char filename[] = "Untitled 1.resized.bmp";
-  */ area_map map(argv[1], 4, false);
+  */area_map map(argv[1], 4, false);
   //map.getDists(x, y);
-  //  map.printDir(x0, y0, x, y);
+  //map.printDir(x0, y0, x, y);
   map.printMap();
 
   //

@@ -101,6 +101,7 @@ void area_map::pixel::computeDist(std::queue <area_map::pixel *> & pix_q, area_m
   return;
 }
 
+
 area_map::pixel::~pixel(){
   if (neighbors_raw[0] != NULL && coord.first==0){//If we are in the first col
     delete neighbors_raw[0];

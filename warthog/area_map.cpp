@@ -251,15 +251,16 @@ void area_map::read_bmp(std::ifstream & bmp){
   std::cout<<"Uncompressed: "<<compression_method<<std::endl;
   std::cout<<"Resolution: "<<res_raw<<" pixels/meter\n";
   
-  row_size = 4*(bits_per_pixel*width_raw+31)/32;
+  row_size = 4*((bits_per_pixel*width_raw+31)/32);
   padding_size = row_size - width_raw*bits_per_pixel/8;
 
+  std::cout<<"Actual rows are "<<row_size<<" bytes long with "<<padding_size<<" bytes of padding\n";
+  
   pixel * cur_row = NULL;
   pixel * new_pix = NULL;
   pixel * prev_pix = NULL;
   pixel * lower_row;
 
-  size_t black_counter = 0;
   unsigned char color;
 
   size_t bit_pos = 0;
@@ -300,17 +301,10 @@ void area_map::read_bmp(std::ifstream & bmp){
       //Create new pixel
       prev_pix = new_pix;
       new_pix = new pixel(color);
-
-      //Set the pixel's value
-      //new_pix->color = char2Gray(bmp);
-      if (new_pix->is_black){
-	
-	black_counter++;
-      }
-      
+   
       new_pix->coord.first = j;
       new_pix->coord.second = i;
-      //std::cout<<j<<","<<i<<"="<<(unsigned int)color<<std::endl;
+
       //Set the pointers
       //W-E
       (new_pix->neighbors_raw)[6] = prev_pix;
@@ -326,8 +320,6 @@ void area_map::read_bmp(std::ifstream & bmp){
     bit_pos = 0;
     bmp.ignore(padding_size);
   }
-
-  std::cout<<black_counter<<std::endl;
   map_data->connectDiags();
   return;
 }
@@ -530,9 +522,9 @@ void area_map::printMap(){
 	std::cout<<":";
       }
       cur_pix = cur_pix->neighbors[2];
-      /*      if(cur_pix!=NULL){
-	      std::cout<<"..";
-	      }*/
+      if(cur_pix!=NULL){
+	std::cout<<"  ";
+      }
     }while(cur_pix != NULL);
     cur_row = cur_row->neighbors[4];
     cur_pix = cur_row;

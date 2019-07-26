@@ -34,6 +34,7 @@ class area_map{
     void restore(){
       neighbors = neighbors_raw;
     }
+    void invertColor();
     
     ~pixel();
 
@@ -116,6 +117,8 @@ class area_map{
 
   void printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y);
   void printMap();
+
+  void invertColors();
   
   ~area_map();
 };
