@@ -34,36 +34,42 @@ class area_map{
     
     uint32_t color_raw;
     uint32_t color;
-    
-    //Variable to map the direction to the distance
-    static std::map<size_t, float> one_step;
-     
+      
     pixel();
     pixel(unsigned char color_);
 
     void computeDist();
     void connectDiags();
+
     void restore(){
       neighbors = neighbors_raw;
     }
-    void invertColor();
     
+    //Function adds/removes set pixels to clean noise
+    void addBuffer(uint8_t n, bool state, bool use_raw);
+
+    //Saves the current values of is_black to is_black_temp
+    void saveTemp();
+    //Sets the values of is_black to be is_black_temp
+    void setTemp();
+ 
     ~pixel();
 
-    //private:
+  private:
     void computeDist(std::queue<pixel *> & pix_q, pixel * target);
-    
-    //Looks in all neighbors within n spaces to see if any matches state
+    //Variable to map the direction to the distance
+    static std::map<size_t, float> one_step;
+
+    //Looks at neighbors up to n away to check if any match the state
+    //If use_raw = true, look at the is_black_raw and change is_black
+    //Else look at is_black and change is_black_temp
     bool inspectNeighbors(uint8_t n, bool state, bool use_raw);
-    void addBuffer(uint8_t n, bool state, bool use_raw);
-    void saveTemp();
-    void setTemp();
-  };
+ };
 
   
   pixel * map_data; //Points at the SW corner of the bit map
-  pixel * source_pix;
-  pixel * sink_pix;
+  pixel * source_pix;//The latest pixel that we started from
+  pixel * sink_pix; //The lastes pixel that we went to 
   
   typedef struct file_header_{
     char file_type[2];//Offset:0, Size 2
@@ -88,15 +94,13 @@ class area_map{
   } _dib_header;
 
   _dib_header dib_header;
-  
-  //The resolution of the image. 
-  unsigned int res_raw;
-  unsigned int res;
 
-  unsigned int width_raw;
-  unsigned int height_raw;
-  unsigned int width;
-  unsigned int height;
+  //User set resolution values in pix/m. Defautls to values in dib_header
+  uint32_t resolution;
+
+  //Calculated dimensions if the resolution is adjusted
+  uint32_t width;
+  uint32_t height;
 
   bool grayscale; //False means the data is binary
   
@@ -106,8 +110,6 @@ class area_map{
 
   uint32_t char2Gray(std::ifstream & file, size_t bits_per_pix);
   uint8_t bit2Black(std::ifstream & file, size_t & bit_pos);
-
-  //void deleteBitMap();
   
   pixel * getPix(size_t x, size_t y, pixel * start);
   
@@ -116,34 +118,18 @@ class area_map{
   
   area_map(char * filename, bool gray_scale_ = false);
 
-  area_map(char * filename, size_t res, bool gray_scale = false);
-
   pixel * operator()(size_t x, size_t y);
   
   void clean(uint8_t trim, uint8_t add);  
   
-  void rawRes(unsigned int res_){
-    res_raw = res_;
-  }
-
-    
-  //Function first trims noise and then adds buffer
-  /*void cleanBMP(size_t noise_level, size_t buffer_level){
-    trimNoise(noise_level);
-    addBuffer(buffer_level);
-    return;
-    }*/
-
-  //Creates a bmp with the current bit_map
-  //void writeBMP(char * filename, int type = 0);
-
+  void setRawRes(uint32_t res);
+  void setRes(uint32_t res);
+  
   void getDists();
   void getDists(size_t x, size_t y);
 
   void printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y);
   void printMap();
-
-  void invertColors();
   
   ~area_map();
 };

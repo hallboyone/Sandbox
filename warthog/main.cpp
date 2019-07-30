@@ -5,8 +5,11 @@ int main(int argc, char** argv){
   size_t y;
   size_t x0;
   size_t y0;
-  area_map map(argv[1], 4, false);
+  area_map map(argv[1], false);
   map.clean(1, 1);
+  map.setRawRes(4);
+  map.setRes(3);
+  
   while(true){
     std::cout<<"Starting x (1000 to end): ";
     std::cin>>x0;

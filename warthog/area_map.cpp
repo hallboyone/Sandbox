@@ -115,6 +115,11 @@ void area_map::read_bmp(std::ifstream & bmp){
   dib_header.v_resolution = char2Int(char_buf, 4);
   bytes_read+=8;
 
+  if (dib_header.v_resolution != dib_header.h_resolution){
+    std::cerr<<"Resolutions do not match. Using the value of h_resolution\n";
+    dib_header.v_resolution = dib_header.h_resolution;
+  }
+  
   //If binary, see if 0 is white or black
   if (dib_header.color_depth == 1){
     bmp.ignore(14+dib_header.header_size - bytes_read);
@@ -274,7 +279,7 @@ uint8_t area_map::bit2Black(std::ifstream & file, size_t & bit_pos){
 
 area_map::area_map(){}
 
-area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(gray_scale_){
+area_map::area_map(char * filename, bool gray_scale_):source_pix(NULL), sink_pix(NULL), grayscale(gray_scale_){
 
   //Open the bmp file for reading
   std::ifstream bmp(filename, std::ifstream::binary);
@@ -285,32 +290,10 @@ area_map::area_map(char * filename, bool gray_scale_):map_data(NULL), grayscale(
   read_bmp(bmp);
   bmp.close();
   
-  res = res_raw;  
-  height = height_raw;
-  width = width_raw;
-
-  source_pix=NULL;
-  sink_pix = NULL;
-}
-
-area_map::area_map(char * filename, size_t res_, bool gray_scale_): grayscale(gray_scale_){
-  //Open the bmp file for reading
-  std::ifstream bmp(filename, std::ifstream::binary);
-  if (!bmp.is_open()){
-    std::cout <<"Could not open file\n";
-    throw std::exception();
-  }
-  read_bmp(bmp);
-  bmp.close();
+  resolution = dib_header.h_resolution;
   
-  res_raw = res_;
-  res = res_raw;
-  height = height_raw;
-  width = width_raw;
-
-  
-  source_pix=NULL;
-  sink_pix = NULL;
+  height = dib_header.pixel_height;
+  width = dib_header.pixel_width;
 }
 
 area_map::pixel * area_map::operator()(size_t x, size_t y){
@@ -325,12 +308,11 @@ void area_map::getDists(size_t x, size_t y){
 void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end_y){
   source_pix = getPix(start_x, start_y, map_data);
   sink_pix = getPix(end_x, end_y, map_data);
-  area_map::pixel * cur_pix = source_pix;
+  if (source_pix == NULL || sink_pix == NULL){
+    return;
+  }
 
-  sink_pix->computeDist();
-
-  std::cout<<"Moving "<<source_pix->min_dists[sink_pix]<<" units\n";
-
+  pixel * cur_pix = source_pix;
   size_t min_dir;
   float min_dist;
   size_t cur_dir = -1;
@@ -338,6 +320,9 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
   std::set<pixel *> prev_pixels;
 
   printMap();
+  sink_pix->computeDist();
+  
+  std::cout<<"Moving "<<source_pix->min_dists[sink_pix]<<" units\n";
   while(cur_pix != sink_pix){
     min_dist = 10000000000;
     for(int i = N; i<= NW; i++){
@@ -470,7 +455,6 @@ void area_map::printMap(){
   std::cout<<std::endl;
 }
 
-
 void area_map::clean(uint8_t trim, uint8_t add){
   map_data->addBuffer(trim, 0, true);
   map_data->setTemp();
@@ -479,7 +463,19 @@ void area_map::clean(uint8_t trim, uint8_t add){
   return;
 }
 
+void area_map::setRawRes(uint32_t res){
+  dib_header.h_resolution = res;
+  dib_header.v_resolution = res;
+  std::cout<<"Setting Resolution to "<<res<<"pix/m\n";
+}
+
+void area_map::setRes(uint32_t res){
+  if (res < dib_header.h_resolution){
+    std::cerr<<"Cannot create a map with a higher resolution than the original\n";
+  }
+  return;
+}
+
 area_map::~area_map(){
   delete(map_data);
 }
-
