@@ -6,7 +6,7 @@ int main(int argc, char** argv){
   size_t x0;
   size_t y0;
   area_map map(argv[1], false);
-  map.clean(1, 1);
+  map.clean(1, 1, 5);
   map.setRawRes(4);
   map.setRes(3);
   
