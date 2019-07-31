@@ -313,8 +313,8 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
   size_t cur_dir = -1;
   size_t cur_dist = 0;
   std::set<pixel *> prev_pixels;
-
-  printMap();
+  waypoints = std::set<pixel *>();
+  
   sink_pix->computeDist();
 
   std::cout<<"Moving "<<source_pix->min_dists[sink_pix]/(float)resolution<<" meters ("<<source_pix->min_dists[sink_pix]<<" units)\n";
@@ -331,9 +331,9 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     }
 
     cur_pix = cur_pix->neighbors[min_dir];
-    prev_pixels.insert(cur_pix);
+    waypoints.insert(cur_pix);
     
-    if(prev_pixels.count(cur_pix)>1){
+    if(waypoints.count(cur_pix)>1){
       std::cerr<<"Circular path. Please try with differnet inputs\n";
       return;
     }
@@ -378,6 +378,8 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     }
 
     else{
+     
+      
       switch (cur_dir){
       case 0:
 	std::cout<<"N:"<<cur_dist<<"->";
@@ -408,6 +410,7 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     }    
     cur_dir = min_dir;
   }
+  printMap();  
   return;
 }
 
@@ -430,13 +433,16 @@ void area_map::printMap(){
       else if(cur_pix->is_black){
 	std::cout<<"@";
       }
+      else if(waypoints.count(cur_pix)==1){
+	std::cout<<"*";
+      }
       else{
 	std::cout<<" ";
       }
       cur_pix = cur_pix->neighbors[2];
-      if(cur_pix!=NULL){
-	std::cout<<"  ";
-      }
+      /*if(cur_pix!=NULL){
+	std::cout<<" ";
+	}*/
     }while(cur_pix != NULL);
     cur_row = cur_row->neighbors[4];
     cur_pix = cur_row;

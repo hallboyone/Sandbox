@@ -22,7 +22,7 @@ class area_map{
 
     //Pointers to the original pixels.
     std::vector<pixel *> neighbors_raw;
-    
+
     //Holds the min distance for each pixel coord pair from the pixel
     std::map<pixel *, float> min_dists;
 
@@ -70,6 +70,7 @@ class area_map{
   pixel * map_data; //Points at the SW corner of the bit map
   pixel * source_pix;//The latest pixel that we started from
   pixel * sink_pix; //The lastes pixel that we went to 
+  std::set<pixel *> waypoints;
   
   typedef struct file_header_{
     char file_type[2];//Offset:0, Size 2
