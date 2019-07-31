@@ -11,7 +11,9 @@ area_map::pixel::pixel(){
 
   color = 255;
   is_black = false;
-  //std::cout<<min_dists.size()<<std::endl;
+
+  color_raw = color;
+  is_black_raw = is_black;
 }
 
 area_map::pixel::pixel(unsigned char color_){
@@ -28,7 +30,8 @@ area_map::pixel::pixel(unsigned char color_){
     is_black = false;
   }
 
-  //std::cout<<min_dists.size()<<std::endl;
+  color_raw = color;
+  is_black_raw = is_black;
 }
   
 
@@ -99,6 +102,150 @@ void area_map::pixel::computeDist(std::queue <area_map::pixel *> & pix_q, area_m
     }
   }
   return;
+}
+
+
+bool area_map::pixel::inspectNeighbors(uint8_t n, bool state, bool use_raw){
+  pixel * pix = this;
+  if(use_raw){
+    for(size_t layer = 1; layer <=n; layer++){
+      if (pix->neighbors[N] != NULL){
+	pix = pix->neighbors[N];;
+      }
+
+      for (size_t i = 0; i<layer; i++){
+	if (pix->is_black_raw == state){
+	  return true;
+	}
+	if(pix->neighbors[E]!=NULL){
+	  pix = pix->neighbors[E];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black_raw == state){
+	  return true;
+	}
+	if(pix->neighbors[S]!=NULL){
+	  pix = pix->neighbors[S];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black_raw == state){
+	  return true;
+	}
+	if(pix->neighbors[W]!=NULL){
+	  pix = pix->neighbors[W];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black_raw == state){
+	  return true;
+	}
+	if(pix->neighbors[N]!=NULL){
+	  pix = pix->neighbors[N];
+	}
+      }
+      for (size_t i = 0; i<layer; i++){
+	if (pix->is_black_raw == state){
+	  return true;
+	}
+	if(pix->neighbors[E]!=NULL){
+	  pix = pix->neighbors[E];
+	}
+      }
+    }
+  }
+  
+  else{
+    for(size_t layer = 1; layer <=n; layer++){
+      if (pix->neighbors[N] != NULL){
+	pix = pix->neighbors[N];;
+      }
+
+      for (size_t i = 0; i<layer; i++){
+	if (pix->is_black == state){
+	  return true;
+	}
+	if(pix->neighbors[E]!=NULL){
+	  pix = pix->neighbors[E];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black == state){
+	  return true;
+	}
+	if(pix->neighbors[S]!=NULL){
+	  pix = pix->neighbors[S];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black == state){
+	  return true;
+	}
+	if(pix->neighbors[W]!=NULL){
+	  pix = pix->neighbors[W];
+	}
+      }
+      for (size_t i = 0; i<2*layer; i++){
+	if (pix->is_black == state){
+	  return true;
+	}
+	if(pix->neighbors[N]!=NULL){
+	  pix = pix->neighbors[N];
+	}
+      }
+      for (size_t i = 0; i<layer; i++){
+	if (pix->is_black == state){
+	  return true;
+	}
+	if(pix->neighbors[E]!=NULL){
+	  pix = pix->neighbors[E];
+	}
+      }
+    }
+  }  
+  return false;
+}
+
+void area_map::pixel::addBuffer(uint8_t n, bool state, bool use_raw){
+  if (neighbors[0] != NULL && coord.first==0){//If we are in the first col
+    neighbors[0]->addBuffer(n, state, use_raw);
+  }
+  if (neighbors[2]!=NULL){
+    neighbors[2]->addBuffer(n, state, use_raw);
+  }
+
+  if(use_raw){
+    if (is_black_raw == !state && inspectNeighbors(n, state, use_raw)){
+      is_black = state;
+    }
+  }
+  else{
+    if (is_black == !state && inspectNeighbors(n, state, use_raw)){
+      is_black_temp = state;
+    }
+  }
+}
+
+void area_map::pixel::saveTemp(){
+  if (neighbors_raw[0] != NULL && coord.first==0){//If we are in the first col
+    neighbors[0]->saveTemp();
+  }
+  if (neighbors_raw[2]!=NULL){
+    neighbors[2]->saveTemp();
+  }
+  is_black = is_black_temp;
+}
+
+
+void area_map::pixel::setTemp(){
+  if (neighbors_raw[0] != NULL && coord.first==0){//If we are in the first col
+    neighbors[0]->setTemp();
+  }
+  if (neighbors_raw[2]!=NULL){
+    neighbors[2]->setTemp();
+  }
+  is_black_temp = is_black;
 }
 
 area_map::pixel::~pixel(){

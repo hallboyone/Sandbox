@@ -2,19 +2,27 @@
 
 int main(int argc, char** argv){
   size_t x = 0;
-  size_t y = 1;
-  size_t x0 = 0;
-  size_t y0 = 0;
-  //char filename[] = "Untitled 1.resized.bmp";
-  area_map map(argv[1], 4, false);
-  //map.getDists(x, y);
-  map.printDir(x0, y0, x, y);
-  map.printMap();
-
-  //
-  //1) Deletes the current map_data grid (unless map_data==raw_data)
-  //2) Creates a new grid from the raw data that trims noise and adds a buffer to the black objects
-  //  map.clean(3, 5);
+  size_t y;
+  size_t x0;
+  size_t y0;
+  area_map map(argv[1], false);
+  map.clean(1, 1, 5);
+  map.setRawRes(4);
+  map.setRes(3);
   
-  //map.setRes(1); //Simplifies the map_data to have just 1 pixel/meter. This res must be less than the constructor res
+  while(true){
+    std::cout<<"Starting x (1000 to end): ";
+    std::cin>>x0;
+    if (x0==1000){
+      return 1;
+    }
+    std::cout<<"Starting y: ";
+    std::cin>>y0;
+    std::cout<<"Ending x: ";
+    std::cin>>x;
+    std::cout<<"Ending y: ";
+    std::cin>>y;
+    std::cout<<"\n";
+    map.printDir(x0, y0, x, y);
+  }
 }
