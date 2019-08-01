@@ -2,37 +2,41 @@
 
 area_map::pixel * area_map::getPix(const size_t x, const size_t y, pixel * start){
   pixel * pix = start;
-  size_t i = 0;
-
-  //Move NE as far as possible
-  while(i < x && i < y){
-    pix = pix->neighbors[NE];
-    if (pix==NULL){
-      std::cerr<<"Index out of range\n";
-      return NULL;
-    }
-    i++;
-  }
   
-  if(x < y){//Move N to the pixel
+  if(x<y){
+    for (size_t i = 0; i < x; i++){
+      if(pix==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pix = pix->neighbors[1];
+    }
     for (size_t i = x; i < y; i++){
-      pix = pix->neighbors[N];
       if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
+      pix = pix->neighbors[0];
     }
   }
   
-  else{//Mov E to the pixel
-    for (size_t i = y; i<x; i++){
-      pix = pix->neighbors[E];
+  else{
+    for (size_t i = 0; i < y; i++){
       if(pix==NULL){
 	std::cerr<<"Index out of range\n";
 	return NULL;
       }
+      pix = pix->neighbors[1];
+    }
+    for (size_t i = y; i<x; i++){
+      if(pix==NULL){
+	std::cerr<<"Index out of range\n";
+	return NULL;
+      }
+      pix = pix->neighbors[2];
     }
   }
+  
   return pix;
 }
 
@@ -111,11 +115,6 @@ void area_map::read_bmp(std::ifstream & bmp){
   dib_header.v_resolution = char2Int(char_buf, 4);
   bytes_read+=8;
 
-  if (dib_header.v_resolution != dib_header.h_resolution){
-    std::cerr<<"Resolutions do not match. Using the value of h_resolution\n";
-    dib_header.v_resolution = dib_header.h_resolution;
-  }
-  
   //If binary, see if 0 is white or black
   if (dib_header.color_depth == 1){
     bmp.ignore(14+dib_header.header_size - bytes_read);
@@ -217,7 +216,6 @@ void area_map::read_bmp(std::ifstream & bmp){
     bmp.ignore(padding_size);
   }
   map_data->connectDiags();
-  map_data->computeAllDists();
   return;
 }
 
@@ -277,6 +275,7 @@ uint8_t area_map::bit2Black(std::ifstream & file, size_t & bit_pos){
 area_map::area_map(){}
 
 area_map::area_map(char * filename, bool gray_scale_):source_pix(NULL), sink_pix(NULL), grayscale(gray_scale_){
+
   //Open the bmp file for reading
   std::ifstream bmp(filename, std::ifstream::binary);
   if (!bmp.is_open()){
@@ -286,7 +285,27 @@ area_map::area_map(char * filename, bool gray_scale_):source_pix(NULL), sink_pix
   read_bmp(bmp);
   bmp.close();
   
-  resolution = dib_header.h_resolution;
+  h_res = dib_header.h_resolution;
+  v_res = dib_header.v_resolution;
+  
+  height = dib_header.pixel_height;
+  width = dib_header.pixel_width;
+}
+
+area_map::area_map(char * filename, uint32_t h_res_, uint32_t v_res_, bool gray_scale_): grayscale(gray_scale_): source_pix(NULL). sink_pix(NULL), grayscale(grayscale_){
+  //Open the bmp file for reading
+  std::ifstream bmp(filename, std::ifstream::binary);
+  if (!bmp.is_open()){
+    std::cout <<"Could not open file\n";
+    throw std::exception();
+  }
+  read_bmp(bmp);
+  bmp.close();
+
+  dib_header.h_resolution = h_res_;
+  h_res_;
+  
+  res = dib_header.h_resolution;
   
   height = dib_header.pixel_height;
   width = dib_header.pixel_width;
@@ -314,14 +333,13 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
   size_t cur_dir = -1;
   size_t cur_dist = 0;
   std::set<pixel *> prev_pixels;
-  waypoints = std::set<pixel *>();
-  
-  sink_pix->computeDist();
 
-  std::cout<<"Moving "<<source_pix->min_dists[sink_pix]/(float)resolution<<" meters ("<<source_pix->min_dists[sink_pix]<<" units)\n";
+  printMap();
+  sink_pix->computeDist();
   
+  std::cout<<"Moving "<<source_pix->min_dists[sink_pix]<<" units\n";
   while(cur_pix != sink_pix){
-    min_dist = INT64_MAX;
+    min_dist = 10000000000;
     for(int i = N; i<= NW; i++){
       if(cur_pix->neighbors[i] != NULL){
 	if((cur_pix->neighbors[i])->min_dists[sink_pix] < min_dist){
@@ -332,13 +350,11 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     }
 
     cur_pix = cur_pix->neighbors[min_dir];
-    waypoints.insert(cur_pix);
-    
-    if(waypoints.count(cur_pix)>1){
+    prev_pixels.insert(cur_pix);
+    if(prev_pixels.count(cur_pix)>1){
       std::cerr<<"Circular path. Please try with differnet inputs\n";
       return;
     }
-    
     if(cur_pix->is_black){
       std::cerr<<"No valid path!\n";
       return;
@@ -346,7 +362,7 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     
     if(cur_pix == sink_pix){
       cur_dist++;
-      switch (min_dir){
+      switch (cur_dir){
       case 0:
 	std::cout<<"N:"<<cur_dist<<std::endl;
 	break;
@@ -379,8 +395,6 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
     }
 
     else{
-     
-      
       switch (cur_dir){
       case 0:
 	std::cout<<"N:"<<cur_dist<<"->";
@@ -408,10 +422,10 @@ void area_map::printDir(size_t start_x, size_t start_y, size_t end_x, size_t end
 	break;
       }
       cur_dist = 1;
-    }    
+    }
+    
     cur_dir = min_dir;
   }
-  printMap();  
   return;
 }
 
@@ -434,16 +448,13 @@ void area_map::printMap(){
       else if(cur_pix->is_black){
 	std::cout<<"@";
       }
-      else if(waypoints.count(cur_pix)==1){
-	std::cout<<"*";
-      }
       else{
 	std::cout<<" ";
       }
       cur_pix = cur_pix->neighbors[2];
-      /*if(cur_pix!=NULL){
-	std::cout<<" ";
-	}*/
+      if(cur_pix!=NULL){
+	std::cout<<"  ";
+      }
     }while(cur_pix != NULL);
     cur_row = cur_row->neighbors[4];
     cur_pix = cur_row;
@@ -459,39 +470,16 @@ void area_map::printMap(){
   std::cout<<std::endl;
 }
 
-void area_map::clean(uint8_t trim, uint8_t add, size_t iterations){
+
+void area_map::clean(uint8_t trim, uint8_t add){
   map_data->addBuffer(trim, 0, true);
   map_data->setTemp();
   map_data->addBuffer(add, 1, false);
   map_data->saveTemp();
-  map_data->addBuffer(add, 1, false);
-  map_data->saveTemp();
-  map_data->addBuffer(trim, 0, false);
-  map_data->saveTemp();
-   
-  for (size_t i = 1; i < iterations; i++){
-    map_data->addBuffer(trim, 0, false);
-    map_data->saveTemp();
-    map_data->addBuffer(add, 1, false);
-    map_data->saveTemp();
-  }
-  return;
-}
-
-void area_map::setRawRes(uint32_t res){
-  dib_header.h_resolution = res;
-  dib_header.v_resolution = res;
-  resolution = res;
-  std::cout<<"Setting Resolution to "<<res<<"pix/m\n";
-}
-
-void area_map::setRes(uint32_t res){
-  if (res < dib_header.h_resolution){
-    std::cerr<<"Cannot create a map with a higher resolution than the original\n";
-  }
   return;
 }
 
 area_map::~area_map(){
   delete(map_data);
 }
+
