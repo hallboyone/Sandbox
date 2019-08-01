@@ -73,6 +73,10 @@ void area_map::pixel::computeDist(){
     std::cout<<"Already computed the distances to ("<<coord.first<<","<<coord.second<<")\n";
     return;
   }
+  
+  if(is_black){
+    return;
+  }
 
   std::queue <area_map::pixel *> pix_q;
   pix_q.push(this); //This pixel will be where we start looking
@@ -248,6 +252,15 @@ void area_map::pixel::setTemp(){
   is_black_temp = is_black;
 }
 
+void area_map::pixel::computeAllDists(){
+  if (neighbors_raw[0] != NULL && coord.first==0){//If we are in the first col
+    neighbors[0]->computeAllDists();
+  }
+  if (neighbors_raw[2]!=NULL){
+    neighbors[2]->computeAllDists();
+  }
+  this->computeDist();  
+}
 area_map::pixel::~pixel(){
   if (neighbors_raw[0] != NULL && coord.first==0){//If we are in the first col
     delete neighbors_raw[0];

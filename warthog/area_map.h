@@ -52,7 +52,9 @@ class area_map{
     void saveTemp();
     //Sets the values of is_black to be is_black_temp
     void setTemp();
- 
+
+    void computeAllDists();
+    
     ~pixel();
 
   private:
