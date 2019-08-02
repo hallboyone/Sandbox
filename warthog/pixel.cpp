@@ -1,6 +1,7 @@
 #include "area_map.h"
 
 #define SQ2 1.41421356237
+#define SQ5 2.2360679775
 #define BLACK_THRESH 40
 
 area_map::pixel::pixel(){
@@ -92,7 +93,7 @@ void area_map::pixel::computeDist(){
 }
 
 void area_map::pixel::computeDist(std::queue <area_map::pixel *> & pix_q, area_map::pixel * target){
-  for(size_t i = 0; i<=7; i++){
+  for(size_t i = 0; i<8; i++){
     if(neighbors[i] != NULL){//Does the neighbor exist
       if(!(neighbors[i]->is_black)){//Is the neighbor passable
 	if(neighbors[i]->min_dists.count(target) == 0 || neighbors[i]->min_dists[target] > min_dists[target] + one_step[i]){//Is it shorter?
@@ -272,4 +273,4 @@ area_map::pixel::~pixel(){
 
 
 //Static variable
-std::map<size_t, float> area_map::pixel::one_step = {{0, 1}, {1, SQ2}, {2, 1}, {3, SQ2}, {4, 1}, {5, SQ2}, {6, 1}, {7, SQ2}};
+std::map<size_t, float> area_map::pixel::one_step = {{0, 1}, {1, SQ2}, {2, 1}, {3, SQ2}, {4, 1}, {5, SQ2}, {6, 1}, {7, SQ2}, {8, SQ5}, {9, SQ5}, {10, SQ5}, {11, SQ5}, {12, SQ5}, {13, SQ5}, {14, SQ5}, {15, SQ5}};
