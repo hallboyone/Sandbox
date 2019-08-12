@@ -1,0 +1,2 @@
+money_tracker: main.c
+	gcc -o money_tracker main.c -Wall -Werror -Wsign-compare -Wwrite-strings -Wtype-limits
