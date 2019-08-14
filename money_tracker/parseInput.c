@@ -22,6 +22,7 @@ void parseInput(int argc, char ** argv){
   }
   else if (!strcmp(argv[1], "mkenvl")){
     cmd = MKENVL;
+    makeEnvl();
   }
   else if (!strcmp(argv[1], "rmenvl")){
     cmd = RMENVL;
