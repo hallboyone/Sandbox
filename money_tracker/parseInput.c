@@ -31,6 +31,5 @@ void parseInput(int argc, char ** argv){
     return;
   }
   
-  printf("%d\n", cmd);
   return;
 }
