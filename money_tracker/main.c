@@ -1,9 +1,4 @@
-#include <stdio.h>
-
-void badCmd();
-
-void parseInput(int argc, char ** argv);
-
+#include "function_decl.h"
 
 int main(int argc, char ** argv){
   if (argc == 1){
@@ -22,12 +17,3 @@ void badCmd(){
   return;
 }
 
-void parseInput(int argc, char ** argv){
-  argv += 1;
-  argc -= 1;
-
-  if(*argv == "add"){
-    printf("Adding\n");
-  }
-  return;
-}

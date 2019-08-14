@@ -34,7 +34,8 @@ Possible Commands:
 - bal Auto Travel		Move enough money from Travel to Auto to remove any deficit
 - bal 15 Auto Travel	Move enough money from Travel to Auto to increase Auto to 15. If Auto is greater than 15, do nothing.
 - trans 10 Auto Travel	Transfer $10 from auto to travel
-- mkenvl Hobbies	Create a new Envelope 'Hobbies'. The Envelope's number is defaulted to CH-FLX-#, incrementor to 0, period to equal SA-LNG-1's period 
+- mkenvl Hobbies	Create a new Envelope 'Hobbies'. The Envelope's number is defaulted to CH-FLX-#, incrementor to 0, period to equal SA-LNG-1's period
+- rmenvl
 - set Auto period w:    Set a property of an envelope. In the example, Auto's period will be set to weekly.
   	   	       	     * period = {day or d, week or w, month or m, year or y}
 	   		     * incrementor = {any number greater than 0 rounded to 2 decimals (1.542 => 1.54)}
