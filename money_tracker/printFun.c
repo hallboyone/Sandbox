@@ -15,7 +15,7 @@ void printEnvl(envolope * e){
     printf("-");
   }
 
-  if(e->bal <= 0){
+  if(e->bal < 0){
     redText();
     printf(" -$%0.2f\n", -(e->bal));
     blackText();
@@ -86,6 +86,16 @@ void badCmd(){
   printf("Invalid command. Use money_tracker -h for additionl help.\n");
   blackText();
   return;
+}
+
+void printWarn(const char * msg){
+  yellowText();
+  fprintf(stdout, "%s", msg);
+  blackText();
+}
+
+void yellowText(){
+  printf("\033[0;33m");
 }
 
 void redText(){

@@ -13,7 +13,15 @@ void makeEnvl(){
   fgets(buffer, 100, stdin);
   //Remove newline char
   while(buffer[idx+1] != '\0'){
-    idx++;
+    if(!isalnum(buffer[idx])){
+      printWarn("Please only enter alphanumeric values in the name\n");
+      printf("Please enter the Envolope's name...\n");
+      fgets(buffer, 100, stdin);
+      idx = 0;
+    }
+    else{
+      idx++;
+    }
   }
   buffer[idx] = '\0';
 

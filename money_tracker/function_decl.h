@@ -4,6 +4,7 @@
 #include <time.h>
 #include <math.h> //modf
 #include <time.h>
+#include <ctype.h> //isalnum
 
 enum cmd_type {DEPOSIT, WITHDRAW, DISP, DISPALL, BALANCE, MKENVL, RMENVL, BAL};
 
@@ -33,5 +34,8 @@ void printEnvl();
 
 size_t printCat(enum catagory c);
 
+void printWarn(const char * msg);
+
 void redText();
 void blackText();
+void yellowText();
