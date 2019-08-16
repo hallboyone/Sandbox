@@ -1,20 +1,41 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-
+#include <math.h>
 int main(){
-  std::vector<std::pair<size_t, size_t> > numbers(8);
-  size_t num;
-  
-  for(size_t i=8; i<16; i++){
-    numbers[i-8].first = i;
-    num = (i-7)/2;
-    num *= 2;
-    numbers[i-8].second = num;
+  float num = -123.45;
 
-    num = (num+2+4*(-1*(i%2)))%8;
-    
-    std::cout<<numbers[i-8].first<<","<<numbers[i-8].second<<","<<num<<std::endl;
+  FILE * f = fopen("test_file", "w+");
+  if (num < 0){
+    num = -num;
+    fputc(255, f);
   }
+
+  unsigned char next_char = 0;
+  for (int i = 3; i>=-4; i--){
+    next_char = num / pow(256, i);
+    num -= next_char * pow(256, i);
+    fputc(next_char, f);  
+  }
+  
+  printf("%0.2f\n", num);
+  fclose(f);
+  num = 0;
+  
+  f = fopen("test_file", "r");
+  next_char = fgetc(f);
+  int neg_flag = 1;
+  if (next_char==255){
+    neg_flag = -1;
+  }
+
+  for (int i = 3; i>=-4; i--){
+    next_char = fgetc(f);
+    num += next_char * pow(256, i);
+  }
+  num *=neg_flag;
+
+  fclose(f);
+  
   return 1;
 }
