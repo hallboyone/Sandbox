@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "node.h"
 
 int main(int argc, char ** argv){
   if(argc != 2){
