@@ -5,21 +5,23 @@ const char * printFirst(int* digits){
   *digits += 5;
   return "First";
 }
-const char * printSecond(int* digits){
-  *digits += 6;
-  return "Second";
+
+void printSecond(char * buff, int num, size_t * idx){
+  //"The number is %d"
+  sprintf(buff+(*idx), "%15s %-4d", "The number is", num);
+  *idx += 20;
 }
 
 int main(void){
   int digit = 0;
-  printf("%-10s | %-15s ||\n", printFirst(&digit), printSecond(&digit));
-  for(int i =0; i<28; i++){
-    printf("-");
-    if(i==10 || i==27){
-      printf("|");
-    }
-  }
-  printf("|\n%-10s | %-15s ||\n", printSecond(&digit), printFirst(&digit));
+  char buff[1000];
+  size_t idx = 0;
+
+  printSecond(buff, 4, &idx);
+  sprintf(buff+idx, "|");
+  idx++;
+  printSecond(buff, 8, &idx);
+  printf("%s", buff);
   return 0;
 }
 	 
