@@ -217,7 +217,7 @@ void area_map::read_bmp(std::ifstream & bmp){
     bmp.ignore(padding_size);
   }
   map_data->connectDiags();
-  map_data->computeAllDists();
+  //  map_data->computeAllDists();
   return;
 }
 
