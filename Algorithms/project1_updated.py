@@ -134,6 +134,43 @@ def QuickSort(listToSort, i=0, j=None):
     # Set default value for j if None.
     if j == None:
         j = len(listToSort)
+        pass
+
+    if i!=j:
+        #Compute the median value of the values at i, j, and (j-i)//2
+        #Swap to the back of the list
+        val_first = listToSort[i]
+        val_mid = listToSort[(j-i)//2]
+        val_last = listToSort[j-1]
+        if val_first <= val_mid <= val_last:
+            pivot = val_mid
+            listToSort[(j-i)//2] = val_last
+            listToSort[j-1] = pivot
+        elif val_first <= val_last <= val_mid:
+            pivot = val_last
+        else:
+            pivot = val_first
+            listToSort[i] = val_last
+            listToSort[j-1] = pivot
+            pass
+        
+        #Partition the list
+        idx_small = i
+        idx_pivot = j-1
+        while idx_small < idx_pivot:
+            if listToSort[idx_small] > pivot:
+                listToSort[idx_pivot] = listToSort[idx_small]
+                listToSort[idx_small] = listToSort[idx_pivot -1]
+                listToSort[idx_pivot - 1] = pivot
+                idx_pivot -= 1
+            else:
+                idx_small += 1
+                pass
+            
+            pass
+        listToSort = QuickSort(listToSort, i, idx_pivot)
+        listToSort = QuickSort(listToSort, idx_pivot + 1, j)
+        pass
     return listToSort
 
 """
