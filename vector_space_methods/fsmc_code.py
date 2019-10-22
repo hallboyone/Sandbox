@@ -1,5 +1,5 @@
 import numpy as np
-
+from scipy.linalg import null_space
 
 # General function to expected hitting time for Exercise 2.1
 def compute_Phi_ET(P, ns=100):
@@ -38,7 +38,7 @@ def simulate_hitting_time(P, states, nr):
         P {numpy.array} -- n x n, transition matrix of the Markov chain
         states {list[int]} -- the list [start state, end state], index starts from 0
         nr {int} -- largest step to consider
-
+    
     Returns:
         T {list[int]} -- a size nr list contains the hitting time of all realizations
     '''
@@ -49,7 +49,7 @@ def simulate_hitting_time(P, states, nr):
         #Initalize the trial
         step_counter = 0
         cur_state = states[0]
-
+        
         #While we are 
         while (cur_state != states[1]):
             roll = np.random.random_sample()
@@ -79,15 +79,18 @@ def stationary_distribution(P):
     '''
     Arguments:
         P {numpy.array} -- n x n, transition matrix of the Markov chain
-
+    
     Returns:
         pi {numpy.array} -- length n, stationary distribution of the Markov chain
     '''
-
     # Add code here: Think of pi as column vector, solve linear equations:
     #     P^T pi = pi
     #     sum(pi) = 1
-
+    n = P.shape[1]
+    P = np.eye(n)-P
+    P = np.transpose(P)
+    pi = null_space(P)
+    pi = pi/np.sum(pi)
     return pi
 
 P = np.array([[0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0],
@@ -114,7 +117,7 @@ P = 0.25 * P
 P_pow = P
 T_cuml = np.empty(100)
 for i in range(0, 100):
-    print(P_pow[0,15])
+   # print(P_pow[0,15])
     T_cuml[i] = P_pow[0,15]
     P_pow = P.dot(P_pow)
     pass
