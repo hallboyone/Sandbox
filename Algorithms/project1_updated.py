@@ -3,12 +3,17 @@ Math 590
 Project 1
 Fall 2019
 
-Partner 1: Richard Hall
+Title: Implementation of common sorting algorithms
+Author: Richard Hall
 Date: October 28, 2019
 """
 
 """
 SelectionSort
+Purpose: Sort a list of comparable objects in ascending order using the 
+    Selection Sort Algorithm
+Input: A non-empty list of comparable objects
+Returns: The list sorted in ascending order
 """
 def SelectionSort(listToSort):
     #Find the min element n times
@@ -35,9 +40,17 @@ def SelectionSort(listToSort):
 
 """
 InsertionSort
+Purpose: Sort a list of comparable objects in ascending order using the 
+    Insertion Sort Algorithm
+Input: A non-empty list of comparable objects
+Returns: The list sorted in ascending order
 """
 def InsertionSort(listToSort):
+    #Get the length of the list
     n = len(listToSort)
+
+    #Partition the list into a sorted and unsorted partition. Select the
+    #   next element in the unsorted section and insert it where it belongs
     for idx in range(1, n):
         sorted_idx = idx-1
         next_val = listToSort[idx]
@@ -52,6 +65,10 @@ def InsertionSort(listToSort):
 
 """
 BubbleSort
+Purpose: Sort a list of comparable objects in ascending order using the 
+    Bubble Sort Algorithm
+Input: A non-empty list of comparable objects
+Returns: The list sorted in ascending order
 """
 def BubbleSort(listToSort):
     n = len(listToSort)
@@ -78,11 +95,15 @@ def BubbleSort(listToSort):
 
 """
 MergeSort
+Purpose: Sort a list of comparable objects in ascending order using the 
+    Merge Sort Algorithm
+Input: A non-empty list of comparable objects
+Returns: The list sorted in ascending order
 """
 def MergeSort(listToSort):
     n=len(listToSort)
     
-    #If the list is longer than a single element, split it and recursivly solve
+    #If the list is longer than 1, split it and recursivly solve
     if n != 1:
         list_1 = MergeSort(listToSort[0:n//2])
         list_2 = MergeSort(listToSort[n//2:n])
@@ -125,25 +146,29 @@ def MergeSort(listToSort):
 
 """
 QuickSort
-
-Sort a list with the call QuickSort(listToSort),
-or additionally specify i and j.
+Purpose: Sort a list of comparable objects in ascending order using the 
+   Quick Sort Algorithm. This is a recursive algorithm which splits the list
+   at each step about the median of the first, last, and middle value in 
+   the list
+Input: A non-empty list of comparable objects
+Returns: The list sorted in ascending order
 """
 def QuickSort(listToSort, i=0, j=None):
     # Set default value for j if None.
     if j == None:
         j = len(listToSort)
         pass
-
+    
     if i!=j:
         #Compute the median value of the values at i, j, and (j-i)//2
         #Swap to the back of the list
+        
         val_first = listToSort[i]
-        val_mid = listToSort[(j-i)//2]
+        val_mid = listToSort[(j-i)//2+i]
         val_last = listToSort[j-1]
         if val_first <= val_mid <= val_last:
             pivot = val_mid
-            listToSort[(j-i)//2] = val_last
+            listToSort[(j-i)//2+i] = val_last
             listToSort[j-1] = pivot
         elif val_first <= val_last <= val_mid:
             pivot = val_last
@@ -152,7 +177,6 @@ def QuickSort(listToSort, i=0, j=None):
             listToSort[i] = val_last
             listToSort[j-1] = pivot
             pass
-        
         #Partition the list
         idx_small = i
         idx_pivot = j-1
@@ -164,11 +188,16 @@ def QuickSort(listToSort, i=0, j=None):
                 idx_pivot -= 1
             else:
                 idx_small += 1
-                pass
-            
+                pass    
             pass
-        listToSort = QuickSort(listToSort, i, idx_pivot)
-        listToSort = QuickSort(listToSort, idx_pivot + 1, j)
+        
+        #Recursivly call the QuickSort funtion again
+        if (i != idx_pivot):
+            listToSort = QuickSort(listToSort, i, idx_pivot)
+            pass
+        if(idx_pivot +1 != j):
+            listToSort = QuickSort(listToSort, idx_pivot + 1, j)
+            pass
         pass
     return listToSort
 
@@ -204,3 +233,4 @@ if __name__ == "__main__":
     print('DEFAULT measureTime')
     print()
     measureTime()
+    measureTime(True, 30)
