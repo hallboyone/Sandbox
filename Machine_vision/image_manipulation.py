@@ -32,7 +32,15 @@ img_1_noise.clip(0, 255, out=img_1_noise);
 #Save the noisy image
 cv.imwrite('img_noise.png', img_1_noise)
 
-sigma_filter = 1;
+#Set the filter parameters
+sigma_filter = 1; #Larger => more blur
 kernal_size = 11;
-img_1_smoothed = cv.GaussianBlur(img_1_noise, (kernal_size, kernal_size), sigma_filter);
-cv.imwrite('img_smooth.png', img_1_smoothed)
+
+#Filter the image
+img_1_smooth = cv.GaussianBlur(img_1_noise, (kernal_size, kernal_size), sigma_filter);
+#Alt: The above line of code can also be split into the following
+# kernal = cv.getGaussianKernel(kernal_size, sigma_filter);
+# img_1_smooth = cv.filter2D(img_1_noise, -1, kernal);
+
+#Save the smoothed image
+cv.imwrite('img_smooth.png', img_1_smooth)
