@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.linalg import null_space
+import matplotlib
+import matplotlib.pyplot as plt
 
 # General function to expected hitting time for Exercise 2.1
 def compute_Phi_ET(P, ns=100):
@@ -18,12 +20,13 @@ def compute_Phi_ET(P, ns=100):
 
     #Initialize all the vales
     Delta = np.identity(n)
-    Phi_list = np.empty([ns, n, n])
+    Phi_list = np.empty([ns+1, n, n])
     ET = np.zeros([n, n])
+    ET = Delta
     Phi_list[0] = Delta
 
     #Solve over the given timeframe
-    for i in range(0,ns-1):
+    for i in range(0,ns):
         Phi_list[i+1] = Delta + np.multiply((1 - Delta), P.dot(Phi_list[i])) 
         ET = ET + (i+1)*(np.subtract(Phi_list[i+1],Phi_list[i]))
         pass
@@ -93,32 +96,6 @@ def stationary_distribution(P):
     pi = pi/np.sum(pi)
     return pi
 
-P = np.array([[0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0],
-              [0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0],
-              [0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0],
-              [0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-              [0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0],
-              [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
-              [0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0],
-              [0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
-              [0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0],
-              [0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,0],
-              [0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,0],
-              [0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0],
-              [0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1],
-              [0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1],
-              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
-              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4]])
 
 
-#Problem 2.2
-P = 0.25 * P
-
-P_pow = P
-T_cuml = np.empty(100)
-for i in range(0, 100):
-   # print(P_pow[0,15])
-    T_cuml[i] = P_pow[0,15]
-    P_pow = P.dot(P_pow)
-    pass
 

@@ -195,8 +195,10 @@ def measureTime(preSorted = False, numTrials = 30):
         N = [20*x for x in N]
     else:
         # Look at n from 10 to 500.
-        N = list(range(1,51))
-        N = [10*x for x in N]
+        #N = list(range(1,51))
+        #N = [10*x for x in N]
+        N = list(range(1,50))
+        N = [20*x for x in N]
 
     # Store the different algs to consider.
     algs = [SelectionSort, InsertionSort, \
@@ -283,9 +285,9 @@ def measureTime(preSorted = False, numTrials = 30):
         plt.xlabel('Input Size n')
         plt.ylabel('Runtime (s)')
         if preSorted:
-            plt.savefig('%s_sorted.png' % alg, bbox_inches='tight')
+            plt.savefig('%s_sorted.png' % alg, bbox_inches='tight', dpi=250)
         else:
-            plt.savefig('%s.png' % alg, bbox_inches='tight')
+            plt.savefig('%s.png' % alg, bbox_inches='tight', dpi=250)
 
     # Plot them all together.
     plt.figure()
@@ -301,9 +303,9 @@ def measureTime(preSorted = False, numTrials = 30):
     plt.xlabel('Input Size n')
     plt.ylabel('Runtime (s)')
     if preSorted:
-        plt.savefig('sorting_sorted.png', bbox_inches='tight')
+        plt.savefig('sorting_sorted.png', bbox_inches='tight', dpi=250)
     else:
-        plt.savefig('sorting.png', bbox_inches='tight')
+        plt.savefig('sorting.png', bbox_inches='tight', dpi=250)
 
     # Now look at the log of the sort times.
     logN = [(numpy.log(x) if x>0 else -6) for x in N]
@@ -329,9 +331,9 @@ def measureTime(preSorted = False, numTrials = 30):
     plt.xlabel('log(n)')
     plt.ylabel('log(runtime)')
     if preSorted:
-        plt.savefig('log_sorted.png', bbox_inches='tight')
+        plt.savefig('log_sorted.png', bbox_inches='tight', dpi=250)
     else:
-        plt.savefig('log.png', bbox_inches='tight')
+        plt.savefig('log.png', bbox_inches='tight', dpi=250)
 
     # Print the regression info.
     print()

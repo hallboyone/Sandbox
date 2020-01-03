@@ -1,0 +1,103 @@
+from fsmc_code import compute_Phi_ET, simulate_hitting_time, stationary_distribution
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+#Function to plot a histogram of the hitting time of a markov chain
+#The histogram is ploted with the given title and saved under the given filename
+def HittingTimesHist(P, title, filename, target=None):
+    hitting_times= np.zeros(500)
+    n = P.shape[1]
+
+    if target==None:
+        target = n-1
+        pass
+    
+    hitting_times = simulate_hitting_time(P, [0, target], 500)
+    plt.hist(hitting_times, int(max(hitting_times)))
+    plt.title(title)
+    plt.savefig(filename, dpi=250)
+    plt.clf()
+    pass
+
+
+#Problem 2.1
+#Write a computer program that generates 500 realizations from this Markov chain and uses them to plot a histogram of T1,4.
+P = np.array([[0.5, 0.5, 0,   0  ],
+              [0.5, 0,   0.5, 0  ],
+              [0.5, 0,   0,   0.5],
+              [0,   0,   0,   1  ]])
+
+#find the expected hitting time
+P_pow = P
+turns = 1
+while P_pow[0, 3]<0.5:
+    P_pow = P.dot(P_pow)
+    turns += 1
+    pass
+print("We expect to be in state 4 from state 1 after", turns, "flips")
+
+[Phi, E] = compute_Phi_ET(P)
+print(P)
+print(E)
+ 
+HittingTimesHist(P, 'Flips before getting 3 heads in a row', 'hist_2_1.png')
+
+#Problem 2.2
+P = np.array([[0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0],
+              [0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0],
+              [0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0],
+              [0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
+              [0,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0],
+              [0,1,0,0,0,0,0,0,0,0,1,1,0,0,1,0],
+              [0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,0],
+              [0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0],
+              [0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1],
+              [0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1],
+              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
+              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4]])
+
+P = 0.25 * P
+
+P_pow = P
+T_cuml = np.empty(100)
+for i in range(0, 100):
+   # print(P_pow[0,15])
+    T_cuml[i] = P_pow[0,15]
+    P_pow = P.dot(P_pow)
+    pass
+plt.plot(T_cuml)
+plt.title("Distribution of the probability that the game has ended")
+plt.savefig('dist_d_2.png', dpi=250)
+plt.clf()
+HittingTimesHist(P, 'Rolls before landing on sqare 20', 'hist_2_2.png')
+
+#Problem 2.4.a
+P = np.array([[1, 0, 1, 2, 3, 4, 3, 2],
+              [2, 1, 0, 1, 2, 3, 4, 3],
+              [3, 2, 1, 0, 1, 2, 3, 4],
+              [4, 3, 2, 1, 0, 1, 2, 3],
+              [3, 4, 3, 2, 1, 0, 1, 2],
+              [2, 3, 4, 3, 2, 1, 0, 1],
+              [1, 2, 3, 4, 3, 2, 1, 0],
+              [0, 1, 2, 3, 4, 3, 2, 1]])
+P = 1/16. * P
+stationary_dist = stationary_distribution(P)
+print(stationary_dist)
+
+#Problem 2.4.b
+P = np.array([[13, 0, 1, 0, 1, 0, 1, 0],
+              [2, 1, 0, 1, 2, 3, 4, 3],
+              [3, 2, 1, 0, 1, 2, 3, 4],
+              [4, 3, 2, 1, 0, 1, 2, 3],
+              [3, 4, 3, 2, 1, 0, 1, 2],
+              [2, 3, 4, 3, 2, 1, 0, 1],
+              [1, 2, 3, 4, 3, 2, 1, 0],
+              [0, 1, 2, 3, 4, 3, 2, 1]])
+P = 1/16. * P
+stationary_dist = stationary_distribution(P)
+print(stationary_dist)
