@@ -18,16 +18,21 @@ cv.imwrite('img_dif.png', img_dif)
 
 #=============Add and filter noise============
 #The larger, the more extreme the noise
-sigma = 50;
+sigma_noise = 25;
 
 #Create the noise
-noise = np.random.normal(0, sigma, img_1.shape)
+noise = np.random.normal(0, sigma_noise, img_1.shape)
 
 #Add the noise in
 img_1_noise = img_1 + noise;
 
-#Clip to 255 and convert the type to 
+#Clip to 255
 img_1_noise.clip(0, 255, out=img_1_noise);
 
 #Save the noisy image
 cv.imwrite('img_noise.png', img_1_noise)
+
+sigma_filter = 1;
+kernal_size = 11;
+img_1_smoothed = cv.GaussianBlur(img_1_noise, (kernal_size, kernal_size), sigma_filter);
+cv.imwrite('img_smooth.png', img_1_smoothed)
