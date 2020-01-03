@@ -89,7 +89,7 @@ def BubbleSort(listToSort):
                 listToSort[idx-1]=tmp
                 pass
             pass
-        itr = itr + 1         
+        itr += 1         
         pass
     return listToSort
 
