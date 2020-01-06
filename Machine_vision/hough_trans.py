@@ -1,0 +1,10 @@
+import cv2 as cv
+import numpy as np
+
+#Load the image in grayscale
+img = cv.imread('camera_man_gray.png', 0);
+
+#Get the edges from the image
+edges = cv.Canny(img, 100, 200);
+
+cv.imwrite('edges.png', edges);
