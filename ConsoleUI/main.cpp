@@ -1,8 +1,9 @@
-#include "UINavigator.hpp"
+#include "ConsoleUI.hpp"
 #include <iostream>
 
 int main(){
-  HB1::UINavigator ui;
+  HB1::ConsoleUI ui;
+  //ui.getInput();
   ui.askYesNo(NULL);
   int num = ui.askForInt("Enter a number, any number", 0);
   std::cout<<num<<std::endl;
