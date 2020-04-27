@@ -8,7 +8,7 @@ namespace HB1{
     ~DictTree();
     
     void addWord(const char * word, int len);
-    char * findCompletion(const char * seed, bool resetSearch);
+    const char * findCompletion(const char * seed, int len, bool resetSearch);
     
   private:
     class DictNode{
@@ -19,11 +19,15 @@ namespace HB1{
       DictNode();
       void addWord(char * word);
       int findCompletion(char * seed, char * dest, int skips);
+      int c2idx(const char c);
+      char idx2c(const int idx);
       ~DictNode();
     };
+
     DictNode * root_;
     int tryNum_;
     int maxDepth_;
+    char * completion_;
   };
 }
 #endif

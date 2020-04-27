@@ -5,8 +5,25 @@
 int main(){
   HB1::ConsoleUI ui;
   HB1::DictTree dict;
-  dict.addWord("test", 4);
-  dict.addWord("tests", 5);
+  dict.addWord("cat", 3);
+  dict.addWord("cats", 4);
+  dict.addWord("crate", 5);
+  dict.addWord("cab", 3);
+  dict.addWord("crack", 5);
+  dict.addWord("crack01", 7);
+  dict.addWord("crack20", 7);
+  dict.addWord("fat", 3);
+  
+  std::cout<<"#1 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#2 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#3 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#4 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#5 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#6 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#5 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  std::cout<<"#6 "<<dict.findCompletion("c", 1, false)<<std::endl;
+  
+  //  printf("%s\n", completion);
   /*
   //ui.getInput();
   ui.askYesNo(NULL);
