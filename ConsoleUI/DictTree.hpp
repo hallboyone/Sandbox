@@ -1,25 +1,29 @@
 #ifndef DICT_TREE
 #define DICT_TREE
 
-class DictTree{
-private:
-  class DictNode{
+namespace HB1{
+  class DictTree{
   public:
-    bool EOW; //Is this node an end of a word
-    DictNode * branchNodes_[36]; //one for each letter and digit
+    DictTree();
+    ~DictTree();
+    
+    void addWord(const char * word, int len);
+    char * findCompletion(const char * seed, bool resetSearch);
+    
+  private:
+    class DictNode{
+    public:
+      bool eow_; //Is this node an end of a word
+      DictNode * branchNodes_[36]; //one for each letter and digit
 
-    DictNode();
-    void addWord(char * word);
-    int findCompletion(char * seed, char * dest, int skips);
-    ~DictNode();
+      DictNode();
+      void addWord(char * word);
+      int findCompletion(char * seed, char * dest, int skips);
+      ~DictNode();
+    };
+    DictNode * root_;
+    int tryNum_;
+    int maxDepth_;
   };
-  DictNode * root;
-  int num2Skip;
-
-public:
-  DictTree();
-  ~DictTree();
-
-  int addWord(const char * word);
 }
 #endif
