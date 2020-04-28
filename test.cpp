@@ -1,41 +1,41 @@
+
+
 #include <iostream>
 #include <utility>
 #include <vector>
 #include <math.h>
+
+class Wrapper{
+private:
+  int num_;
+  int abs_num_;
+
+public:
+  Wrapper(int n){
+    num_ = n;
+    abs_num_ = abs(n);
+  }
+  int & get(){
+    return num_;
+  }
+  const int & getAbs(){
+    return abs_num_;
+  }
+  
+  void set(int n){
+    num_ = n;
+    abs_num_ = abs(n);
+    return;
+  }
+};
+  
 int main(){
-  float num = -123.45;
-
-  FILE * f = fopen("test_file", "w+");
-  if (num < 0){
-    num = -num;
-    fputc(255, f);
-  }
-
-  unsigned char next_char = 0;
-  for (int i = 3; i>=-4; i--){
-    next_char = num / pow(256, i);
-    num -= next_char * pow(256, i);
-    fputc(next_char, f);  
-  }
-  
-  printf("%0.2f\n", num);
-  fclose(f);
-  num = 0;
-  
-  f = fopen("test_file", "r");
-  next_char = fgetc(f);
-  int neg_flag = 1;
-  if (next_char==255){
-    neg_flag = -1;
-  }
-
-  for (int i = 3; i>=-4; i--){
-    next_char = fgetc(f);
-    num += next_char * pow(256, i);
-  }
-  num *=neg_flag;
-
-  fclose(f);
-  
+  Wrapper w(10);
+  std::cout<<w.get()<<std::endl;
+  int & num_ref = w.get();
+  std::cout<<num_ref<<std::endl;
+  w.set(15);
+  std::cout<<w.get()<<std::endl;
+  std::cout<<num_ref<<std::endl;
   return 1;
 }
