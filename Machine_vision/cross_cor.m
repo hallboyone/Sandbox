@@ -1,4 +1,7 @@
-% target = rgb2gray(imread('target.jpg'));
+target = rgb2gray(imread('t1.png'));
+target2 = rgb2gray(imread('t2.png'));
+surf(target-target2);
+shading flat
 % shot = target(250:300, 435:480);
 % target = imresize(target, 0.4);
 % shot = imresize(shot, 0.4);

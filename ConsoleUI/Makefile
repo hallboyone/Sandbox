@@ -1,4 +1,4 @@
-CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits
+CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits -std=c++11
 
 ui: main.o ConsoleUI.o DictTree.o
 	g++ main.o ConsoleUI.o DictTree.o -o ui
