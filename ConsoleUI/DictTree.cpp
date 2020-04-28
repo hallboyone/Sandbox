@@ -71,12 +71,14 @@ const char * HB1::DictTree::findCompletion(const char * seed, int len, bool rese
   if(resetSearch) tryNum_ = 0;
 
   //Start recursive calls
-  if(root_->findCompletion(s, completion_, tryNum_)>=0){
-    //If no completions found
-    *completion_ = '\0';
+  if(root_->findCompletion(s, completion_, tryNum_) >= 0){
+    //If tryNum is larger than the number of options
+    tryNum_ = 0;
+    //completion_[0] = '\0';
   }
-
-  tryNum_++;
+  else{
+    tryNum_++;
+  }
   
   delete[] s;
   
@@ -110,8 +112,8 @@ void HB1::DictTree::DictNode::addWord(char * word){
 int HB1::DictTree::DictNode::findCompletion(char * seed, char * dest, int skips){
   if(*seed != '\0'){//Not yet to end of seed, continue down trail
     if(branchNodes_[c2idx(*seed)] != NULL){//If there is a completion from here
-      *dest = *seed; //Save char to completion
-      return branchNodes_[c2idx(*seed)]->findCompletion(seed+1, dest+1, skips); //Recursive call
+      //*dest = *seed; //Save char to completion
+      return branchNodes_[c2idx(*seed)]->findCompletion(seed+1, dest, skips); //Recursive call
     }
     else{//End of the road. No solution found
       return skips;
@@ -142,22 +144,22 @@ int HB1::DictTree::DictNode::c2idx(const char c){
   if(!isalnum(lcC)) throw std::invalid_argument("char must be alpha-numeric to convert to index");
 
   int idx;
-  
-  if(lcC - 'a' >= 0 && lcC - 'a' < 26){//Lowercase
-    idx = lcC - 'a';
+
+  if(lcC - '0' >=0 && lcC - '0' < 10){
+    idx = lcC - '0';
   }
   else{
-    idx = lcC - '0' + 26;
+    idx = lcC - 'a' + 10;
   }
   return idx;
 }
 
 char HB1::DictTree::DictNode::idx2c(const int idx){
-  if(idx<26 && idx>=0){
-    return 'a'+idx;
+  if(idx >= 0 && idx < 10){
+    return '0' + idx;
   }
-  else if(idx>=26 && idx<36){
-    return '0' + idx - 26;
+  else if(idx >= 10 && idx < 36){
+    return 'a' + idx - 10;
   }
   else{
     throw std::invalid_argument("char must be alpha-numeric to convert to index");

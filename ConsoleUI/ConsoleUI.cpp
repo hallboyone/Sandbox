@@ -16,6 +16,15 @@ HB1::ConsoleUI::ConsoleUI(){
   buf_ = new char [bufCap_];
   buf_[0] = '\0';
   ops_.echo = true;
+  dict_.addWord("cat", 3);
+  dict_.addWord("cat", 3);
+  dict_.addWord("cats", 4);
+  dict_.addWord("crate", 5);
+  dict_.addWord("cab", 3);
+  dict_.addWord("cracks", 6);
+  dict_.addWord("crack01", 7);
+  dict_.addWord("crack20", 7);
+  dict_.addWord("fat", 3);
 }
 
 HB1::ConsoleUI::~ConsoleUI(){
@@ -181,19 +190,64 @@ void HB1::ConsoleUI::getInput(){
     switch(c){
     case 9://Tab
       kpTab();
+      lastKey_ = Key::TAB;
       break;
     case 127://Del
       kpDel();
+      lastKey_ = Key::DEL;
       break;
     default:
       if(ops_.echo) putchar(c); //write to terminal
       add2Buf(c); //Save into buffer
+      lastKey_ = Key::ALNUM;
     }
   } while(c != '\n');
   
   //Set back to old settings
   tcsetattr(STDIN_FILENO, TCSANOW, &oldTermSettings);
   return;
+}
+
+void HB1::ConsoleUI::autoComplete(){
+  //Tab pressed at least twice. Delete previous completion
+  if(lastKey_ == Key::TAB){
+    for(size_t i = 0; i<completionLen_; i++){
+      //Delete from view
+      if(ops_.echo){
+	printf("\b \b");
+      }
+      //Delete from buf_
+      delFromBuf();
+    }
+  }
+
+  const char * completion = NULL;
+  char * startOfWord = buf_ + bufSize_;
+  int sizeOfWord = 0;
+
+  //Find the start of the word (first non alnum char)
+  for(size_t i = 0; i<bufSize_; i++){
+    startOfWord--;
+    if(!isalnum(*startOfWord)){
+      startOfWord++;
+      break;
+    }
+    sizeOfWord++;
+  }
+  if(*startOfWord == '\0'){//Nothing to complete
+    return;
+  }
+  
+  completion = dict_.findCompletion(startOfWord, sizeOfWord, lastKey_ != Key::TAB);
+
+  //Print the completion value
+  completionLen_ = 0;
+  while(*completion != '\0'){
+    completionLen_++;
+    add2Buf(*completion);
+    if(ops_.echo) putchar(*completion);
+    completion++;
+  }
 }
 
 //=========================================================================
@@ -242,6 +296,7 @@ void HB1::ConsoleUI::waitForEnter(int displayInstructions){
   }
   ops_.echo = false;
   getInput();
+  printf("\n");
   ops_.echo = true;
 }
   
@@ -322,15 +377,10 @@ void HB1::ConsoleUI::kpDel(){
 }
 
 void HB1::ConsoleUI::kpTab(){
-  /*
-  if(ops_.autoComplete != NULL){
-    autoComplete();
-    return;
+  if(ops_.autoComplete) autoComplete();
+  else if(ops_.echo){
+    printf("\t");
+    add2Buf('\t');
   }
-  */
-  
-  if(ops_.echo) printf("\t");
-  
-  add2Buf('\t');
 }
 
