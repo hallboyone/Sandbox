@@ -1,13 +1,9 @@
-CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits -std=c++11
+CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits
 
-ui: main.o ConsoleUI.o DictTree.o
-	g++ main.o ConsoleUI.o DictTree.o -o ui
-main.o: main.cpp
-	g++ -c main.cpp $(CFLAGS)
-ConsoleUI.o: ConsoleUI.cpp ConsoleUI.hpp
-	g++ -c ConsoleUI.cpp $(CFLAGS)
-DictTree.o: DictTree.cpp DictTree.hpp
-	g++ -c DictTree.cpp $(CFLAGS)
+ui: main.o
+	gcc main.o -o ui
+main.o: main.c
+	gcc -c main.c $(CFLAGS)
 
 .PHONY: clean
 clean:
