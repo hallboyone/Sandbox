@@ -4,10 +4,11 @@
 #include <string>
 #include <iostream>
 #include <limits>//numeric_limits
+#include <stdexcept>
 
 //Check if char is valid within block
 bool validBlockChar(const char & c){
-  if(isalpha(c) || c=='=' || c==';' || c=='"') return true;
+  if(isalnum(c) || c=='=' || c==';' || c=='"' || c=='_') return true;
   else return false;
 }
 
@@ -68,7 +69,7 @@ int extractNextBlock(std::ifstream & f, std::string & block){
 }
 
 //Looks in a string for the key, reads the value after it up to the deliminator
-int readKeyValue(std::string & s, const char * key, size_t len, std::string & val, char delim = ';'){
+int readKeyValue(const std::string & s, const char * key, size_t len, std::string & val, char delim = ';'){
   
   size_t start_of_key = s.find(key);
   if(start_of_key == std::string::npos){
@@ -85,53 +86,128 @@ int readKeyValue(std::string & s, const char * key, size_t len, std::string & va
   return 1;
 }
 
-//From a template string, build a flag
-int Flag(std::string & s){
+//Makes sure the name of input flag is valid
+// 1) Only alpha-numeric and _ chars
+// 2) Starts and ends with alpha char
+std::string readName(const std::string & root_string){
   std::string name;
-  std::string desc;
-  std::string sh;
-  std::string para;
-
-  //Get name
-  if(!readKeyValue(s, "name=", 5, name)) {
-    return 0;
+  //Read name
+  if(!readKeyValue(root_string, "name=", 5, name)) {
+    throw std::invalid_argument("Could not find any name key");
   }
-  std::cout<<"Name: "<<name<<std::endl;
-  
-  //Get description
-  if(!readKeyValue(s, "desc=\"", 6, desc, '"')) {//with quotes
-    if(!readKeyValue(s, "desc=", 5, desc)) {//without quotes
-      return 0;
+  //Make sure only valid chars are used
+  if(name.find_first_not_of("abcdefghijklmnopqrstuvwxyz_0123456789") != std::string::npos){
+    throw std::invalid_argument("Name not valid");
+  }
+  //Make sure the name begins and ends with alpha
+  if(!isalpha(name[0]) || !isalpha(name.back())){
+    throw std::invalid_argument("Name not valid. Must start and and with alpha char");
+  }
+  return name;
+}
+
+std::string readDesc(const std::string & root_string){
+  std::string desc;
+  //Read desc
+  if(!readKeyValue(root_string, "desc=\"", 6, desc)) {//With quotes
+    if(!readKeyValue(root_string, "desc=", 5, desc)) {//without quotes
+    throw std::invalid_argument("No description found for flag");
     }
   }
-  std::cout<<"Desc: "<<desc<<std::endl;
+  return desc;
+}
+
+//Makes sure the sh of input flag is a single alpha char
+char readSH(const std::string & root_string){
+  std::string sh;
+  if(readKeyValue(root_string, "sh=", 3, sh)){
+    if(sh.size() != 1 || !isalpha(sh[0])){
+      return '\0';
+    }
+    return sh[0];
+  }
+  else{
+    return '\0';
+  }
+}
+
+enum DataType {NONE=0, INT, DOUBLE, CHAR, STRING};
+typedef struct Flag_{
+  std::string name;
+  std::string desc;
+  char sh;
+  DataType para_t;
+  std::string data;
+} Flag;
+
+DataType readPara(const std::string & root_string){
+  std::string para;
+  if(readKeyValue(root_string, "para=", 5, para)){
+    for(size_t i = 0; i<para.size(); i++){
+      para[i] = tolower(para[i]);
+    }
+    if(para == "int") return INT;
+    else if (para == "double") return DOUBLE;
+    else if (para == "char") return CHAR;
+    else if (para == "string") return STRING;
+    else return NONE;
+  }
+  else return NONE;
+}
   
-  //Get sh (opt)
-  if(readKeyValue(s, "sh=", 3, sh)){
-    std::cout<<"Shorthand: "<<sh<<std::endl;
-  }
-  //Get para type (opt)
-  if(readKeyValue(s, "para=", 5, para)){
-    std::cout<<"Para Type: "<<para<<std::endl;
-  }
-  return 1;
+//From a template string, build a flag
+Flag BuildFlag(std::string & s){
+  std::string name;
+  std::string desc;
+
+  Flag flag = {readName(s), readDesc(s), readSH(s), readPara(s)};
+  return flag;
+}
+
+void printFlag(const Flag & flag){
+  std::cout<<"Name           : "<<flag.name<<std::endl;
+
+  std::cout<<"Description    : "<<flag.desc<<std::endl;
+
+  std::cout<<"Shorthand      : ";
+  if(flag.sh != '\0') std::cout<<flag.sh<<std::endl;
+  else std::cout<<"None\n";
+  
+  std::cout<<"Parameter type : ";
+  switch(flag.para_t){
+  case INT:
+    std::cout<<"Int\n";
+    break;
+  case DOUBLE:
+    std::cout<<"Double\n";
+    break;
+  case CHAR:
+    std::cout<<"Char\n";
+    break;
+  case STRING:
+    std::cout<<"String\n";
+    break;
+  default:
+    std::cout<<"None\n";
+  }   
 }
 
 void parseFlagTemplates(){
   // Open the file
   std::ifstream f ("flags.tmpl");
   std::string nextBlock;
-
+  Flag flag;
   if(f.is_open()){
     //Extract the next block without any extra chars
     while(extractNextBlock(f, nextBlock)){
       //Build the flag from the tempate string
-      Flag(nextBlock);
+      flag = BuildFlag(nextBlock);
+      printFlag(flag);
     }
     f.close();
   }
   else{
-    sstd::err<<"Could not open file\n";
+    std::cerr<<"Could not open file\n";
   }
 }  
 

@@ -1,7 +1,7 @@
 CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits -std=c++11
 
-flags: main.o
-	g++ main.o -o flags
+inputFlags: main.o
+	g++ main.o -o inputFlags
 main.o: main.cpp
 	g++ -c main.cpp $(CFLAGS)
 
