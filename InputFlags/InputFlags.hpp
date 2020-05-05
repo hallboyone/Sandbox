@@ -60,9 +60,15 @@ private:
   //Counts the number of leading '-' in the string 
   int static numLeadingDash(const std::string & arg);
 
+  //Reads through an input string vector and converts any sh notation to full names
+  std::vector<std::string> formatInputArgs(int argc, char ** argv);
+
   //Looks for a flag with name matching *it and sets it as active. If needed,
   //the parameter is also read.
-  void inputArg2Flag(std::vector<string>::iterator & it, const std::vector<string>::iterator & args_end, bool sh);
+  void inputArg2Flag(std::vector<std::string>::iterator & it, const std::vector<std::string>::iterator & args_end);
+
+  //Returns an iterator pointing at the flag with the name 'name'. If none, returns flags_.end()
+  std::vector<Flag>::iterator getFlagWithName(const std::string & name, bool is_sh);
 
   void static printFlag(const Flag & flag);
 };

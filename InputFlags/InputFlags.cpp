@@ -12,25 +12,21 @@ void HB1::InputFlags::setFlags(int argc, char ** argv){
   //parse the file if not already done
   if(flags_.empty()) parseFlagTemplates();
 
-  //Make a string vector holding the args
-  std::vector<string> args;
-  for(int i = 0; i<argc; i++){
-    args.push_back(argv[i]);
-  }
-
-  for(auto arg = args.begin(); arg != args.end(); ++args){
-    switch(numLeadingDash(*arg)){
-    case 1:
-      readFlagSH(arg, args);
-      break;
-    case 2:
-      readFlag(arg, args);
-      break;
-    case 0:
-    default:
+  //Make a string vector holding the args. Remove any sh notation
+  std::vector<std::string> args = formatInputArgs(argc, argv);
+  
+  //For each arg, process it based on the number of leading '-' chars
+  for(auto arg = args.begin(); arg != args.end(); ++arg){
+    if(numLeadingDash(*arg) == 2){//if flag
+      //inputArg2Flag(arg, args);
+      std::cout<<"Flag  : "<<*arg<<std::endl;
+    }
+    else{//If not flag, save into 'other_input_
       other_input_.push_back(*arg);
+      std::cout<<"Other : "<<*arg<<std::endl;
     }
   }
+  
 }
 
 //Parse flags.tmpl and build an array of the possible flags.
@@ -52,7 +48,7 @@ void HB1::InputFlags::parseFlagTemplates(){
     throw std::ifstream::failure("Could not open file");
   }
 
-  ensureUniqueFlags();
+  //ensureUniqueFlags();
 }
 
 
@@ -202,7 +198,7 @@ int HB1::InputFlags::readKeyValue(const std::string & s, const char * key, size_
 
 //Counts the number of leading '-' in the string 
 int HB1::InputFlags::numLeadingDash(const std::string & arg){
-  int n = 0;
+  size_t n = 0;
   while(n < arg.size()){
     if(arg[n] != '-'){
       break;
@@ -212,18 +208,41 @@ int HB1::InputFlags::numLeadingDash(const std::string & arg){
   return n;
 }
 
+//Reads through an input string vector and converts any sh notation to full names
+std::vector<std::string> HB1::InputFlags::formatInputArgs(int argc, char ** argv){
+  std::vector<std::string> args;
+  std::string cur_arg;
+  for(int i = 0; i<argc; i++){
+    cur_arg = argv[i];
+    
+    //If arg is sh notation, convert to lh
+    if(numLeadingDash(cur_arg) == 1){
+      cur_arg.erase(0,1); //Erase dash
+      for(char & c : cur_arg){//For each sh char in arg
+	//Get flag with sh 'c' and add its name led by -- to args
+	args.push_back(std::string("--"));
+	args.back() += (getFlagWithName(std::string(1,c), true)->name);
+      }
+    }
+    else{//If not in sh notation, add as is
+      args.push_back(std::string(argv[i]));
+    }
+  }
+  return args;
+}
+
 //Reads the Flag pointed at by it. Must start with '--'
 //it is moved to the last element in args used to process the flag
-void HB1::InputFlags::inputArg2Flag(std::vector<string>::iterator & it, const std::vector<string>::iterator & args_end, bool sh){
+void HB1::InputFlags::inputArg2Flag(std::vector<std::string>::iterator & it, const std::vector<std::string>::iterator & args_end){
   std::string name = *it;
-  if(sh) name.erase(0,1); //Erase the leading '-'
-  else   name.erase(0,2); //Erase the two leading '--'
+  name.erase(0,2); //Erase the two leading '--'
 
-  try{
+  //  try{
     //Find the flag among flags_
-    std::vector<Flag>::iterator f_it = getFlagWithName(name, sh);
+    std::vector<Flag>::iterator f_it = getFlagWithName(name, false);
     f_it->active = true;
 
+    /*
     //Read the parameter if needed.
     if(f_it->para_t != NONE){
       if(it+1 != args_end){ // If parameter is given
@@ -243,10 +262,31 @@ void HB1::InputFlags::inputArg2Flag(std::vector<string>::iterator & it, const st
 	}
       }
     }
-  }
-  catch{
+    */
+    //}
+    //catch{
     //ADD CATCH STATMENTS
+    //}
+}
+
+
+//Searches through flags_ for one that matches "name".
+std::vector<HB1::InputFlags::Flag>::iterator HB1::InputFlags::getFlagWithName(const std::string & name, bool is_sh){
+  //Make sure that, if is_sh, that the name only has a single char
+  if(is_sh && name.size() != 1){
+    throw std::invalid_argument("Asked for Flag by shorthand notation using more than 1 char");
   }
+  
+  std::vector<Flag>::iterator cur_flag;
+  for(cur_flag = flags_.begin(); cur_flag != flags_.end(); ++cur_flag){
+    if(is_sh){
+      if(name[0] == cur_flag->sh) return cur_flag;
+    }
+    else{
+      if(name == cur_flag->name) return cur_flag;
+    }
+  }
+  return flags_.end();
 }
 
 void HB1::InputFlags::printFlag(const Flag & flag){
