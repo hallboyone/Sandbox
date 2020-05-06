@@ -16,8 +16,8 @@ public:
     char sh;
     DataType para_t;
     std::string default_para;
-    std::string para;
     bool active;
+    std::string para;
   } CommandLineFlag;
   
   //================= Constructors ==================
@@ -45,14 +45,14 @@ private:
   
   //Takes the block template string and uses it to make a new flag
   //Conducts error check to make sure the flag is unique and the para_t and default para match
-  void BuildFlag(const std::string & tmpl_str);
+  void BuildFlag(std::string tmpl_str);
   
   //Finds and varifies the the indicated field from a block template string
-  std::string static readName       (const std::string & root_string);
-  std::string static readDesc       (const std::string & root_string);
-  char        static readSH         (const std::string & root_string);
-  DataType    static readPara_t     (const std::string & root_string);
-  std::string static readDefaultPara(const std::string & root_string);
+  std::string static readName       (std::string & root_string);
+  std::string static readDesc       (std::string & root_string);
+  char        static readSH         (std::string & root_string);
+  DataType    static readPara_t     (std::string & root_string);
+  std::string static readDefaultPara(std::string & root_string);
   
   //Finds the key in the string and extracts the chars up to the desired delim char
   int static readKeyValue(const std::string & s, const char * key, size_t len, std::string & val, char delim = ';');

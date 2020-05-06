@@ -5,8 +5,6 @@
 #include <limits>//numeric_limits
 #include <iostream> //cout, cerr
 #include <fstream> //ifstream
-//InputFlags();
-
 
 void HB1::InputFlags::setFlags(int argc, char ** argv){
   //parse the file if not already done
@@ -14,17 +12,19 @@ void HB1::InputFlags::setFlags(int argc, char ** argv){
 
   //Make a string vector holding the args. Remove any sh notation
   std::vector<std::string> args = formatInputArgs(argc, argv);
-
   
   //For each arg, process it based on the number of leading '-' chars
   for(auto arg = args.begin(); arg != args.end(); ++arg){
     if(numLeadingDash(*arg) == 2){//if flag
-      std::cout<<"Flag  : "<<*arg<<std::endl;
-      inputArg2Flag(arg, args.end());
+      try{
+	inputArg2Flag(arg, args.end());
+      }
+      catch(std::invalid_argument & ia){
+	std::cerr<<"\033[33mWarning: (at "<<*arg<<") - "<<ia.what()<<"\033[0m"<<std::endl;
+      }
     }
     else{//If not flag, save into 'other_input_
       other_input_.push_back(*arg);
-      std::cout<<"Other : "<<*arg<<std::endl;
     }
   }  
 }
@@ -119,19 +119,24 @@ bool HB1::InputFlags::validBlockChar(const char & c){
 }
   
 //Takes the block template string and uses it to make a new flag
-void HB1::InputFlags::BuildFlag(const std::string & tmpl_str){
+void HB1::InputFlags::BuildFlag(std::string tmpl_str){
   CommandLineFlag new_flag = {readName(tmpl_str),
 			      readDesc(tmpl_str),
 			      readSH(tmpl_str),
 			      readPara_t(tmpl_str),
-			      readDefaultPara(tmpl_str)};
+			      readDefaultPara(tmpl_str),
+			      false, //Not active
+			      std::string("")}; //No parameter currently
+  if(tmpl_str.size() != 0){
+    std::cerr<<"\033[33mExtra chars in flag template block. Did not read \""<<tmpl_str<<"\".\033[0m\n";
+  }
   
   //Check uniqueness
   for(const CommandLineFlag & f : flags_){
     if(f.name == new_flag.name){//Names match
       throw std::invalid_argument("Attempted to use duplicate flag name");
     }
-    if(f.sh == new_flag.sh){//sh names match
+    if(new_flag.sh != '\0' && f.sh == new_flag.sh){//sh names match
        throw std::invalid_argument("Attempted to use duplicate flag name shorthand");
     }
   }
@@ -162,7 +167,7 @@ void HB1::InputFlags::BuildFlag(const std::string & tmpl_str){
 }
   
 //Finds and varifies the the indicated field from a block template string
-std::string HB1::InputFlags::readName(const std::string & root_string){
+std::string HB1::InputFlags::readName(std::string & root_string){
   std::string name;
   //Read name
   if(!readKeyValue(root_string, "name=", 5, name)) {
@@ -176,26 +181,34 @@ std::string HB1::InputFlags::readName(const std::string & root_string){
   if(!isalpha(name[0]) || !isalpha(name.back())){
     throw std::invalid_argument("Name not valid. Must start and and with alpha char");
   }
+
+  //Erase name field from template string
+  root_string.erase(root_string.find("name="), 6+name.size());
   return name;
 }
 
-std::string HB1::InputFlags::readDesc(const std::string & root_string){
+std::string HB1::InputFlags::readDesc(std::string & root_string){
   std::string desc;
   //Read desc
-  if(!readKeyValue(root_string, "desc=\"", 6, desc, '"')) {//With quotes
-    if(!readKeyValue(root_string, "desc=", 5, desc)) {//without quotes
+  if(readKeyValue(root_string, "desc=\"", 6, desc, '"')) {//With quotes
+    root_string.erase(root_string.find("desc=\""), 8+desc.size());
+  }
+  else if(!readKeyValue(root_string, "desc=", 5, desc)) {//without quotes
+    root_string.erase(root_string.find("desc="), 6+desc.size());
+  }
+  else{
     throw std::invalid_argument("No description found for flag");
-    }
   }
   return desc;
 }
 
-char HB1::InputFlags::readSH(const std::string & root_string){
+char HB1::InputFlags::readSH(std::string & root_string){
   std::string sh;
   if(readKeyValue(root_string, "sh=", 3, sh)){
     if(sh.size() != 1 || !isalpha(sh[0])){
-      return '\0';
+      throw std::invalid_argument("Shorthand notation must be a single unique char");
     }
+    root_string.erase(root_string.find("sh="), 5);
     return sh[0];
   }
   else{
@@ -203,9 +216,11 @@ char HB1::InputFlags::readSH(const std::string & root_string){
   }
 }
 
-HB1::InputFlags::DataType HB1::InputFlags::readPara_t(const std::string & root_string){
+HB1::InputFlags::DataType HB1::InputFlags::readPara_t(std::string & root_string){
   std::string para_t;
   if(readKeyValue(root_string, "para_t=", 7, para_t)){
+    //Erase from template string
+    root_string.erase(root_string.find("para_t"),8+para_t.size());
     for(size_t i = 0; i<para_t.size(); i++){
       para_t[i] = tolower(para_t[i]);
     }
@@ -213,16 +228,22 @@ HB1::InputFlags::DataType HB1::InputFlags::readPara_t(const std::string & root_s
     else if (para_t == "double") return DOUBLE;
     else if (para_t == "char") return CHAR;
     else if (para_t == "string") return STRING;
-    else return NONE;
+    else if (para_t == "none") return NONE;
+    else{
+      throw std::invalid_argument("para_t can be int, double, char, string, or none only");
+    }
   }
   else return NONE;
 }
 
-std::string HB1::InputFlags::readDefaultPara(const std::string & root_string){
+std::string HB1::InputFlags::readDefaultPara(std::string & root_string){
   std::string default_para;
   //Read default_para. First try with quotes, then without
-  if(!readKeyValue(root_string, "default_para=\"", 14, default_para, '"')){
-    readKeyValue(root_string, "default_para=", 13, default_para);
+  if(readKeyValue(root_string, "default_para=\"", 14, default_para, '"')){
+    root_string.erase(root_string.find("default_para=\""), 16+default_para.size());
+  }
+  else if (readKeyValue(root_string, "default_para=", 13, default_para)){
+    root_string.erase(root_string.find("default_para="), 14+default_para.size());
   }
   return default_para;
 }
@@ -291,6 +312,9 @@ void HB1::InputFlags::inputArg2Flag(std::vector<std::string>::iterator & it, con
   //  try{
     //Find the flag among flags_
     std::vector<CommandLineFlag>::iterator f_it = getFlagWithName(name, false);
+    if(f_it == flags_.end()){
+      throw std::invalid_argument("Did not recoginize flag");
+    }
     if(f_it->active == true) throw std::invalid_argument("Flag added twice.");
     
     f_it->active = true;
@@ -350,8 +374,6 @@ void HB1::InputFlags::inputArg2Flag(std::vector<std::string>::iterator & it, con
 	f_it->para = f_it->default_para;
       }
     }
-
-    printFlag(*f_it);
     //}
     //catch{
     //ADD CATCH STATMENTS
@@ -378,13 +400,9 @@ std::vector<HB1::InputFlags::CommandLineFlag>::iterator HB1::InputFlags::getFlag
 }
 
 void HB1::InputFlags::printFlag(const CommandLineFlag & flag){
-  std::cout<<"Name           : "<<flag.name<<std::endl;
-
-  std::cout<<"Description    : "<<flag.desc<<std::endl;
-  std::cout<<"Shorthand      : ";
-  if(flag.sh != '\0') std::cout<<flag.sh<<std::endl;
-  else std::cout<<"None\n";
-  
+  std::cout<<"\nName           : "<<flag.name;
+  if(flag.sh != '\0') std::cout<<" ("<<flag.sh<<")";
+  std::cout<<"\nDescription    : "<<flag.desc<<std::endl;
   std::cout<<"Parameter type : ";
   switch(flag.para_t){
   case INT:
@@ -402,6 +420,8 @@ void HB1::InputFlags::printFlag(const CommandLineFlag & flag){
   default:
     std::cout<<"None\n";
   }
-  std::cout<<"Default Para   : "<<flag.default_para<<std::endl;
-  std::cout<<"Para Value     : "<<flag.para<<std::endl;
+  if(flag.para_t != NONE){
+    std::cout<<"Default Para   : "<<flag.default_para<<std::endl;
+    std::cout<<"Para Value     : "<<flag.para<<std::endl;
+  }
 }

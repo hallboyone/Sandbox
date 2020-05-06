@@ -1,4 +1,4 @@
-CFLAGS = -Wall -ggdb3 -Werror -Wsign-compare -Wwrite-strings -Wtype-limits -std=c++11
+CFLAGS = -Wall -Werror -Wsign-compare -Wwrite-strings -Wtype-limits -std=c++11
 
 inputFlags: main.o InputFlags.o
 	g++ main.o InputFlags.o -o inputFlags
