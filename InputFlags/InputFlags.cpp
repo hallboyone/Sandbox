@@ -1,4 +1,3 @@
-
 #include "InputFlags.hpp"
 
 #include <stdexcept> //invalid_arg
@@ -100,14 +99,13 @@ int HB1::InputFlags::extractNextBlock(std::ifstream & f, std::string & block){
 	f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       }
       else if(validBlockChar(next_char)){ 
-	block.append(&next_char);
+	block.push_back(next_char);
       }
     }
     else{
-      block.append(&next_char);
+      block.push_back(next_char);
     }
   }
-  
   //If no valid close brace was found before EOF
   if(f.eof()) return 0;
   return 1;
@@ -173,6 +171,7 @@ std::string HB1::InputFlags::readName(std::string & root_string){
   if(!readKeyValue(root_string, "name=", 5, name)) {
     throw std::invalid_argument("Could not find any name key");
   }
+  
   //Make sure only valid chars are used
   if(name.find_first_not_of("abcdefghijklmnopqrstuvwxyz_0123456789") != std::string::npos){
     throw std::invalid_argument("Name not valid");
