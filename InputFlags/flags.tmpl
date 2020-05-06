@@ -5,25 +5,31 @@ test{}";}
 //The shouldn't be caught {lets see
 what happen
 {
-  name = ver100bose;
+  name = verbose;
   sh   = v;
   desc = "Display additional info while running";
-  para = int;
-  default = 0;
+  para_t = int;
+  default_para = 0;
 }
 
 {
  name = help_all;
  sh   = h;
  desc = "Show help page";
- para = none;
+ para_t = none;
 }
 
 {
  name = outfile;
  sh   = o;
  desc = "Set the output file name";
- para = string;
+ para_t = string;
+ default_para = "file.txt";
 }
 
+{
+ name = force;
+ sh = f;
+ desc = "Force the program to run. Ignore errors";
+}
 
