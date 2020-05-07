@@ -1,0 +1,76 @@
+\hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag__}{}\doxysection{H\+B1\+::Input\+Flags\+::Command\+Line\+Flag\+\_\+ Struct Reference}
+\label{structHB1_1_1InputFlags_1_1CommandLineFlag__}\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+
+
+{\ttfamily \#include $<$Input\+Flags.\+hpp$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___ab36f0f6c409bdbbba35dc52ff1c31e30}{name}}
+\item 
+std\+::string \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___a57117a37cb7d7f9e4941624b84489929}{desc}}
+\item 
+char \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___a511feb29330ffcaf0823ee8c3c1bb3e1}{sh}}
+\item 
+\mbox{\hyperlink{classHB1_1_1InputFlags_a5042597fe7671ebe12ad5f354a01953e}{Data\+Type}} \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___a357581caf8fc2b37145180173f57a9aa}{para\+\_\+t}}
+\item 
+std\+::string \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___ac30b2e89614a4b573bb49077f38306af}{default\+\_\+para}}
+\item 
+bool \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___af31318574338bcb26a5cf79639cf5867}{active}}
+\item 
+std\+::string \mbox{\hyperlink{structHB1_1_1InputFlags_1_1CommandLineFlag___a3784d38564a6257dc75c6c36e4e6ff16}{para}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stuct of the information required for a single flag such as its name, shorthand char, and its parameter type 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___af31318574338bcb26a5cf79639cf5867}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___af31318574338bcb26a5cf79639cf5867}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!active@{active}}
+\index{active@{active}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{active}{active}}
+{\footnotesize\ttfamily bool H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::active}
+
+Indicates if the user set the flag \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___ac30b2e89614a4b573bb49077f38306af}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___ac30b2e89614a4b573bb49077f38306af}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!default\_para@{default\_para}}
+\index{default\_para@{default\_para}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{default\_para}{default\_para}}
+{\footnotesize\ttfamily std\+::string H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::default\+\_\+para}
+
+(opt) Default parameter value. Must be empty if para\+\_\+t is N\+O\+NE \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___a57117a37cb7d7f9e4941624b84489929}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___a57117a37cb7d7f9e4941624b84489929}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!desc@{desc}}
+\index{desc@{desc}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{desc}{desc}}
+{\footnotesize\ttfamily std\+::string H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::desc}
+
+Description of flag. Useful for help functions \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___ab36f0f6c409bdbbba35dc52ff1c31e30}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___ab36f0f6c409bdbbba35dc52ff1c31e30}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!name@{name}}
+\index{name@{name}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily std\+::string H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::name}
+
+Full name of flag. Flag is invoked using --\mbox{[}name\mbox{]} \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___a3784d38564a6257dc75c6c36e4e6ff16}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___a3784d38564a6257dc75c6c36e4e6ff16}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!para@{para}}
+\index{para@{para}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{para}{para}}
+{\footnotesize\ttfamily std\+::string H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::para}
+
+The value of the parameter that the user supplied \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___a357581caf8fc2b37145180173f57a9aa}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___a357581caf8fc2b37145180173f57a9aa}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!para\_t@{para\_t}}
+\index{para\_t@{para\_t}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{para\_t}{para\_t}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classHB1_1_1InputFlags_a5042597fe7671ebe12ad5f354a01953e}{Data\+Type}} H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::para\+\_\+t}
+
+(opt) Specify the data type of the parameter. Default is N\+O\+NE \mbox{\Hypertarget{structHB1_1_1InputFlags_1_1CommandLineFlag___a511feb29330ffcaf0823ee8c3c1bb3e1}\label{structHB1_1_1InputFlags_1_1CommandLineFlag___a511feb29330ffcaf0823ee8c3c1bb3e1}} 
+\index{HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}!sh@{sh}}
+\index{sh@{sh}!HB1::InputFlags::CommandLineFlag\_@{HB1::InputFlags::CommandLineFlag\_}}
+\doxysubsubsection{\texorpdfstring{sh}{sh}}
+{\footnotesize\ttfamily char H\+B1\+::\+Input\+Flags\+::\+Command\+Line\+Flag\+\_\+\+::sh}
+
+(opt) The char used for the short hand notation -\/\mbox{[}sh\mbox{]} 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Input\+Flags.\+hpp\end{DoxyCompactItemize}
