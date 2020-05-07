@@ -8,21 +8,32 @@ namespace HB1{
 class InputFlags {
 public:
   //=============== Custom data types ===============
+  /**
+   *  Enumeration of the possible flag parameter data types
+   */
   enum DataType {NONE=0, INT, DOUBLE, CHAR, STRING};
 
-  typedef struct CommandLineFlag_{
-    std::string name;
-    std::string desc;
-    char sh;
-    DataType para_t;
-    std::string default_para;
-    bool active;
-    std::string para;
-  } CommandLineFlag;
-  
+  /**
+   *  Stuct of the information required for a single flag such as its name, 
+   *  shorthand char, and its parameter type
+   */
+  struct CommandLineFlag_{
+    std::string name;          /**< Full name of flag. Flag is invoked using --[name]*/
+    std::string desc;          /**< Description of flag. Useful for help functions*/
+    char sh;                   /**< (opt) The char used for the short hand notation -[sh]*/
+    DataType para_t;           /**< (opt) Specify the data type of the parameter. Default is NONE*/
+    std::string default_para;  /**< (opt) Default parameter value. Must be empty if para_t is NONE*/
+    bool active;               /**< Indicates if the user set the flag*/
+    std::string para;          /**< The value of the parameter that the user supplied*/
+  };
+
+  typedef struct CommandLineFlag_ CommandLineFlag;
   //================= Constructors ==================
   //InputFlags();
 
+  /** Initializes the object by parseing the flags.tmpl file and user input.
+   *  This is a test
+   */
   void setFlags(int argc, char ** argv);
 private:
   //Members
@@ -70,6 +81,9 @@ private:
   //Returns an iterator pointing at the flag with the name 'name'. If none, returns flags_.end()
   std::vector<CommandLineFlag>::iterator getFlagWithName(const std::string & name, bool is_sh);
 
+  bool static verifyIntPara(const std::string & arg);
+  bool static verifyDoublePara(const std::string & arg);
+  
   void static printFlag(const CommandLineFlag & flag);
 };
   

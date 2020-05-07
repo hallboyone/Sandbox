@@ -25,7 +25,11 @@ void HB1::InputFlags::setFlags(int argc, char ** argv){
     else{//If not flag, save into 'other_input_
       other_input_.push_back(*arg);
     }
-  }  
+  }
+
+  for(CommandLineFlag & f : flags_){
+    printFlag(f);
+  }
 }
 
 //Parse flags.tmpl and build an array of the possible flags.
@@ -43,7 +47,7 @@ void HB1::InputFlags::parseFlagTemplates(){
 	BuildFlag(next_block);
       }
       catch(std::exception & e){
-	std::cout<<e.what()<<std::endl;
+	std::cout<<"Could not build flag from template \""<<next_block<<"\"\n"<<e.what()<<std::endl;
       }
     }
     f.close();
@@ -113,7 +117,7 @@ int HB1::InputFlags::extractNextBlock(std::ifstream & f, std::string & block){
 
 //Checks if char is one that should be saved from within flag template block
 bool HB1::InputFlags::validBlockChar(const char & c){
-  return (isalnum(c) || c=='=' || c==';' || c=='"' || c=='_');
+  return (isalnum(c) || c=='=' || c==';' || c=='"' || c=='_' || c=='.');
 }
   
 //Takes the block template string and uses it to make a new flag
@@ -142,11 +146,19 @@ void HB1::InputFlags::BuildFlag(std::string tmpl_str){
   //Chech that the default para matches the para_t
   if(new_flag.default_para.size() != 0){
     switch(new_flag.para_t){
-    case NONE:
+    case NONE: //If given a default parameter when no parameter is specified
       throw std::invalid_argument("Specified default parameter with specifying parameter type");
       break;
-    case INT:
-      std::stoi(new_flag.default_para);
+    case INT: //Make sure the integer default value is a whole number
+      if(new_flag.default_para.find_first_not_of("-0123456789") != std::string::npos){
+	throw std::invalid_argument("Integer argument must only have numeric chars");
+      }
+      try{
+	std::stoi(new_flag.default_para);
+      }
+      catch (std::exception & e){
+	throw std::invalid_argument("Could not convert default value to int");
+      }
       break;
     case DOUBLE:
       std::stod(new_flag.default_para);
@@ -285,14 +297,19 @@ std::vector<std::string> HB1::InputFlags::formatInputArgs(int argc, char ** argv
     
     //If arg is sh notation, convert to lh
     if(numLeadingDash(cur_arg) == 1){
-      cur_arg.erase(0,1); //Erase dash
-      for(char & c : cur_arg){//For each sh char in arg
-	//Get flag with sh 'c' and add its name led by -- to args
-	if(getFlagWithName(std::string(1,c), true) == flags_.end()){
-	  throw std::invalid_argument("Did not recoginize a sh char");
+      if(!isdigit(cur_arg[1])){ // If not a number
+	cur_arg.erase(0,1); //Erase dash
+	for(char & c : cur_arg){//For each sh char in arg
+	  //Get flag with sh 'c' and add its name led by -- to args
+	  if(getFlagWithName(std::string(1,c), true) == flags_.end()){
+	    throw std::invalid_argument("Did not recoginize a sh char");
+	  }
+	  args.push_back(std::string("--"));
+	  args.back() += (getFlagWithName(std::string(1,c), true)->name);
 	}
-	args.push_back(std::string("--"));
-	args.back() += (getFlagWithName(std::string(1,c), true)->name);
+      }
+      else{//If negative number (-2 has a leading '-')
+	args.push_back(cur_arg);
       }
     }
     else{//If not in sh notation, add as is
@@ -308,75 +325,77 @@ void HB1::InputFlags::inputArg2Flag(std::vector<std::string>::iterator & it, con
   std::string name = *it;
   name.erase(0,2); //Erase the two leading '--'
 
-  //  try{
-    //Find the flag among flags_
-    std::vector<CommandLineFlag>::iterator f_it = getFlagWithName(name, false);
-    if(f_it == flags_.end()){
-      throw std::invalid_argument("Did not recoginize flag");
-    }
-    if(f_it->active == true) throw std::invalid_argument("Flag added twice.");
-    
-    f_it->active = true;
-    
-    
-    //Read the parameter if needed.
-    if(f_it->para_t != NONE){
-      if(it+1 != args_end && numLeadingDash(*(it+1)) != 2){ // If parameter is given
-	switch(f_it->para_t){
-	case INT:
-	  try{
-	    std::stoi(*(it+1)); //Will throw excpetion if invalid
-	    ++it;
-	    f_it->para = *it;
-	  }
-	  catch(std::exception & e){
-	    if(f_it->default_para.size() == 0){
-	      throw std::invalid_argument("Flag requiring parameter missing parameter\n");
-	    }
-	    std::cerr<<"Could not read int parameter value. Using default\n";
-	    f_it->para = f_it->default_para;
-	  }
-	  break;
-	case DOUBLE:
-	  try{
-	    std::stod(*(it+1)); //Will throw excpetion if invalid
-	    ++it;
-	    f_it->para = *it;
-	  }
-	  catch(std::exception & e){
-	    if(f_it->default_para.size() == 0){
-	      throw std::invalid_argument("Flag requiring parameter missing parameter\n");
-	    }
-	    std::cerr<<"Could not read double parameter value. Using default\n";
-	    f_it->para = f_it->default_para;
-	  }
-	  break;
-	case CHAR:
-	  if((it+1)->size() != 1){
-	    throw std::invalid_argument("Char parameter with more than 1 char in string");
-	  }
-	  ++it;
-	  f_it->para = (*it)[0];
-	  break;
-	case STRING:
-	  ++it;
-	  f_it->para = *it;
-	  break;
-	default:
-	  break;
+  //Find the flag among flags_
+  std::vector<CommandLineFlag>::iterator f_it = getFlagWithName(name, false);
+  if(f_it == flags_.end()){
+    throw std::invalid_argument("Did not recoginize flag");
+  }
+
+  //Check if it was previously active. If not, set it to active
+  if(f_it->active == true) throw std::invalid_argument("Flag set twice");
+  f_it->active = true;
+  
+   
+  //Read the parameter if needed.
+  if(f_it->para_t != NONE){
+    if(it+1 != args_end && numLeadingDash(*(it+1)) != 2){ // If parameter is given
+      switch(f_it->para_t){
+      case INT:
+	//If next command line argument is a valid integer
+	if(verifyIntPara(*(it+1))){
+	  //Save it as the para
+	  f_it->para = *(++it);
 	}
-      }
-      else{ //No input flags
-	if(f_it->default_para.size() == 0){
-	  throw std::invalid_argument("Flag requiring parameter missing parameter\n");
+	//Else, if a default value is given, use that
+	else if (f_it->default_para.size() != 0){
+	  f_it->para = f_it->default_para;
 	}
-	f_it->para = f_it->default_para;
+	//Else throw exception
+	else{
+	  throw std::invalid_argument("Flag requiring integer missing parameter\n");
+	}
+	break;
+      case DOUBLE:
+	//If next command line argument is a valid double
+	if(verifyDoublePara(*(it+1))){
+	  //Save it as the para
+	  f_it->para = *(++it);
+	}
+	//Else, if a default value is given, use that
+	else if (f_it->default_para.size() != 0){
+	  f_it->para = f_it->default_para;
+	}
+	//Else throw exception
+	else{
+	  throw std::invalid_argument("Flag requiring double missing parameter\n");
+	}
+	break;
+      case CHAR:
+	if((it+1)->size() != 1){
+	  throw std::invalid_argument("Char parameter with more than 1 char in string");
+	}
+	++it;
+	f_it->para = (*it)[0];
+	break;
+      case STRING:
+	++it;
+	f_it->para = *it;
+	break;
+      default:
+	break;
       }
     }
-    //}
-    //catch{
-    //ADD CATCH STATMENTS
-    //}
+    else{ //No input flags
+      if(f_it->default_para.size() == 0){
+	throw std::invalid_argument("Flag requiring parameter missing parameter\n");
+      }
+      f_it->para = f_it->default_para;
+    }
+  }
+  //}
+  //catch{
+  //ADD CATCH STATMENTS
+  //}
 }
 
 //Searches through flags_ for one that matches "name".
@@ -396,6 +415,37 @@ std::vector<HB1::InputFlags::CommandLineFlag>::iterator HB1::InputFlags::getFlag
     }
   }
   return flags_.end();
+}
+
+
+//Function examines the string parameter and returns false if it cannot become a whole number
+bool HB1::InputFlags::verifyIntPara(const std::string & arg){
+  if(arg.find_first_not_of("-0123456789") != std::string::npos){
+    return false;
+  }
+  
+  try{
+    std::stoi(arg);
+  }
+  catch (std::exception & e){
+    return false;
+  }
+  return true;
+}
+
+//Function examines the string parameter and returns false if it cannot become a whole number
+bool HB1::InputFlags::verifyDoublePara(const std::string & arg){
+  if(arg.find_first_not_of(".-0123456789") != std::string::npos){
+    return false;
+  }
+  
+  try{
+    std::stod(arg);
+  }
+  catch (std::exception & e){
+    return false;
+  }
+  return true;
 }
 
 void HB1::InputFlags::printFlag(const CommandLineFlag & flag){
