@@ -1,10 +1,15 @@
 \hypertarget{classHB1_1_1CmdLnFlags}{}\doxysection{H\+B1\+::Cmd\+Ln\+Flags Class Reference}
 \label{classHB1_1_1CmdLnFlags}\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+
+
+{\ttfamily \#include $<$Cmd\+Ln\+Flags.\+hpp$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}\label{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}} 
-{\bfseries Cmd\+Ln\+Flags} (int argc, char $\ast$$\ast$argv)
+\mbox{\hyperlink{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}{Cmd\+Ln\+Flags}} (int argc, char $\ast$$\ast$argv)
+\item 
+bool \mbox{\hyperlink{classHB1_1_1CmdLnFlags_ae6956da72ee87fe50b4a9cf51f737930}{is\+Set}} (const char $\ast$key, bool allow\+\_\+sh=false)
 \item 
 bool \mbox{\hyperlink{classHB1_1_1CmdLnFlags_ae6018a3548339a527667be2261b47d4d}{is\+Set\+With\+Para}} (const char $\ast$key, int \&para, bool allow\+\_\+sh=false)
 \item 
@@ -12,8 +17,26 @@ bool \mbox{\hyperlink{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}{
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Detailed Description}
+Abstracts the usage of command line flags. Basic workflow is to construct an instance using the command line args (argc and argv) and then check status of flags using provided function calls (is\+Set\+With\+Para -\/$>$ check if flag is set and has a parameter of the given type). 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}\label{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}} 
+\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}!CmdLnFlags@{CmdLnFlags}}
+\index{CmdLnFlags@{CmdLnFlags}!HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+\doxysubsubsection{\texorpdfstring{CmdLnFlags()}{CmdLnFlags()}}
+{\footnotesize\ttfamily H\+B1\+::\+Cmd\+Ln\+Flags\+::\+Cmd\+Ln\+Flags (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+Constructor. Builds the argument vector out of the elements of argv. If a flag group is found (\char`\"{}-\/fvm\char`\"{}), it is split into individual elements in args\+\_\+ (\mbox{[}-\/f, -\/v, -\/m\mbox{]}). 
+
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}\label{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}} 
+\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_ae6956da72ee87fe50b4a9cf51f737930}\label{classHB1_1_1CmdLnFlags_ae6956da72ee87fe50b4a9cf51f737930}} 
+\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}!isSet@{isSet}}
+\index{isSet@{isSet}!HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+\doxysubsubsection{\texorpdfstring{isSet()}{isSet()}}
+{\footnotesize\ttfamily bool H\+B1\+::\+Cmd\+Ln\+Flags\+::is\+Set (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key,  }\item[{bool}]{allow\+\_\+sh = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Checks if a flag matching the key has been set. If it has, return true. Else, return false. If allow\+\_\+sh is true, a flag in shorthand notation only need match the first char. \mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}\label{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}} 
 \index{HB1::CmdLnFlags@{HB1::CmdLnFlags}!isSetWithOptPara@{isSetWithOptPara}}
 \index{isSetWithOptPara@{isSetWithOptPara}!HB1::CmdLnFlags@{HB1::CmdLnFlags}}
 \doxysubsubsection{\texorpdfstring{isSetWithOptPara()}{isSetWithOptPara()}}

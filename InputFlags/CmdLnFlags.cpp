@@ -1,54 +1,96 @@
 
 #include "CmdLnFlags.hpp"
 #include <iostream>
+
 HB1::CmdLnFlags::CmdLnFlags(int argc, char ** argv) : args_(std::vector<std::string>(argc, "")){
   //Save each argument in its raw form into args_
   for(int i = 0; i < argc; i++){
     args_[i] = argv[i];
   }
+
+  //Split up sh flag groups ([...,-fvm,...] becomes [...,-f,-v,-m,...])
+  for(auto it = args_.begin(); it != args_.end(); ++it){
+    //If current string is sh group, split it
+    if (numLeadingChar(*it, '-') ==  1 && !verifyDoublePara(*it) && it->size() > 2){
+      std::vector<std::string> split_sh_group;
+     
+      for (auto it_char = it->begin() + 1; it_char != it->end(); ++it_char){
+	//Make sure all chars after the first are letters
+	if(!std::isalpha(*it_char)) throw std::invalid_argument("Invalid SH group found");
+	
+	//Add new element to group vector. Start with a dash and then add the char
+	split_sh_group.push_back(std::string("-"));
+	split_sh_group.back() += *it_char; 
+      }
+
+      //Erase old group, insert split group, reset 'it'
+      it = args_.erase(it);
+      args_.insert(it, split_sh_group.begin(), split_sh_group.end());
+      it = args_.begin();
+    }
+  }
+}
+
+bool HB1::CmdLnFlags::isSet(const char * key, bool allow_sh){
+  return (findFlag(key, allow_sh) != args_.end());
 }
 
 bool HB1::CmdLnFlags::isSetWithPara(const char * key, int & para, bool allow_sh){
-  std::string potential_match;
-  std::vector<std::string>::iterator cur_arg;
+  std::vector<std::string>::iterator matching_arg = findFlag(key, allow_sh);
   
-  for(cur_arg = args_.begin(); cur_arg != args_.end(); ++cur_arg){
-    if(numLeadingChar(*cur_arg, '-') == 2){ //Full flag argument
-      potential_match = *cur_arg;
-      potential_match.erase(0,2);
-
-      if(potential_match == key) break;
-    }
-    else if(allow_sh && numLeadingChar(*cur_arg, '-') == 1){ //SH flag arg
-      potential_match = *cur_arg;
-      potential_match.erase(0,1);
-
-      //If sh char is last char in sh flag group, then we found the match
-      if(key[0] == potential_match.back()) break;
-
-      //If match not found, make sure none of the other chars match since
-      //we need a parameter
-      for(char & c : potential_match){
-	if(key[0] == c)//if first char in key matches
-	  throw std::invalid_argument("Flag needing integer parameter set without parameter");
-      }
-    }
-  }
-
-  if(cur_arg != args_.end()){//if a match was found, look for parameter in following arg
-    ++cur_arg;
-    if(cur_arg == args_.end())
+  if (matching_arg != args_.end()){//if a match was found, look for parameter in following arg
+    ++matching_arg;
+    if (matching_arg == args_.end())
       throw std::invalid_argument("Flag needing integer parameter set without parameter");
 
-    if(!verifyIntPara(*cur_arg))
+    if (!verifyIntPara(*matching_arg))
       throw std::invalid_argument("Flag needing integer parameter set with invalid parameter");
 
-    para = std::stoi(*cur_arg);
+    para = std::stoi(*matching_arg);
     return true;
   }
   else return false;
 }
 
+bool HB1::CmdLnFlags::isSetWithPara(const char * key, double & para, bool allow_sh){
+  std::vector<std::string>::iterator matching_arg = findFlag(key, allow_sh);
+  
+  if (matching_arg != args_.end()){//if a match was found, look for parameter in following arg
+    ++matching_arg;
+    if (matching_arg == args_.end())
+      throw std::invalid_argument("Flag needing integer parameter set without parameter");
+
+    if (!verifyDoublePara(*matching_arg))
+      throw std::invalid_argument("Flag needing integer parameter set with invalid parameter");
+
+    para = std::stod(*matching_arg);
+    return true;
+  }
+  else return false;
+}
+
+std::vector<std::string>::iterator HB1::CmdLnFlags::findFlag(const char * key, bool allow_sh){
+  std::string potential_match;
+  std::vector<std::string>::iterator cur_arg;
+  
+  for (cur_arg = args_.begin(); cur_arg != args_.end(); ++cur_arg){
+    if (numLeadingChar(*cur_arg, '-') == 2){ //Full flag argument
+      potential_match = *cur_arg;
+      potential_match.erase(0,2);
+
+      if (potential_match == key) return cur_arg;
+    }
+    else if (allow_sh && numLeadingChar(*cur_arg, '-') == 1){ //SH flag arg
+      //Check argument only if it is not a negative numeric parameter
+      if (!verifyDoublePara(*cur_arg)){
+	//If sh char matches the sh flag, then we found the match
+	if (key[0] == cur_arg->back()) return cur_arg;
+      }
+    }
+  }
+
+  return cur_arg;
+}
 
 //Counts the number of leading '-' in the string 
 int HB1::CmdLnFlags::numLeadingChar(const std::string & arg, const char c){

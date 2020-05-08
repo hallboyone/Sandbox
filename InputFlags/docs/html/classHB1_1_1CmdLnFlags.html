@@ -74,18 +74,82 @@ $(function() {
 <div class="title">HB1::CmdLnFlags Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="CmdLnFlags_8hpp_source.html">CmdLnFlags.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2287424329cca955acec8476fa54596e"><td class="memItemLeft" align="right" valign="top"><a id="a2287424329cca955acec8476fa54596e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CmdLnFlags</b> (int argc, char **argv)</td></tr>
+<tr class="memitem:a2287424329cca955acec8476fa54596e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a2287424329cca955acec8476fa54596e">CmdLnFlags</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a2287424329cca955acec8476fa54596e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6956da72ee87fe50b4a9cf51f737930"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#ae6956da72ee87fe50b4a9cf51f737930">isSet</a> (const char *key, bool allow_sh=false)</td></tr>
+<tr class="separator:ae6956da72ee87fe50b4a9cf51f737930"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6018a3548339a527667be2261b47d4d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#ae6018a3548339a527667be2261b47d4d">isSetWithPara</a> (const char *key, int &amp;para, bool allow_sh=false)</td></tr>
 <tr class="separator:ae6018a3548339a527667be2261b47d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a715eaa4bf94b574e92ac4cc2c185b5eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a715eaa4bf94b574e92ac4cc2c185b5eb">isSetWithOptPara</a> (const char *key, int &amp;para, bool allow_sh=false)</td></tr>
 <tr class="separator:a715eaa4bf94b574e92ac4cc2c185b5eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Abstracts the usage of command line flags. Basic workflow is to construct an instance using the command line args (argc and argv) and then check status of flags using provided function calls (isSetWithPara -&gt; check if flag is set and has a parameter of the given type). </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2287424329cca955acec8476fa54596e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2287424329cca955acec8476fa54596e">&#9670;&nbsp;</a></span>CmdLnFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HB1::CmdLnFlags::CmdLnFlags </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>argv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Constructor. Builds the argument vector out of the elements of argv. If a flag group is found ("-fvm"), it is split into individual elements in args_ ([-f, -v, -m]). </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae6956da72ee87fe50b4a9cf51f737930"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6956da72ee87fe50b4a9cf51f737930">&#9670;&nbsp;</a></span>isSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::isSet </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Checks if a flag matching the key has been set. If it has, return true. Else, return false. If allow_sh is true, a flag in shorthand notation only need match the first char. </p>
+
+</div>
+</div>
 <a id="a715eaa4bf94b574e92ac4cc2c185b5eb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a715eaa4bf94b574e92ac4cc2c185b5eb">&#9670;&nbsp;</a></span>isSetWithOptPara()</h2>
 
