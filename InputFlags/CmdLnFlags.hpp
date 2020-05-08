@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <utility> //pair
 
 namespace HB1{
   /**
@@ -14,37 +15,44 @@ namespace HB1{
    */
   class CmdLnFlags{
   private:
+    typedef std::pair<std::string, bool> FlagPair;
+    
     /**
-     * Vector holding each of the command line arguments. A group of chars in
-     * sh notation will be split ([...,-fvm,...] becomes [...,-f,-v,-m,...])
+     * Vector holding the command line arguments and boolean flags indicating if they have been used
      */
-    std::vector<std::string> args_;
+    std::vector<FlagPair> args_;
 
     /**
      * Find flag matching the key and return an iterator to it. If no matching flag
      * is found, returns args_.end()
      */
-    std::vector<std::string>::iterator findFlag(const char * key, bool allow_sh = false);
+    std::vector<FlagPair>::iterator findFlag(const char * key, bool allow_sh = false);
     
     /**
      * Counts the number of chars at the start of the string 'arg' with match
      * the char 'c'. Useful to count the number of dashes in front of an element
      * of args_
      */
-    int numLeadingChar(const std::string & arg, const char c);
+    int static numLeadingChar(const std::string & arg, const char c);
 
     /**
      * Verifies that the string 'arg' contains numeric chars and, if a dash is
      * present, it is at the start of the string
     */
-    bool verifyIntPara(const std::string & arg);
+    bool static verifyIntPara(const std::string & arg);
 
     /**
      * Verifies that the string 'arg' contains only numeric chars, if a dash is
      * present, it is at the start of the string, and, if a period is present,
      * there is only one
     */
-    bool verifyDoublePara(const std::string & arg);
+    bool static verifyDoublePara(const std::string & arg);
+
+    /**
+     * Verifies that the string 'arg' is only a single char
+    */
+    bool verifyCharPara(const std::string & arg);
+    
   public:
     /**
      * Constructor. Builds the argument vector out of the elements of argv.
@@ -53,35 +61,67 @@ namespace HB1{
      */
     CmdLnFlags(int argc, char ** argv);
 
-    /**
+    /** \brief Check if flag is set.
+     *
      *   Checks if a flag matching the key has been set. If it has, return true.
      * Else, return false.
      *   If allow_sh is true, a flag in shorthand notation only need 
      * match the first char. 
      */
     bool isSet(const char * key, bool allow_sh = false);
-    
-    /**
-     *   Checks if a flag matching the key has been set. If it has, return true 
-     * and look at the next arg for an int parameter. If it exists, set the 
-     * assign para to its value. Otherwise, throw an invalid_argument. 
-     *   If a matching para is not found, false is returned and para is left
-     * unchanged. 
-     *   If allow_sh is true, a flag in shorthand notation only need 
-     * match the first char. 
+
+    ///@{
+    /** \brief Check if flag is set and get its required parameter value.
+     *
+     * Returns true if flag has been set, false otherwise.
+     *
+     * If the flag is found, it must be followed by a parameter of the appropriate
+     * type. If it is not, an invalid_argument exception is thrown. If it is, 
+     * assign its value to para.
+     *
+     * If allow_sh is true, a flag in shorthand notation (i.e., "-f") only need 
+     * match the first char or key
+     * @param key A char array specifying the full name of flag
+     * @param para The variable the parameter should be stored in
+     * @param allow_sh Allow the function to match the first char of key to a sh flag
      */
     bool isSetWithPara(const char * key, int & para, bool allow_sh = false);
-    bool isSetWithPara(const char * key, double & para, bool allow_sh = false);
-
     /**
-     * Checks if a flag matching the key has been set. If it has, return true 
-     * and look at the next arg for an int parameter. If it exists, set the 
-     * assign para to its value. Otherwise, the value of para remains unchanged.
-     * If a matching para is not found, false is returned and para is left
-     * unchanged. If allow_sh is true, a flag in shorthand notation only need 
-     * match the first char. 
+     * \overload
+     */
+    bool isSetWithPara(const char * key, double & para, bool allow_sh = false);
+    /**
+     * \overload
+     */
+    bool isSetWithPara(const char * key, char & para, bool allow_sh = false);
+    ///@}
+
+    ///@{
+    /** \brief Check if flag is set and get its optional parameter value.
+     *
+     * Returns true if flag has been set, false otherwise.
+     *
+     * If the flag is found, check if it is followed by a parameter of the 
+     * appropriate type. If it is, assign its value to para. Else para is unchanged.
+     *
+     * If allow_sh is true, a flag in shorthand notation (i.e., "-f") only need 
+     * match the first char or key
+     * @param key A char array specifying the full name of flag
+     * @param para The variable the parameter should be stored in if found
+     * @param allow_sh Allow the function to match the first char of key to a sh flag
      */
     bool isSetWithOptPara(const char * key, int & para, bool allow_sh = false);
+    /** 
+     * \overload
+     */
+    bool isSetWithOptPara(const char * key, double & para, bool allow_sh = false);
+    /** 
+     * \overload
+     */
+    bool isSetWithOptPara(const char * key, char & para, bool allow_sh = false);
+    ///@}
+
+    void printFlags();
   };
 }
 #endif //CMD_LN_FLAGS

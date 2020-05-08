@@ -97,33 +97,18 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stuct of the information required for a single flag such as its name, shorthand char, and its parameter type </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="af31318574338bcb26a5cf79639cf5867"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af31318574338bcb26a5cf79639cf5867">&#9670;&nbsp;</a></span>active</h2>
+<a id="ab36f0f6c409bdbbba35dc52ff1c31e30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab36f0f6c409bdbbba35dc52ff1c31e30">&#9670;&nbsp;</a></span>name</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool HB1::InputFlags::CommandLineFlag_::active</td>
+          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::name</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Indicates if the user set the flag </p>
-
-</div>
-</div>
-<a id="ac30b2e89614a4b573bb49077f38306af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac30b2e89614a4b573bb49077f38306af">&#9670;&nbsp;</a></span>default_para</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::default_para</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>(opt) Default parameter value. Must be empty if para_t is NONE </p>
+<p>Full name of flag. Flag is invoked using &ndash;[name] </p>
 
 </div>
 </div>
@@ -142,33 +127,18 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab36f0f6c409bdbbba35dc52ff1c31e30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab36f0f6c409bdbbba35dc52ff1c31e30">&#9670;&nbsp;</a></span>name</h2>
+<a id="a511feb29330ffcaf0823ee8c3c1bb3e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a511feb29330ffcaf0823ee8c3c1bb3e1">&#9670;&nbsp;</a></span>sh</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::name</td>
+          <td class="memname">char HB1::InputFlags::CommandLineFlag_::sh</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Full name of flag. Flag is invoked using &ndash;[name] </p>
-
-</div>
-</div>
-<a id="a3784d38564a6257dc75c6c36e4e6ff16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3784d38564a6257dc75c6c36e4e6ff16">&#9670;&nbsp;</a></span>para</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::para</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The value of the parameter that the user supplied </p>
+<p>(opt) The char used for the short hand notation -[sh] </p>
 
 </div>
 </div>
@@ -187,18 +157,48 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a511feb29330ffcaf0823ee8c3c1bb3e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a511feb29330ffcaf0823ee8c3c1bb3e1">&#9670;&nbsp;</a></span>sh</h2>
+<a id="ac30b2e89614a4b573bb49077f38306af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac30b2e89614a4b573bb49077f38306af">&#9670;&nbsp;</a></span>default_para</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char HB1::InputFlags::CommandLineFlag_::sh</td>
+          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::default_para</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>(opt) The char used for the short hand notation -[sh] </p>
+<p>(opt) Default parameter value. Must be empty if para_t is NONE </p>
+
+</div>
+</div>
+<a id="af31318574338bcb26a5cf79639cf5867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af31318574338bcb26a5cf79639cf5867">&#9670;&nbsp;</a></span>active</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::InputFlags::CommandLineFlag_::active</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Indicates if the user set the flag </p>
+
+</div>
+</div>
+<a id="a3784d38564a6257dc75c6c36e4e6ff16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3784d38564a6257dc75c6c36e4e6ff16">&#9670;&nbsp;</a></span>para</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string HB1::InputFlags::CommandLineFlag_::para</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The value of the parameter that the user supplied </p>
 
 </div>
 </div>

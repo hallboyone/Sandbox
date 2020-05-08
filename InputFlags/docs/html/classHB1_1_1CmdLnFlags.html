@@ -69,6 +69,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classHB1_1_1CmdLnFlags-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">HB1::CmdLnFlags Class Reference</div>  </div>
@@ -82,11 +85,39 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2287424329cca955acec8476fa54596e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a2287424329cca955acec8476fa54596e">CmdLnFlags</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a2287424329cca955acec8476fa54596e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6956da72ee87fe50b4a9cf51f737930"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#ae6956da72ee87fe50b4a9cf51f737930">isSet</a> (const char *key, bool allow_sh=false)</td></tr>
+<tr class="memdesc:ae6956da72ee87fe50b4a9cf51f737930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if flag is set.  <a href="classHB1_1_1CmdLnFlags.html#ae6956da72ee87fe50b4a9cf51f737930">More...</a><br /></td></tr>
 <tr class="separator:ae6956da72ee87fe50b4a9cf51f737930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:ae6018a3548339a527667be2261b47d4d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#ae6018a3548339a527667be2261b47d4d">isSetWithPara</a> (const char *key, int &amp;para, bool allow_sh=false)</td></tr>
+<tr class="memdesc:ae6018a3548339a527667be2261b47d4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if flag is set and get its required parameter value.  <a href="classHB1_1_1CmdLnFlags.html#ae6018a3548339a527667be2261b47d4d">More...</a><br /></td></tr>
 <tr class="separator:ae6018a3548339a527667be2261b47d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dce33f879c6dde6f2a1cba449c93df7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a4dce33f879c6dde6f2a1cba449c93df7">isSetWithPara</a> (const char *key, double &amp;para, bool allow_sh=false)</td></tr>
+<tr class="separator:a4dce33f879c6dde6f2a1cba449c93df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:a715eaa4bf94b574e92ac4cc2c185b5eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a715eaa4bf94b574e92ac4cc2c185b5eb">isSetWithOptPara</a> (const char *key, int &amp;para, bool allow_sh=false)</td></tr>
+<tr class="memdesc:a715eaa4bf94b574e92ac4cc2c185b5eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if flag is set and get its optional parameter value.  <a href="classHB1_1_1CmdLnFlags.html#a715eaa4bf94b574e92ac4cc2c185b5eb">More...</a><br /></td></tr>
 <tr class="separator:a715eaa4bf94b574e92ac4cc2c185b5eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494b98e25b5dffe54c0568bba46959c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a494b98e25b5dffe54c0568bba46959c2">isSetWithOptPara</a> (const char *key, double &amp;para, bool allow_sh=false)</td></tr>
+<tr class="separator:a494b98e25b5dffe54c0568bba46959c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a305dbca3349ee81570472cd7277c81e4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a305dbca3349ee81570472cd7277c81e4">findFlag</a> (const char *key, bool allow_sh=false)</td></tr>
+<tr class="separator:a305dbca3349ee81570472cd7277c81e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1cb5fa4b397f4b5c474ac27ef1f90d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#ac1cb5fa4b397f4b5c474ac27ef1f90d4">numLeadingChar</a> (const std::string &amp;arg, const char c)</td></tr>
+<tr class="separator:ac1cb5fa4b397f4b5c474ac27ef1f90d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a415f2c1f49c05c7df1e636e383df3e45"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a415f2c1f49c05c7df1e636e383df3e45">verifyIntPara</a> (const std::string &amp;arg)</td></tr>
+<tr class="separator:a415f2c1f49c05c7df1e636e383df3e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3facf06ebcc3cfa29df79147f97c0860"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#a3facf06ebcc3cfa29df79147f97c0860">verifyDoublePara</a> (const std::string &amp;arg)</td></tr>
+<tr class="separator:a3facf06ebcc3cfa29df79147f97c0860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aa5d47a59aa03708df4b5f719f3fd4f10"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1CmdLnFlags.html#aa5d47a59aa03708df4b5f719f3fd4f10">args_</a></td></tr>
+<tr class="separator:aa5d47a59aa03708df4b5f719f3fd4f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstracts the usage of command line flags. Basic workflow is to construct an instance using the command line args (argc and argv) and then check status of flags using provided function calls (isSetWithPara -&gt; check if flag is set and has a parameter of the given type). </p>
@@ -121,6 +152,134 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a305dbca3349ee81570472cd7277c81e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a305dbca3349ee81570472cd7277c81e4">&#9670;&nbsp;</a></span>findFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt;::iterator HB1::CmdLnFlags::findFlag </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Find flag matching the key and return an iterator to it. If no matching flag is found, returns args_.end() </p>
+
+</div>
+</div>
+<a id="ac1cb5fa4b397f4b5c474ac27ef1f90d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1cb5fa4b397f4b5c474ac27ef1f90d4">&#9670;&nbsp;</a></span>numLeadingChar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int HB1::CmdLnFlags::numLeadingChar </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>arg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Counts the number of chars at the start of the string 'arg' with match the char 'c'. Useful to count the number of dashes in front of an element of args_ </p>
+
+</div>
+</div>
+<a id="a415f2c1f49c05c7df1e636e383df3e45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a415f2c1f49c05c7df1e636e383df3e45">&#9670;&nbsp;</a></span>verifyIntPara()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::verifyIntPara </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Verifies that the string 'arg' contains numeric chars and, if a dash is present, it is at the start of the string </p>
+
+</div>
+</div>
+<a id="a3facf06ebcc3cfa29df79147f97c0860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3facf06ebcc3cfa29df79147f97c0860">&#9670;&nbsp;</a></span>verifyDoublePara()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::verifyDoublePara </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Verifies that the string 'arg' contains only numeric chars, if a dash is present, it is at the start of the string, and, if a period is present, there is only one </p>
+
+</div>
+</div>
 <a id="ae6956da72ee87fe50b4a9cf51f737930"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae6956da72ee87fe50b4a9cf51f737930">&#9670;&nbsp;</a></span>isSet()</h2>
 
@@ -146,47 +305,14 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Check if flag is set. </p>
 <p>Checks if a flag matching the key has been set. If it has, return true. Else, return false. If allow_sh is true, a flag in shorthand notation only need match the first char. </p>
 
 </div>
 </div>
-<a id="a715eaa4bf94b574e92ac4cc2c185b5eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a715eaa4bf94b574e92ac4cc2c185b5eb">&#9670;&nbsp;</a></span>isSetWithOptPara()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool HB1::CmdLnFlags::isSetWithOptPara </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>para</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Checks if a flag matching the key has been set. If it has, return true and look at the next arg for an int parameter. If it exists, set the assign para to its value. Otherwise, the value of para remains unchanged. If a matching para is not found, false is returned and para is left unchanged. If allow_sh is true, a flag in shorthand notation only need match the first char. </p>
-
-</div>
-</div>
 <a id="ae6018a3548339a527667be2261b47d4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6018a3548339a527667be2261b47d4d">&#9670;&nbsp;</a></span>isSetWithPara()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6018a3548339a527667be2261b47d4d">&#9670;&nbsp;</a></span>isSetWithPara() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +342,151 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a flag matching the key has been set. If it has, return true and look at the next arg for an int parameter. If it exists, set the assign para to its value. Otherwise, throw an invalid_argument. If a matching para is not found, false is returned and para is left unchanged. If allow_sh is true, a flag in shorthand notation only need match the first char. </p>
+
+<p>Check if flag is set and get its required parameter value. </p>
+<p>Returns true if flag has been set, false otherwise.</p>
+<p>If the flag is found, it must be followed by a parameter of the appropriate type. If it is not, an invalid_argument exception is thrown. If it is, assign its value to para.</p>
+<p>If allow_sh is true, a flag in shorthand notation (i.e., "-f") only need match the first char or key </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>A char array specifying the full name of flag </td></tr>
+    <tr><td class="paramname">para</td><td>The variable the parameter should be stored in </td></tr>
+    <tr><td class="paramname">allow_sh</td><td>Allow the function to match the first char of key to a sh flag </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4dce33f879c6dde6f2a1cba449c93df7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dce33f879c6dde6f2a1cba449c93df7">&#9670;&nbsp;</a></span>isSetWithPara() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::isSetWithPara </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>para</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
+<a id="a715eaa4bf94b574e92ac4cc2c185b5eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a715eaa4bf94b574e92ac4cc2c185b5eb">&#9670;&nbsp;</a></span>isSetWithOptPara() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::isSetWithOptPara </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>para</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if flag is set and get its optional parameter value. </p>
+<p>Returns true if flag has been set, false otherwise.</p>
+<p>If the flag is found, check if it is followed by a parameter of the appropriate type. If it is, assign its value to para. Else para is unchanged.</p>
+<p>If allow_sh is true, a flag in shorthand notation (i.e., "-f") only need match the first char or key </p>
+
+</div>
+</div>
+<a id="a494b98e25b5dffe54c0568bba46959c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a494b98e25b5dffe54c0568bba46959c2">&#9670;&nbsp;</a></span>isSetWithOptPara() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool HB1::CmdLnFlags::isSetWithOptPara </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>para</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allow_sh</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa5d47a59aa03708df4b5f719f3fd4f10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5d47a59aa03708df4b5f719f3fd4f10">&#9670;&nbsp;</a></span>args_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; HB1::CmdLnFlags::args_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Vector holding each of the command line arguments. </p>
 
 </div>
 </div>

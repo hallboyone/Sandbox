@@ -71,6 +71,9 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classHB1_1_1InputFlags-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">HB1::InputFlags Class Reference</div>  </div>
@@ -102,6 +105,75 @@ typedef struct <a class="el" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5e1be05556f2503d07cb4194c4f49372"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHB1_1_1InputFlags.html#a5e1be05556f2503d07cb4194c4f49372">setFlags</a> (int argc, char **argv)</td></tr>
 <tr class="separator:a5e1be05556f2503d07cb4194c4f49372"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a438bc82204b5fe1b174ceb7bd3c2e6ff"><td class="memItemLeft" align="right" valign="top"><a id="a438bc82204b5fe1b174ceb7bd3c2e6ff"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>parseFlagTemplates</b> ()</td></tr>
+<tr class="separator:a438bc82204b5fe1b174ceb7bd3c2e6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ab8af801a2746ee99dddec2736eb94d"><td class="memItemLeft" align="right" valign="top"><a id="a4ab8af801a2746ee99dddec2736eb94d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>BuildFlag</b> (std::string tmpl_str)</td></tr>
+<tr class="separator:a4ab8af801a2746ee99dddec2736eb94d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefe828c67a548be788e0c7bab0dbd07f"><td class="memItemLeft" align="right" valign="top"><a id="aefe828c67a548be788e0c7bab0dbd07f"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>formatInputArgs</b> (int argc, char **argv)</td></tr>
+<tr class="separator:aefe828c67a548be788e0c7bab0dbd07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad998191bbb3694594717a7fa200abe92"><td class="memItemLeft" align="right" valign="top"><a id="ad998191bbb3694594717a7fa200abe92"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>inputArg2Flag</b> (std::vector&lt; std::string &gt;::iterator &amp;it, const std::vector&lt; std::string &gt;::iterator &amp;args_end)</td></tr>
+<tr class="separator:ad998191bbb3694594717a7fa200abe92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543e5b7851020c02cef30af6d9633f93"><td class="memItemLeft" align="right" valign="top"><a id="a543e5b7851020c02cef30af6d9633f93"></a>
+std::vector&lt; <a class="el" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html">CommandLineFlag</a> &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><b>getFlagWithName</b> (const std::string &amp;name, bool is_sh)</td></tr>
+<tr class="separator:a543e5b7851020c02cef30af6d9633f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:aeebc9b78ee78de72e610d9360bda49b2"><td class="memItemLeft" align="right" valign="top"><a id="aeebc9b78ee78de72e610d9360bda49b2"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>move2BlockStart</b> (std::ifstream &amp;f)</td></tr>
+<tr class="separator:aeebc9b78ee78de72e610d9360bda49b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a253aa6acbf78ab3d9893089fe5e8067e"><td class="memItemLeft" align="right" valign="top"><a id="a253aa6acbf78ab3d9893089fe5e8067e"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>extractNextBlock</b> (std::ifstream &amp;f, std::string &amp;block)</td></tr>
+<tr class="separator:a253aa6acbf78ab3d9893089fe5e8067e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1256711ab6121735d3c706e773825e9b"><td class="memItemLeft" align="right" valign="top"><a id="a1256711ab6121735d3c706e773825e9b"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>validBlockChar</b> (const char &amp;c)</td></tr>
+<tr class="separator:a1256711ab6121735d3c706e773825e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefa23a48f5edcb115f2079020a49f620"><td class="memItemLeft" align="right" valign="top"><a id="aefa23a48f5edcb115f2079020a49f620"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>readName</b> (std::string &amp;root_string)</td></tr>
+<tr class="separator:aefa23a48f5edcb115f2079020a49f620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fa5ef1be5576577556a1c52aab7ddc"><td class="memItemLeft" align="right" valign="top"><a id="a75fa5ef1be5576577556a1c52aab7ddc"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>readDesc</b> (std::string &amp;root_string)</td></tr>
+<tr class="separator:a75fa5ef1be5576577556a1c52aab7ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1706b5a8a044740e8fe8d8bd6568b7a6"><td class="memItemLeft" align="right" valign="top"><a id="a1706b5a8a044740e8fe8d8bd6568b7a6"></a>
+static char&#160;</td><td class="memItemRight" valign="bottom"><b>readSH</b> (std::string &amp;root_string)</td></tr>
+<tr class="separator:a1706b5a8a044740e8fe8d8bd6568b7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8f9eb84f4d7c503a1405d71a0d8b80e"><td class="memItemLeft" align="right" valign="top"><a id="ab8f9eb84f4d7c503a1405d71a0d8b80e"></a>
+static <a class="el" href="classHB1_1_1InputFlags.html#a5042597fe7671ebe12ad5f354a01953e">DataType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>readPara_t</b> (std::string &amp;root_string)</td></tr>
+<tr class="separator:ab8f9eb84f4d7c503a1405d71a0d8b80e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4e38ad5703ae24eef6f147700b2243c"><td class="memItemLeft" align="right" valign="top"><a id="af4e38ad5703ae24eef6f147700b2243c"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>readDefaultPara</b> (std::string &amp;root_string)</td></tr>
+<tr class="separator:af4e38ad5703ae24eef6f147700b2243c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a765152868448ce3dacc94517ac57bb93"><td class="memItemLeft" align="right" valign="top"><a id="a765152868448ce3dacc94517ac57bb93"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>readKeyValue</b> (const std::string &amp;s, const char *key, size_t len, std::string &amp;val, char delim=';')</td></tr>
+<tr class="separator:a765152868448ce3dacc94517ac57bb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa744add4ac204ae551bfcff3b106c1a1"><td class="memItemLeft" align="right" valign="top"><a id="aa744add4ac204ae551bfcff3b106c1a1"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>numLeadingDash</b> (const std::string &amp;arg)</td></tr>
+<tr class="separator:aa744add4ac204ae551bfcff3b106c1a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d13dac29ad6cd6a45a07ea3628875e4"><td class="memItemLeft" align="right" valign="top"><a id="a5d13dac29ad6cd6a45a07ea3628875e4"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>verifyIntPara</b> (const std::string &amp;arg)</td></tr>
+<tr class="separator:a5d13dac29ad6cd6a45a07ea3628875e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14cff526c4b12ac655527e9e3e3f5788"><td class="memItemLeft" align="right" valign="top"><a id="a14cff526c4b12ac655527e9e3e3f5788"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>verifyDoublePara</b> (const std::string &amp;arg)</td></tr>
+<tr class="separator:a14cff526c4b12ac655527e9e3e3f5788"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4386350cf17fcbaea9d1465cb6e69df7"><td class="memItemLeft" align="right" valign="top"><a id="a4386350cf17fcbaea9d1465cb6e69df7"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>printFlag</b> (const <a class="el" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html">CommandLineFlag</a> &amp;flag)</td></tr>
+<tr class="separator:a4386350cf17fcbaea9d1465cb6e69df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a1469c9496aabb7e08a436197174ee83c"><td class="memItemLeft" align="right" valign="top"><a id="a1469c9496aabb7e08a436197174ee83c"></a>
+std::vector&lt; <a class="el" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html">CommandLineFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>flags_</b></td></tr>
+<tr class="separator:a1469c9496aabb7e08a436197174ee83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae386c36f51f8abd66e86df204f3aad11"><td class="memItemLeft" align="right" valign="top"><a id="ae386c36f51f8abd66e86df204f3aad11"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>other_input_</b></td></tr>
+<tr class="separator:ae386c36f51f8abd66e86df204f3aad11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a5042597fe7671ebe12ad5f354a01953e"></a>
