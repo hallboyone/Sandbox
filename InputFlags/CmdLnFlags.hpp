@@ -15,7 +15,7 @@ namespace HB1{
    */
   class CmdLnFlags{
   private:
-    typedef std::pair<std::string, bool> FlagPair;
+    typedef std::pair<std::string, bool> FlagPair; //*< Type containing arg and bool indicating if arg has been used*/
     
     /**
      * Vector holding the command line arguments and boolean flags indicating if they have been used
@@ -121,6 +121,10 @@ namespace HB1{
     bool isSetWithOptPara(const char * key, char & para, bool allow_sh = false);
     ///@}
 
+    /** \brief Print all argument strings in args_
+     *
+     * If the argument has not been used, it is printed in red. Else, it is printed in green.
+     */
     void printFlags();
   };
 }

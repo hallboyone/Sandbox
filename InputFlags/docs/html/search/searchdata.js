@@ -2,7 +2,7 @@ var indexSectionsWithContent =
 {
   0: "acdfinpsv",
   1: "ci",
-  2: "cfinsv",
+  2: "cfinpsv",
   3: "adnps",
   4: "d"
 };
