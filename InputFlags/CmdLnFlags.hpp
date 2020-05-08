@@ -15,7 +15,10 @@ namespace HB1{
    */
   class CmdLnFlags{
   private:
-    typedef std::pair<std::string, bool> FlagPair; //*< Type containing arg and bool indicating if arg has been used*/
+    /**
+     * \brief Type containing arg and bool indicating if arg has been used
+     */
+    typedef std::pair<std::string, bool> FlagPair; 
     
     /**
      * Vector holding the command line arguments and boolean flags indicating if they have been used
