@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['commandlineflag_5f_11',['CommandLineFlag_',['../structHB1_1_1InputFlags_1_1CommandLineFlag__.html',1,'HB1::InputFlags']]]
+  ['cmdlnflags_14',['CmdLnFlags',['../classHB1_1_1CmdLnFlags.html',1,'HB1']]],
+  ['commandlineflag_5f_15',['CommandLineFlag_',['../structHB1_1_1InputFlags_1_1CommandLineFlag__.html',1,'HB1::InputFlags']]]
 ];

@@ -1,0 +1,33 @@
+\hypertarget{classHB1_1_1CmdLnFlags}{}\doxysection{H\+B1\+::Cmd\+Ln\+Flags Class Reference}
+\label{classHB1_1_1CmdLnFlags}\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}\label{classHB1_1_1CmdLnFlags_a2287424329cca955acec8476fa54596e}} 
+{\bfseries Cmd\+Ln\+Flags} (int argc, char $\ast$$\ast$argv)
+\item 
+bool \mbox{\hyperlink{classHB1_1_1CmdLnFlags_ae6018a3548339a527667be2261b47d4d}{is\+Set\+With\+Para}} (const char $\ast$key, int \&para, bool allow\+\_\+sh=false)
+\item 
+bool \mbox{\hyperlink{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}{is\+Set\+With\+Opt\+Para}} (const char $\ast$key, int \&para, bool allow\+\_\+sh=false)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}\label{classHB1_1_1CmdLnFlags_a715eaa4bf94b574e92ac4cc2c185b5eb}} 
+\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}!isSetWithOptPara@{isSetWithOptPara}}
+\index{isSetWithOptPara@{isSetWithOptPara}!HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+\doxysubsubsection{\texorpdfstring{isSetWithOptPara()}{isSetWithOptPara()}}
+{\footnotesize\ttfamily bool H\+B1\+::\+Cmd\+Ln\+Flags\+::is\+Set\+With\+Opt\+Para (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key,  }\item[{int \&}]{para,  }\item[{bool}]{allow\+\_\+sh = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Checks if a flag matching the key has been set. If it has, return true and look at the next arg for an int parameter. If it exists, set the assign para to its value. Otherwise, the value of para remains unchanged. If a matching para is not found, false is returned and para is left unchanged. If allow\+\_\+sh is true, a flag in shorthand notation only need match the first char. \mbox{\Hypertarget{classHB1_1_1CmdLnFlags_ae6018a3548339a527667be2261b47d4d}\label{classHB1_1_1CmdLnFlags_ae6018a3548339a527667be2261b47d4d}} 
+\index{HB1::CmdLnFlags@{HB1::CmdLnFlags}!isSetWithPara@{isSetWithPara}}
+\index{isSetWithPara@{isSetWithPara}!HB1::CmdLnFlags@{HB1::CmdLnFlags}}
+\doxysubsubsection{\texorpdfstring{isSetWithPara()}{isSetWithPara()}}
+{\footnotesize\ttfamily bool H\+B1\+::\+Cmd\+Ln\+Flags\+::is\+Set\+With\+Para (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key,  }\item[{int \&}]{para,  }\item[{bool}]{allow\+\_\+sh = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Checks if a flag matching the key has been set. If it has, return true and look at the next arg for an int parameter. If it exists, set the assign para to its value. Otherwise, throw an invalid\+\_\+argument. If a matching para is not found, false is returned and para is left unchanged. If allow\+\_\+sh is true, a flag in shorthand notation only need match the first char. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Cmd\+Ln\+Flags.\+hpp\item 
+Cmd\+Ln\+Flags.\+cpp\end{DoxyCompactItemize}

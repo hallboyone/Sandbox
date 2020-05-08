@@ -140,12 +140,15 @@ $(function() {
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="comment">//Returns an iterator pointing at the flag with the name &#39;name&#39;. If none, returns flags_.end()</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  std::vector&lt;CommandLineFlag&gt;::iterator getFlagWithName(<span class="keyword">const</span> std::string &amp; name, <span class="keywordtype">bool</span> is_sh);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keywordtype">void</span> <span class="keyword">static</span> printFlag(<span class="keyword">const</span> <a class="code" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html">CommandLineFlag</a> &amp; flag);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keywordtype">bool</span> <span class="keyword">static</span> verifyIntPara(<span class="keyword">const</span> std::string &amp; arg);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">bool</span> <span class="keyword">static</span> verifyDoublePara(<span class="keyword">const</span> std::string &amp; arg);</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}<span class="comment">// namespace HB1</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">void</span> <span class="keyword">static</span> printFlag(<span class="keyword">const</span> <a class="code" href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html">CommandLineFlag</a> &amp; flag);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}<span class="comment">// namespace HB1</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassHB1_1_1InputFlags_html_a5042597fe7671ebe12ad5f354a01953e"><div class="ttname"><a href="classHB1_1_1InputFlags.html#a5042597fe7671ebe12ad5f354a01953e">HB1::InputFlags::DataType</a></div><div class="ttdeci">DataType</div><div class="ttdef"><b>Definition:</b> InputFlags.hpp:14</div></div>
 <div class="ttc" id="astructHB1_1_1InputFlags_1_1CommandLineFlag___html_a57117a37cb7d7f9e4941624b84489929"><div class="ttname"><a href="structHB1_1_1InputFlags_1_1CommandLineFlag__.html#a57117a37cb7d7f9e4941624b84489929">HB1::InputFlags::CommandLineFlag_::desc</a></div><div class="ttdeci">std::string desc</div><div class="ttdef"><b>Definition:</b> InputFlags.hpp:22</div></div>

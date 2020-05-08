@@ -31,8 +31,8 @@ public:
   //================= Constructors ==================
   //InputFlags();
 
-  /** Initializes the object by parseing the flags.tmpl file and user input.
-   *  This is a test
+  /** 
+   *  Initializes the object by parseing the flags.tmpl file and user input
    */
   void setFlags(int argc, char ** argv);
 private:
