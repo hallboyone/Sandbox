@@ -35,6 +35,7 @@ int main(int argc, char * argv[]){
     std::cout<<"Char flag not found\n";
   }
 
-  flags.printFlags();
+  flags.warnUnused();
+  flags.warnUnused("Unused flags!!");
   return 1;
 }

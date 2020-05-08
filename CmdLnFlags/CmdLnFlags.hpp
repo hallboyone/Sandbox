@@ -129,6 +129,14 @@ namespace HB1{
      * If the argument has not been used, it is printed in red. Else, it is printed in green.
      */
     void printFlags();
+
+    /** \brief Print a warning about any unused arguments
+     *
+     * Any argument in args_ that is not used is printed alongside a warning message
+     * @param msg Char array supplying a warning message. If NULL, default message is used
+     * @return The number of unused parameters
+     */
+    int warnUnused(const char * msg = NULL);
   };
 }
 #endif //CMD_LN_FLAGS

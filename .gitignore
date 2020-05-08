@@ -52,3 +52,6 @@ Mkfile.old
 dkms.conf
 
 .DS_store
+
+# doxy output
+*doxy_docs/

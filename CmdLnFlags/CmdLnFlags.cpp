@@ -151,6 +151,23 @@ void HB1::CmdLnFlags::printFlags(){
   std::cout<<std::endl;
 }
 
+int HB1::CmdLnFlags::warnUnused(const char * msg){
+  int num_unused = 0;
+  std::string warning = "\033[33mWarning: ";
+  if (msg == NULL) warning += "Some flags where not used";
+  else             warning +=  msg;
+  warning += '\n';
+  
+  for (FlagPair & f : args_){
+    if (!f.second){
+      num_unused++;
+      warning += f.first + " ";
+    }
+  }
+  if (num_unused > 0) std::cout<<warning<<"\033[0m\n";
+  return num_unused;
+}
+
 std::vector<HB1::CmdLnFlags::FlagPair>::iterator HB1::CmdLnFlags::findFlag(const char * key, bool allow_sh){
   std::string potential_match;
   std::vector<FlagPair>::iterator cur_arg;
