@@ -32,4 +32,6 @@ int main()
   l3.tip() << 1, 2, 3;
   std::cout<<l1<<std::endl<<l3<<std::endl;
   std::cout<<l3.lpNorm<1>()<<" "<<l3.lpNorm<Eigen::Infinity>()<<std::endl;
+
+  std::cout<<(l3<l1)<<std::endl;
 }

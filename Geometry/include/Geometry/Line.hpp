@@ -41,13 +41,13 @@ namespace SharkPlot{
      *  Functions used to access the #root_ and #tip_ members 
      */
     ///@{
-    /** Returns a ref to the #root_*/
+    /** \brief Returns a ref to the #root_*/
     Coord & root(){return root_;}
-    /** Returns a ref to the #tip_*/
+    /** \brief Returns a ref to the #tip_*/
     Coord & tip() {return  tip_;}
-    /** Returns a const ref to the #root_*/
+    /** \brief Returns a const ref to the #root_*/
     const Coord & root()const {return root_;}
-    /** Returns a const ref to the #tip_*/
+    /** \brief Returns a const ref to the #tip_*/
     const Coord & tip() const {return  tip_;}
     ///@}
     
@@ -55,11 +55,11 @@ namespace SharkPlot{
      *  Functions used to set the #root_ and #tip_ members 
      */
     ///@{
-    /** Updates the value of #root_ to match the passed in #Coord
+    /** \brief Updates the value of #root_ to match the passed in #Coord
      * @param r #Coord object that #root_ will be set to 
      **/
     void setRoot(const Coord & r){ root_ = r;}
-    /** Updates the value of #tip_ to match the passed in #Coord
+    /** \brief Updates the value of #tip_ to match the passed in #Coord
      * @param t #Coord object that #tip_ will be set to 
      **/
     void setTip (const Coord & t){ tip_ = t;}
@@ -69,11 +69,11 @@ namespace SharkPlot{
      * Methods that implement various norm operations on the line
      */
     ///@{
-    /** Return the line's 2-norm */
+    /** \brief Return the line's 2-norm */
     double len() const {return (root_ - tip_).norm();}
-    /** Return the line's 2-norm */
+    /** \brief Return the line's 2-norm */
     double norm() const {return len();}
-    /** Return the line's inf-norm */
+    /** \brief Return the line's p-norm */
     template <int p>
     double lpNorm() const {
       Coord diff = root_-tip_;
@@ -106,6 +106,46 @@ namespace SharkPlot{
     void normalize(bool lock_root = false){scale(1/len(), lock_root);}
     ///@}
 
+    bool operator<(const Line<D> & rhs){
+      if (CoordEqual(root_, rhs.root())) return coordSmaller(tip_, rhs.tip());
+      else return coordSmaller(root_, rhs.root());
+    }
+    bool operator>(const Line<D> & rhs){
+      if (CoordEqual(root_, rhs.root())) return coordGreater(tip_, rhs.tip());
+      else return coordGreater(root_, rhs.root());
+    }
+    bool operator==(const Line<D> & rhs){
+      return CoordEqual(root_, rhs.root()) && CoordEqual(tip_, rhs.tip());
+    }
+    bool operator>=(const Line<D> & rhs){
+      return (*this==rhs) || (*this) > rhs;
+    }
+    bool operator<=(const Line<D> & rhs){
+      return (*this==rhs) || (*this) < rhs;
+    }
+    bool operator!=(const Line<D> & rhs){
+      return !(*this==rhs);
+    }
+
+    static bool coordSmaller(const Coord & lhs, const Coord & rhs){
+      for(dim_t i = 0; i<D; i++){
+	if (lhs(i) + COORD_TOL < rhs(i)) return true;
+      }
+      return false;
+    }
+    static bool coordGreater(const Coord & lhs, const Coord & rhs){
+      for(dim_t i = 0; i<D; i++){
+	if (lhs(i) - COORD_TOL > rhs(i)) return true;
+      }
+      return false;
+    }
+    static bool coordEqual(const Coord & lhs, const Coord & rhs){
+      for(dim_t i = 0; i<D; i++){
+	if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return false;
+      }
+      return true;
+    }
+    
     friend std::ostream& operator<< <D>(std::ostream& os, const Line<D>& ln);
   };
 
