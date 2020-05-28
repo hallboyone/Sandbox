@@ -35,6 +35,8 @@ namespace SharkPlot{
     const double & x() const {return vals_[0];}
     const double & y() const {return vals_[1];}
 
+    Coord2D & operator=(const Coord & rhs);
+    
     virtual Coord2D & scale(const double n){
       vals_[0] *= n;
       vals_[1] *= n;

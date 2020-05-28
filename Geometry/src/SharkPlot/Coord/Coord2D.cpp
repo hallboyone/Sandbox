@@ -21,6 +21,15 @@ namespace SharkPlot{
    */
   Coord2D::Coord2D(const double * vals): Coord(2, vals){}
 
+  Coord2D & operator=(const Coord & rhs){
+    if (this != &rhs){
+      ensureDimsMatch(rhs);
+      vals_[0] = rhs[0];
+      vals_[1] = rhs[1];
+    }
+    return *this;
+  }
+  
   /*
     Returns the angle of the coord around the z-axis.
     Angle is scaled between 0 and 1 with 0 being the 

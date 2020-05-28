@@ -52,9 +52,6 @@ namespace SharkPlot{
   Coord & Coord::operator=(const Coord & rhs){
     if (this != &rhs){
       ensureDimsMatch(rhs);
-      if (rhs.dim() != dim_)
-	throw std::invalid_argument("Cannot assign a Coord to a Coord of a different dime");
-
       for (size_t i = 0; i<dim_; i++){
 	vals_[i] = rhs[i];
       }
@@ -176,15 +173,6 @@ namespace SharkPlot{
 
     return vals_[idx];
   }
-  
-  //Distance from origin
-  double Coord::len() const{
-    return norm2();
-  }
-
-  double Coord::norm() const{
-    return norm2();
-  }
 
   double Coord::norm1() const{
     double n = 0;
@@ -209,18 +197,6 @@ namespace SharkPlot{
     }
     return n;
   }
-  
-  void Coord::print(const char * ps) const{
-    std::cout<<std::setprecision(5)<<"[";
-    for (size_t i = 0; i<dim_; i++){
-      std::cout<<vals_[i];
-      if (i<dim_-1) std::cout<<", ";
-    }
-    std::cout<<"]"<<std::setprecision(10);
-
-    if(ps != NULL) std::cout<<ps;
-    return;
-  }  
 
   void Coord::ensureDimsMatch(const Coord & rhs) const{
     if (rhs.dim() != dim_)

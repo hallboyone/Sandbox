@@ -7,7 +7,7 @@
 #define PI 3.1415926535897932384626433832
 #endif
 
-#include <stdlib.h> //size_t
+#include <cstdlib> //size_t
 #include <iostream> //cout, NULL
 #include <vector>
 
@@ -59,51 +59,61 @@ namespace SharkPlot{
      * Function which define the relationship operator between Coord objects.
      * the comparision must be with a Coord object with an equal diminsion.
      *  @{
-     */    
+     */ 
     /** \brief Returns true if Coords are equivalent*/
     bool operator==(const Coord & rhs) const;
     /** \brief Returns false if Coords are equivalent*/
     bool operator!=(const Coord & rhs) const;
-    /** \brief Returns true if Coords are equivalent*/
+    /** \brief Returns true if Coords are related occording to the operator*/
     bool operator<(const Coord & rhs) const;
     bool operator>(const Coord & rhs) const;
     bool operator<=(const Coord & rhs) const;
     bool operator>=(const Coord & rhs) const;
     /** @} */
     
-    //Mathematical
+    /** @name Mathematical methods
+     *  Methods which equip the class to preform simple mathematical operations
+     *  @{
+     */
+    /** \brief Element wise subtraction */
     Coord operator-(const Coord & rhs) const; //Elementwise subtraction
+    /** \brief Element wise addition */
     Coord operator+(const Coord & rhs) const; //Elementwise addition
     Coord & operator-=(const Coord & rhs);
     Coord & operator+=(const Coord & rhs);
     double dot(const Coord & rhs) const; //dot product of two coords
     Coord  cross(const Coord & rhs) const;//Cross product. Creates new coord
+    /** @} */
     
     //Shifts the coordinate by the passed in values. A lot like += 
     Coord & shiftBy(const double * shift_dist);
-    Coord & shiftBy(const Coord & shift_dist);
+    Coord & shiftBy(const Coord  & shift_dist);
 
     //Scale the coord by n
     virtual Coord & scale(const double n);
     
-    //Sets the coords so its length is 1
+    /**Scale the coord so that its length is 1*/
     Coord & normalize();
 
-    //Element access 
+    /**@{*/
+    /** Element access methods */
     double & operator[](size_t idx);
     const double & operator[](size_t idx) const;
+    ///@}
+    
+    /** Return the number of diminsions in Object */
     double dim() const {return dim_;}
 
-    //Distance from origin
-    double len() const;
-    double norm() const;
-    double norm1() const;
-    double norm2() const;
+    ///@{
+    /** 1, 2, and Inf norm functions */
+    double len()     const {return norm2();}
+    double norm()    const {return norm2();}
+    double norm1()   const;
+    double norm2()   const;
     double normInf() const;
+    /**@}*/
     
-    void print(const char * ps = NULL) const;
-
-    ~Coord();
+    virtual ~Coord();
   };
 }
 #endif  
