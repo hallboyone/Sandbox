@@ -107,15 +107,15 @@ namespace SharkPlot{
     ///@}
 
     bool operator<(const Line<D> & rhs){
-      if (CoordEqual(root_, rhs.root())) return coordSmaller(tip_, rhs.tip());
+      if (coordEqual(root_, rhs.root())) return coordSmaller(tip_, rhs.tip());
       else return coordSmaller(root_, rhs.root());
     }
     bool operator>(const Line<D> & rhs){
-      if (CoordEqual(root_, rhs.root())) return coordGreater(tip_, rhs.tip());
+      if (coordEqual(root_, rhs.root())) return coordGreater(tip_, rhs.tip());
       else return coordGreater(root_, rhs.root());
     }
     bool operator==(const Line<D> & rhs){
-      return CoordEqual(root_, rhs.root()) && CoordEqual(tip_, rhs.tip());
+      return coordEqual(root_, rhs.root()) && coordEqual(tip_, rhs.tip());
     }
     bool operator>=(const Line<D> & rhs){
       return (*this==rhs) || (*this) > rhs;
@@ -129,13 +129,13 @@ namespace SharkPlot{
 
     static bool coordSmaller(const Coord & lhs, const Coord & rhs){
       for(dim_t i = 0; i<D; i++){
-	if (lhs(i) + COORD_TOL < rhs(i)) return true;
+	if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return lhs(i) < rhs(i);
       }
       return false;
     }
     static bool coordGreater(const Coord & lhs, const Coord & rhs){
       for(dim_t i = 0; i<D; i++){
-	if (lhs(i) - COORD_TOL > rhs(i)) return true;
+        if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return lhs(i) > rhs(i);
       }
       return false;
     }

@@ -34,4 +34,74 @@ int main()
   std::cout<<l3.lpNorm<1>()<<" "<<l3.lpNorm<Eigen::Infinity>()<<std::endl;
 
   std::cout<<(l3<l1)<<std::endl;
+
+  l1.root() << 1,2,3;
+  l1.tip() << 4,5,6;
+  l3.root() << 7,8,9;
+  l3.tip() << 10,11,12;
+
+  std::cout<<"l1 = "<<l1<<std::endl;
+  std::cout<<"l3 = "<<l3<<std::endl;
+  std::cout<<"l1<l3 = "<<(l1<l3)<<std::endl;
+  std::cout<<"l1<=l3 = "<<(l1<=l3)<<std::endl;
+  std::cout<<"l1>l3 = "<<(l1>l3)<<std::endl;
+  std::cout<<"l1>=l3 = "<<(l1>=l3)<<std::endl;
+  std::cout<<"l1==l3 = "<<(l1==l3)<<std::endl;
+  std::cout<<"l1!=l3 = "<<(l1!=l3)<<std::endl;
+
+  l1.root() << 1,2,3;
+  l1.tip() << 4,5,6;
+  l3.root() << 0,8,9;
+  l3.tip() << 10,11,12;
+
+  std::cout<<"l1 = "<<l1<<std::endl;
+  std::cout<<"l3 = "<<l3<<std::endl;
+  std::cout<<"l1<l3 = "<<(l1<l3)<<std::endl;
+  std::cout<<"l1<=l3 = "<<(l1<=l3)<<std::endl;
+  std::cout<<"l1>l3 = "<<(l1>l3)<<std::endl;
+  std::cout<<"l1>=l3 = "<<(l1>=l3)<<std::endl;
+  std::cout<<"l1==l3 = "<<(l1==l3)<<std::endl;
+  std::cout<<"l1!=l3 = "<<(l1!=l3)<<std::endl;
+
+  l1.root() << 1,2,3;
+  l1.tip()  << 4,5,6;
+  l3.root() << 1,8,9;
+  l3.tip()  << 10,11,12;
+
+  std::cout<<"l1 = "<<l1<<std::endl;
+  std::cout<<"l3 = "<<l3<<std::endl;
+  std::cout<<"l1<l3 = "<<(l1<l3)<<std::endl;
+  std::cout<<"l1<=l3 = "<<(l1<=l3)<<std::endl;
+  std::cout<<"l1>l3 = "<<(l1>l3)<<std::endl;
+  std::cout<<"l1>=l3 = "<<(l1>=l3)<<std::endl;
+  std::cout<<"l1==l3 = "<<(l1==l3)<<std::endl;
+  std::cout<<"l1!=l3 = "<<(l1!=l3)<<std::endl;
+
+  l1.root() << 1,1,1;
+  l1.tip()  << 1,1,1;
+  l3.root() << 1,1,1;
+  l3.tip()  << 1,1,1;
+
+  std::cout<<"l1 = "<<l1<<std::endl;
+  std::cout<<"l3 = "<<l3<<std::endl;
+  std::cout<<"l1<l3 = "<<(l1<l3)<<std::endl;
+  std::cout<<"l1<=l3 = "<<(l1<=l3)<<std::endl;
+  std::cout<<"l1>l3 = "<<(l1>l3)<<std::endl;
+  std::cout<<"l1>=l3 = "<<(l1>=l3)<<std::endl;
+  std::cout<<"l1==l3 = "<<(l1==l3)<<std::endl;
+  std::cout<<"l1!=l3 = "<<(l1!=l3)<<std::endl;
+
+  l1.root() << 1,1,1;
+  l1.tip()  << 1,1,0;
+  l3.root() << 1,1,1;
+  l3.tip()  << 1,1,1;
+
+  std::cout<<"l1 = "<<l1<<std::endl;
+  std::cout<<"l3 = "<<l3<<std::endl;
+  std::cout<<"l1<l3 = "<<(l1<l3)<<std::endl;
+  std::cout<<"l1<=l3 = "<<(l1<=l3)<<std::endl;
+  std::cout<<"l1>l3 = "<<(l1>l3)<<std::endl;
+  std::cout<<"l1>=l3 = "<<(l1>=l3)<<std::endl;
+  std::cout<<"l1==l3 = "<<(l1==l3)<<std::endl;
+  std::cout<<"l1!=l3 = "<<(l1!=l3)<<std::endl;
 }
