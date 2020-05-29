@@ -106,46 +106,54 @@ namespace SharkPlot{
     void normalize(bool lock_root = false){scale(1/len(), lock_root);}
     ///@}
 
+    /** @name Relational operators
+     * Compares edges element wise starting with the first dim in #root_ and going
+     * through the last dim in #tip_. 
+     */
+    ///@{
+    /** \brief Returns true if the first non-equal dim of object is less than same dim in rhs*/ 
     bool operator<(const Line<D> & rhs){
       if (coordEqual(root_, rhs.root())) return coordSmaller(tip_, rhs.tip());
       else return coordSmaller(root_, rhs.root());
     }
+    /** \brief Returns true if the first non-equal dim of object is greater than same dim in rhs*/
     bool operator>(const Line<D> & rhs){
-      if (coordEqual(root_, rhs.root())) return coordGreater(tip_, rhs.tip());
-      else return coordGreater(root_, rhs.root());
+      if (coordEqual(root_, rhs.root())) return coordSmaller(rhs.tip(), tip_);
+      else return coordSmaller(rhs.root(), root_);
     }
+    /** \brief Returns true if all values are equal*/
     bool operator==(const Line<D> & rhs){
       return coordEqual(root_, rhs.root()) && coordEqual(tip_, rhs.tip());
     }
+    /** \brief Returns true if edges match either > or ==*/
     bool operator>=(const Line<D> & rhs){
       return (*this==rhs) || (*this) > rhs;
     }
+    /** \brief Returns true if edges match either < or ==*/
     bool operator<=(const Line<D> & rhs){
       return (*this==rhs) || (*this) < rhs;
     }
+    /** \brief Returns true if any coords do not math ==*/
     bool operator!=(const Line<D> & rhs){
       return !(*this==rhs);
     }
-
+    /** \brief Checks if the lhs #Coord is smaller than the rhs.*/
     static bool coordSmaller(const Coord & lhs, const Coord & rhs){
       for(dim_t i = 0; i<D; i++){
 	if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return lhs(i) < rhs(i);
       }
       return false;
     }
-    static bool coordGreater(const Coord & lhs, const Coord & rhs){
-      for(dim_t i = 0; i<D; i++){
-        if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return lhs(i) > rhs(i);
-      }
-      return false;
-    }
+    /** \brief Checks if two #Coord objects are equal in value*/
     static bool coordEqual(const Coord & lhs, const Coord & rhs){
       for(dim_t i = 0; i<D; i++){
 	if (fabs(lhs(i) - rhs(i)) > COORD_TOL) return false;
       }
       return true;
     }
+    ///@}
     
+    //\brief Write line to ostream object */
     friend std::ostream& operator<< <D>(std::ostream& os, const Line<D>& ln);
   };
 
