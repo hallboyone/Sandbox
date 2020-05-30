@@ -3,6 +3,7 @@ CC := g++ # This is the main compiler
 SRCDIR   := src
 HDDIR    := include
 BUILDDIR := build
+TESTDIR  := tests
 LIBDIR   := /home/hallboyone/Dev/HB1/lib/HB1
 TARGET   := bin/geometry
 
@@ -34,4 +35,4 @@ clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR)/* $(TARGET)"; $(RM) -r $(BUILDDIR)/* $(TARGET)
 
-.PHONY: clean
+.PHONY: clean testall

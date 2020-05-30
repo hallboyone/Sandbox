@@ -9,6 +9,7 @@
 #include <iomanip> //setprecision
 
 #define COORD_TOL 10e-100
+#define PI  3.14159265358979323846
 
 namespace SharkPlot{
   
@@ -28,15 +29,15 @@ namespace SharkPlot{
    */
   template <dim_t D>
   class Line{
-  private:
-    /** Typedef of the Eigen Matrix specilization used as the #root_ and #tip_*/
-    typedef Eigen::Matrix<double, D, 1> Coord;
-    
+  private:    
     /** Coordinate representing the starting point of the line*/
     Eigen::Matrix<double, D, 1> root_;
     /** Coordinate representing the ending point of the line*/
     Eigen::Matrix<double, D, 1> tip_;
   public:
+    /** Typedef of the Eigen Matrix specilization used as the #root_ and #tip_*/
+    typedef Eigen::Matrix<double, D, 1> Coord;
+
     /** @name Member access
      *  Functions used to access the #root_ and #tip_ members 
      */
@@ -152,11 +153,46 @@ namespace SharkPlot{
       return true;
     }
     ///@}
-    
-    //\brief Write line to ostream object */
+
+    /**
+     *  Checks if \p ln can link to #root_. 
+     * \returns 1 if the #root_ is equal to the rhs #tip_
+     * \returns -1 if the #root_ is equal to the rhs #root_
+     * \returns 0 else
+     */
+    int links2Root(const Line<D>& ln) const {
+      if (coordEqual(ln.tip(), root_)) return 1;
+      else if (coordEqual(ln.root(), root_)) return -1;
+      else return 0;
+    }
+    /**
+     * Checks if \p ln can link to #tip_. 
+     * \returns 1 if the #root_ is equal to the rhs #tip_
+     * \returns -1 if the #root_ is equal to the rhs #root_
+     * \returns 0 else
+     */
+    int links2Tip(const Line<D>& ln) const {
+      if (coordEqual(ln.root(), tip_)) return 1;
+      else if (coordEqual(ln.tip(), tip_)) return -1;
+      else return 0;
+    }
+
+    /** \brief Reverse the #root_ and #tip_ Coords */
+    void flip() {
+      Coord tmp = root_;
+      root_ = tip_;
+      tip_ = tmp;
+    }
+
+    /** \brief Returns the angle between 0 and 1 of a 2D edge around the z-axis.
+     * The positive direction is CCW with 0 being the positive x-axis and 0.25 being
+     * the positive y-axis
+     */
+    double theta();
+
+    /**\brief Write line to ostream object */
     friend std::ostream& operator<< <D>(std::ostream& os, const Line<D>& ln);
   };
-
   
   template <dim_t D>
   std::ostream & operator<<(std::ostream & os, const Line<D>& ln){
@@ -178,6 +214,17 @@ namespace SharkPlot{
     }
     return os;
     }
+
+  template <>
+  double Line<2>::theta(){
+    Coord ln = tip_ - root_;
+    if(fabs(ln[0]) < COORD_TOL && fabs(ln[1]) < COORD_TOL){
+      throw(std::domain_error("Attempted to get theta for (0,0)"));
+    }
+    double theta = atan2(ln[1],ln[0]) / (2*PI);
+    if(theta < 0) theta += 1;
+    return theta;
+  }
 }//Sharkplot
 
 #endif //LINE_HPP
