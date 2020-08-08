@@ -36,6 +36,27 @@ public:
     return &((*add_here)->data_);
   }
 
+  void printNodes(){
+    printNodes(root_);
+  }
+  
+  ~MergeSet(){
+    destroy(root_);
+    return;
+  }
+	      
+private:
+  MON * root_;
+  unsigned int sz_;
+
+  void printNodes(MON * node){
+    if (node != NULL){
+      printNodes(node->l_);
+      node->data_.print();
+      printNodes(node->r_);
+    }
+  }
+  
   void destroy(MON * node){
     if (node != NULL){
       destroy(node->l_);
@@ -45,13 +66,5 @@ public:
     return;
   }
 
-  ~MergeSet(){
-    destroy(root_);
-    return;
-  }
-	      
-private:
-  MON * root_;
-  unsigned int sz_;
 };
 #endif
