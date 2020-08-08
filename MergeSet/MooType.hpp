@@ -4,15 +4,19 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+#include <iostream>
 
 class MooType{
 private:
-  std::string str_;
-  int num_;
+  const int   num_; /** Sorting member **/
+  std::string str_; /** Mergeing member **/
 public:
-  MooType(const char * s, int n){
+  /**
+   * Constructor. Takes a char string and int and sets the obj 
+   * fields to their values.
+   **/
+  MooType(const char * s, int n): num_(n){
     str_ = s;
-    num_ = n;
   }
   
   std::string str() const { return str_; }
@@ -22,7 +26,7 @@ public:
    * Merges the object, rhs, into *this. The function must leave
    * the comparison field unchanged.
    **/
-  void merge(MooType & rhs){
+  void merge(const MooType & rhs){
     if (*this != rhs) throw std::invalid_argument("Trying to merge unequal objects");
     str_.append(rhs.str());
   }
@@ -48,6 +52,10 @@ public:
   }
   bool operator>(const MooType & rhs) const{
     return !compare(rhs);
+  }
+
+  void print() const{
+    std::cout<<num_<<": \""<<str_<<"\"\n";
   }
 };
 

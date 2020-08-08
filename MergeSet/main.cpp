@@ -1,4 +1,6 @@
 #include "MooType.hpp"
+#include "MergeSet.hpp"
+
 #include <iostream>
 
 int main(){
@@ -17,11 +19,22 @@ int main(){
   std::cout<<"var1 = var3 = "<<(var1==var3)<<std::endl;
   std::cout<<"var1 = var4 = "<<(var1==var4)<<std::endl;
   
-  var1.merge(var2);
-  var1.merge(var3);
-  std::cout<<var1.str()<<std::endl;
-  std::cout<<var4.str()<<std::endl;
+  //  var1.merge(var2);
+  //  var1.merge(var3);
 
-  var1.merge(var4);
+  var1.print();
+  var2.print();
+  var3.print();
+  var4.print();
+  
+
+  //  var1.merge(var4);
+  
+
+  MergeSet<MooType> var;
+  (var.insert(var1))->print();
+  (var.insert(var2))->print();
+  (var.insert(var3))->print();
+  (var.insert(var4))->print();
   return 1;
 }
