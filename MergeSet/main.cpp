@@ -45,6 +45,6 @@ int main(){
   var.insert(var6);
   var.insert(var8);
 
-  var.printNodes();
+  var.printSet();
   return 1;
 }
