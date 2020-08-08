@@ -8,7 +8,11 @@ int main(){
   MooType var2(" is", 1);
   MooType var3(" a test", 1);
   MooType var4("Will it pass?", 2);
-
+  MooType var5("I hope", -1);
+  MooType var6(" it will", -1);
+  MooType var7("But we will", -2);
+  MooType var8(" have to see", -2);
+  /*
   std::cout<<"var1 < var2 = "<<var1.compare(var2)<<std::endl;
   std::cout<<"var1 < var3 = "<<var1.compare(var3)<<std::endl;
   std::cout<<"var1 < var4 = "<<var1.compare(var4)<<std::endl;
@@ -29,12 +33,16 @@ int main(){
   
 
   //  var1.merge(var4);
-  
+  */
 
   MergeSet<MooType> var;
-  (var.insert(var1))->print();
-  (var.insert(var2))->print();
+  var.insert(var1);
+  var.insert(var2);
+  var.insert(var7);
+  var.insert(var5);
   (var.insert(var3))->print();
   (var.insert(var4))->print();
+  (var.insert(var6))->print();
+  (var.insert(var8))->print();
   return 1;
 }
