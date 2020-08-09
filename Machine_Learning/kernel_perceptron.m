@@ -5,7 +5,7 @@ b = 4;
 
 num_data_points = 10000;
 
-%Generate random data and label each point
+%Generate random data and label each point 
 all_data = 7*rand(2,num_data_points)-3.5;
 all_labels = ones(1,num_data_points);
 for i=1:num_data_points
