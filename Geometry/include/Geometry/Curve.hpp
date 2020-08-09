@@ -1,26 +1,19 @@
-#ifndef LINE_HPP
-#define LINE_HPP
+#ifndef CURVE_HPP
+#define CURVE_HPP
 
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Geometry>
+#include <Geometry/Line.hpp>
 
 #include <iostream>
 #include <cmath>
 #include <iomanip> //setprecision
-
-#define COORD_TOL 10e-100
-#define PI  3.14159265358979323846
+#include <vector>
 
 namespace SharkPlot{
-  
-  /** Global typedef used to hold the diminsion*/
-  typedef unsigned int dim_t;
-
-  template <dim_t D> class Line;
-  template <dim_t D> std::ostream& operator<<(std::ostream & os, const Line<D>& ln);
+  template <dim_t D> class Curve;
+  //template <dim_t D> std::ostream& operator<<(std::ostream & os, const Line<D>& ln);
   
   
-  /** A class representing a single, straight, directed line.
+  /** A class representing a Curve made up of line segments
    *
    * The line consists of a \link #root_ root\endlink and a \link #tip_ tip\endlink
    * which specify the start and end points of the line. Various transformations
@@ -28,58 +21,36 @@ namespace SharkPlot{
    * @tparam DIM A uint specifying the diminsion the line is in. 
    */
   template <dim_t D>
-  class Line{
-  private:    
-    /** Coordinate representing the starting point of the line*/
-    Eigen::Matrix<double, D, 1> root_;
-    /** Coordinate representing the ending point of the line*/
-    Eigen::Matrix<double, D, 1> tip_;
+  class Curve{
+  private:
+    /** Vector of line segments*/
+    std::vector<Line<D> > segments_;
+    
   public:
-    /** Typedef of the Eigen Matrix specilization used as the #root_ and #tip_*/
-    typedef Eigen::Matrix<double, D, 1> Coord;
-
+    typedef Line<D>::Coord Coord;
+    
     /** @name Member access
      *  Functions used to access the #root_ and #tip_ members 
      */
     ///@{
-    /** \brief Returns a ref to the #root_*/
-    Coord & root(){return root_;}
+    /** \brief Returns a ref to the #root_ of the first segments*/
+    Coord & root(){return segments_[0].root();}
     /** \brief Returns a ref to the #tip_*/
-    Coord & tip() {return  tip_;}
+    Coord & tip() {return segments_.back().tip();}
     /** \brief Returns a const ref to the #root_*/
-    const Coord & root()const {return root_;}
+    const Coord & root()const {return segments_[0].root();}
     /** \brief Returns a const ref to the #tip_*/
-    const Coord & tip() const {return  tip_;}
-    ///@}
-    
-    /** @name Member setting
-     *  Functions used to set the #root_ and #tip_ members 
-     */
-    ///@{
-    /** \brief Updates the value of #root_ to match the passed in #Coord
-     * @param r #Coord object that #root_ will be set to 
-     **/
-    void setRoot(const Coord & r){ root_ = r;}
-    /** \brief Updates the value of #tip_ to match the passed in #Coord
-     * @param t #Coord object that #tip_ will be set to 
-     **/
-    void setTip (const Coord & t){ tip_ = t;}
+    const Coord & tip() const {return segments_.back().tip();}
     ///@}
 
-    /** @name Norm operations
-     * Methods that implement various norm operations on the line
-     */
-    ///@{
-    /** \brief Return the line's 2-norm */
-    double len() const {return (root_ - tip_).norm();}
-    /** \brief Return the line's 2-norm */
-    double norm() const {return len();}
-    /** \brief Return the line's p-norm */
-    template <int p>
-    double lpNorm() const {
-      Coord diff = root_-tip_;
-      return diff.template lpNorm<p>();}
-    ///@}
+    /** \brief Return the curve's length*/
+    double len() const {
+      double length = 0;
+      for(const Line<D> & ln : segments_) {
+	length += ln.len();
+      }
+      return length;
+    }
 
     /** @name Transformations
      * Methods implementing various transformations on the object
@@ -94,10 +65,20 @@ namespace SharkPlot{
       if (fabs(n) < COORD_TOL)
 	std::cerr<<"Warning: Scaling line by very small value. "
 		 <<"May lead to numerical errors.\n";
-      if (lock_root) tip_ = root_ + n*(tip_ - root_);
+      if (lock_root){
+	Coord shift_dist(0,0);
+	Coord pre_scale_tip;
+	for (Line<D> & ln : segments_){
+	  pre_scale_tip = ln.tip();
+	  ln += shift_dist;
+	  ln.scale(n, true);
+	  shift_dist += ln.tip() - pre_scale_tip;
+	}
+      }
       else{
-	root_ *= n;
-	tip_  *= n;
+	for (Line<D> & ln : segments_){
+	  ln.scale(n);
+	}
       }
     }
     /** Scales to line so that its 2-norm is 1
@@ -106,11 +87,11 @@ namespace SharkPlot{
      */
     void normalize(bool lock_root = false){scale(1/len(), lock_root);}
 
-    /** \brief Reverse the #root_ and #tip_ Coords */
-    void flip() {
-      Coord tmp = root_;
-      root_ = tip_;
-      tip_ = tmp;
+    /** \brief Reverse the direction of the curve */
+    void flip(){
+      for (Line<D> & ln : segments_){
+	ln.flip(n);
+      }
     }
     ///@}
 
@@ -258,4 +239,4 @@ namespace SharkPlot{
   }
 }//Sharkplot
 
-#endif //LINE_HPP
+#endif //CURVE_HPP

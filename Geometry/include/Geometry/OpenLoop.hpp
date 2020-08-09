@@ -1,5 +1,5 @@
-#ifndef LINE_HPP
-#define LINE_HPP
+#ifndef OPEN_LOOP_HPP
+#define OPEN_LOOP_HPP
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
@@ -16,11 +16,9 @@ namespace SharkPlot{
   /** Global typedef used to hold the diminsion*/
   typedef unsigned int dim_t;
 
-  template <dim_t D> class Line;
-  template <dim_t D> std::ostream& operator<<(std::ostream & os, const Line<D>& ln);
+  template <dim_t D> class OpenLoop;
   
-  
-  /** A class representing a single, straight, directed line.
+  /** A class representing any open curve where the start is not the end
    *
    * The line consists of a \link #root_ root\endlink and a \link #tip_ tip\endlink
    * which specify the start and end points of the line. Various transformations
@@ -28,16 +26,15 @@ namespace SharkPlot{
    * @tparam DIM A uint specifying the diminsion the line is in. 
    */
   template <dim_t D>
-  class Line{
-  private:    
-    /** Coordinate representing the starting point of the line*/
-    Eigen::Matrix<double, D, 1> root_;
-    /** Coordinate representing the ending point of the line*/
-    Eigen::Matrix<double, D, 1> tip_;
+  class OpenLoop{
   public:
     /** Typedef of the Eigen Matrix specilization used as the #root_ and #tip_*/
     typedef Eigen::Matrix<double, D, 1> Coord;
 
+    //flip
+    //ln
+    //linking checks
+    // getter
     /** @name Member access
      *  Functions used to access the #root_ and #tip_ members 
      */
@@ -258,4 +255,4 @@ namespace SharkPlot{
   }
 }//Sharkplot
 
-#endif //LINE_HPP
+#endif //OPEN_LOOP_HPP

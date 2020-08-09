@@ -258,4 +258,4 @@ namespace SharkPlot{
   }
 }//Sharkplot
 
-#endif //LINE_HPP
+#endif //CURVE_HPP
