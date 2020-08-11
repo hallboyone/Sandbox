@@ -112,7 +112,7 @@ int main(){
   var.insert(v35);
   var.insert(v36);
   var.insert(v37);
-  var.erase(v1);
+  var.erase(v9);
   var.printSet();
   return 1;
 }

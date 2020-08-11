@@ -25,7 +25,7 @@ namespace SharkPlot{
    * The line consists of a \link #root_ root\endlink and a \link #tip_ tip\endlink
    * which specify the start and end points of the line. Various transformations
    * and operations can be carried out on the line accourding the the methods below.
-   * @tparam DIM A uint specifying the diminsion the line is in. 
+   * @tparam D A uint specifying the diminsion the line is in. 
    */
   template <dim_t D>
   class Line{
