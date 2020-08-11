@@ -1,6 +1,8 @@
 #ifndef MERGE_SET
 #define MERGE_SET
 
+#include <iostream>
+
 template <class MOO>
 class MergeSet{
 public:
@@ -107,11 +109,6 @@ private:
     MON ** search_ptr = &root_;
     while (*search_ptr != NULL){
       if (el == (*search_ptr)->data) {
-	((*search_ptr)->data).print();
-	std::cout<<" = ";
-	el.print();
-	std::cout<<"\n";
-	  
         break;
       }
       else if (el < (*search_ptr)->data) {

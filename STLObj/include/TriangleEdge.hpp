@@ -1,22 +1,23 @@
-#ifndef LINE_PTR
-#define LINE_PTR
+#ifndef TRIANGLE_EDGE
+#define TRIANGLE_EDGE
 
 #include "Coord.hpp"
+#include "Triangle.hpp"
 
-class LinePtr{
+class TriangleEdge{
 private:
   const Coord<3> *const v_[2];
   bool first_v_smallest;
-  TriPtr * t_[2];
+  Triangle * t_[2];
 public:
-  LinePtr(const Coord<3> * v1, const Coord<3> * v2, TriPtr * t): v_{v1,v2}{
+  TriangleEdge(const Coord<3> * v1, const Coord<3> * v2, TriPtr * t): v_{v1,v2}{
     t_[0] = t;
     t_[1] = NULL;
     if (v_[0] < v_[1]) first_v_smallest = true;
     else first_v_smallest = false;
   }
   
-  TriPtr * t(int n) const{
+  Triangle * t(int n) const{
     return t_[n];
   }
 
@@ -24,7 +25,7 @@ public:
   const Coord<3> *const vLarge() const{ return v_[first_v_smallest]; };
   
   
-  void merge(const LinePtr & rhs){
+  void merge(const TriangleEdge & rhs){
     if (*this != rhs) throw std::invalid_argument("Trying to merge unequal edges");
     if (t_[1] != NULL) throw std::invalid_argument("Edge used by more than 2 tri");
     if (rhs.t(1) != NULL) throw std::invalid_argument("Edge used by more than 2 tri");
@@ -32,20 +33,20 @@ public:
     t_[1] = rhs.t(0);
   }
 
-  bool operator<(const LinePtr & rhs) const{
+  bool operator<(const TriangleEdge & rhs) const{
     if (*(this->vSmall()) != *(rhs.vSmall()))
       return ((*(this->vSmall())) < (*(rhs.vSmall())));
     else
       return ((*(this->vLarge())) < (*(rhs.vLarge())));
   }
   
-  bool operator==(const LinePtr & rhs) const{
+  bool operator==(const TriangleEdge & rhs) const{
     return (!((*this < rhs)) && !(rhs < (*this)));
   }
-  bool operator!=(const LinePtr & rhs) const{
+  bool operator!=(const TriangleEdge & rhs) const{
     return (*this < rhs || rhs < (*this));
   }
-  bool operator>(const LinePtr & rhs) const{
+  bool operator>(const TriangleEdge & rhs) const{
     return rhs < (*this);
   }
 
@@ -56,8 +57,5 @@ public:
     }
     std::cout<<std::endl;
   }
-  //  ~LinePtr(){
-
-  //}
 };
 #endif

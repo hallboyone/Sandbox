@@ -3,8 +3,9 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
-#include "fwrd_decl.hpp"
 
+typedef unsigned int dim_t;
+template <dim_t D> class Coord;
 template <dim_t D> std::ostream& operator<<(std::ostream& os, const Coord<D>& c);
 
 template <dim_t D>
