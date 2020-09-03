@@ -1,6 +1,6 @@
 #include "StlData.hpp"
 
-int StlData::Triangle::next_tri_id_ = 1;
+int StlData::Triangle::next_tri_id_ = 0;
 
 StlData::Triangle::Triangle(Coord3 & n, const Coord3* v1, const Coord3* v2, const Coord3* v3, MergeSet<TriangleEdge> & e_set): norm_(n){
   id_ = next_tri_id_;
@@ -20,6 +20,27 @@ void StlData::Triangle::print() const{
   e_[1]->print();
   e_[2]->print();
   return;
+}
+
+/**
+ * For each edge joining triangles with different norms, add its address to
+ * face_edges. Add the neighbor accross all other edges to the tri_q if not
+ * already examined (as told by its slot inside already_examined)
+ */
+void StlData::Triangle::getFaceEdges(std::queue<const Triangle *> & tri_q,
+				     std::vector<TriangleEdge *> & face_edges,
+				     std::vector<bool> & already_examined) const{
+  const Triangle * neighbor_tri;
+  for (int i=0; i<3; i++){
+    neighbor_tri = e_[i]->getNeighbor(this);
+    if (neighbor_tri->norm() != norm_){ //add edge to face_edges
+      face_edges.push_back(e_[i]);
+    }
+    else if (!already_examined[neighbor_tri->id()]) { //add tri to stack
+      tri_q.push(neighbor_tri);
+      already_examined[neighbor_tri->id()] = true;
+    }
+  }
 }
 
 StlData::TriangleEdge::TriangleEdge(const Coord<3> * v1, const Coord<3> * v2, Triangle * t): v_{v1,v2}{
