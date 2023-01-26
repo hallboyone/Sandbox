@@ -56,4 +56,6 @@ dkms.conf
 # doxy output
 *doxy_docs/
 
-*/.venv/*
+*.venv*
+*.vscode*
+*.DS_Store
