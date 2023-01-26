@@ -33,12 +33,15 @@ while True:
             exit()
         elif usr_input.endswith("sys.start"):
             break
+        elif usr_input.endswith("clear"):
+            os.system('cls' if os.name == 'nt' else 'clear')
         elif usr_input.endswith("deaddrop"):
-            print("Let us hold fast the confession of our faith without wavering,\n" +
+            print("[This may help you break a code later. Memorize it and then type 'clear']\n\n" +
+                  "Let us hold fast the confession of our faith without wavering,\n" +
                   "for he who promised is faithful.\n"+
                   "                                            Heb 10:23 (ESV)")
         else:
-            print("Unknown command. Type 'sys.start' to begin.")
+            print("Unknown command. Type 'sys.start' to begin or 'clear' to clear screen.")
 
     # Print opening text
     print(term_str, end="")
