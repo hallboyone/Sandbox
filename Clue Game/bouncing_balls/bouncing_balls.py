@@ -24,6 +24,8 @@ ycoord = np.random.random(num_balls)
 
 # Create figure
 figure, ax = plt.subplots(figsize=(5, 4))
+manager = plt.get_current_fig_manager()
+manager.full_screen_toggle()
 
 # Add vars for exiting game
 run_game = False
@@ -32,7 +34,13 @@ def on_click(event):
     if event.button is MouseButton.LEFT:
         run_game = not run_game
         print(run_game)
+
+def on_key_press(event):
+    if event.key == 'q':
+        exit()
+
 plt.connect('button_press_event', on_click)
+plt.connect('key_press_event', on_key_press)
 
 while True:
     # Clear figure and wait for game start
@@ -53,7 +61,7 @@ while True:
         figure.canvas.flush_events()
         plt.pause(3)
         for t in range(dwell_steps):
-            if not run_game:
+            if  not run_game:
                 break
             for j in range(i+1):
                 x_diff = math.cos(headings[j])
