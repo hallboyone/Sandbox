@@ -23,9 +23,7 @@ xcoord = aspect_ratio*np.random.random(num_balls)
 ycoord = np.random.random(num_balls)
 
 # Create figure
-figure, ax = plt.subplots(figsize=(5, 4))
-manager = plt.get_current_fig_manager()
-manager.full_screen_toggle()
+figure, ax = plt.subplots()
 
 # Add vars for exiting game
 run_game = False
